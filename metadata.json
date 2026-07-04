@@ -1,0 +1,6 @@
+{
+  "name": "FaceMax AI",
+  "description": "The AI Glow-Up Laboratory. Upload a selfie for premium, constructive analysis of geometry, styling, and professional presentation.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
