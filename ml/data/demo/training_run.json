@@ -1,0 +1,33 @@
+{
+  "mode": "demo",
+  "smoke": true,
+  "config": {
+    "random_seed": 42,
+    "cv_folds": 5,
+    "min_class_samples": 3,
+    "selection_metric": "macro_f1",
+    "class_weight": "balanced",
+    "n_jobs": 1,
+    "models": [
+      "logreg",
+      "random_forest",
+      "xgboost",
+      "lightgbm"
+    ],
+    "season_approaches": [
+      "direct",
+      "axis_first",
+      "hierarchical"
+    ],
+    "hierarchical_axis_backend": "random_forest",
+    "calibration": {
+      "method": "auto",
+      "isotonic_min_samples": 1000,
+      "bins": 15
+    },
+    "secondary_rule": {
+      "secondary_min_prob": 0.1
+    }
+  },
+  "results": {}
+}

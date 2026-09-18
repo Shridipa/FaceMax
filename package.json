@@ -8,7 +8,19 @@
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "bias:selfcheck": "cd ml && python -m facemax_bias selfcheck",
+    "bias:demo": "cd ml && python -m facemax_bias demo --out data --people 1000",
+    "bias:test": "cd ml && python -m unittest discover tests",
+    "colour:demo": "cd ml && python -m facemax_color demo-image",
+    "colour:audit": "cd ml && python -m facemax_color audit --root data --splits",
+    "colour:validate": "cd ml && python -m facemax_color validate --root data",
+    "colour:ready": "cd ml && python -m facemax_color ready --root data --out data/reports",
+    "colour:gate": "cd ml && python -m facemax_color gate --root data --out data/reports",
+    "colour:prepare": "cd ml && python -m facemax_color prepare --root data --out data/reports",
+    "colour:train": "cd ml && python -m facemax_color train --root data --config configs/color_training.json",
+    "colour:evaluate": "cd ml && python -m facemax_color evaluate --root data",
+    "colour:train-demo": "cd ml && python -m facemax_color train --demo --root data --targets season,undertone,skin_depth,chroma,contrast"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -21,6 +33,7 @@
     "motion": "^12.23.24",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "react-router-dom": "^7.18.4",
     "recharts": "^3.9.2",
     "vite": "^6.2.3"
   },

@@ -1,0 +1,199 @@
+========================================================
+             FACEMAXX MODEL FAIRNESS REPORT             
+========================================================
+Total images:      2000
+Scored images:     2000
+
+Overall Accuracy:     60.4%
+Macro F1:             59.9%
+Balanced Accuracy:    60.1%
+Top-2 Accuracy:       97.4%
+
+--------------------------------------------------------
+REPRESENTATION (dataset distribution)
+--------------------------------------------------------
+Skin Depth:
+  Very Fair           436   21.8%
+  Fair                458   22.9%
+  Light               298   14.9%
+  Light-Medium        304   15.2%
+  Medium              230   11.5%
+  Medium-Deep         162    8.1%
+  Deep                 80    4.0%
+  Very Deep            32    1.6%  <-- low
+Undertone:
+  Cool                376   18.8%
+  Neutral-Cool        344   17.2%
+  Neutral             498   24.9%
+  Neutral-Warm        380   19.0%
+  Warm                292   14.6%
+  Olive               110    5.5%
+Image Quality:
+  Excellent           406   20.3%
+  Good                690   34.5%
+  Acceptable          484   24.2%
+  Poor                323   16.2%
+  Very Poor            97    4.9%
+Source:
+  Studio               99    5.0%
+  Phone selfie       1706   85.3%
+  Webcam              195    9.8%
+Makeup:
+  No makeup           864   43.2%
+  Light makeup        437   21.9%
+  Heavy makeup        191    9.6%
+  Filter              306   15.3%
+  Skin smoothing      202   10.1%
+Season Primary:
+  Light Spring        106    5.3%
+  Bright Spring       112    5.6%
+  Warm Spring         102    5.1%
+  Light Summer        124    6.2%
+  Soft Summer         130    6.5%
+  Cool Summer          72    3.6%
+  Soft Autumn         190    9.5%
+  Warm Autumn         230   11.5%
+  Deep Autumn         316   15.8%
+  Light Winter         72    3.6%
+  Cool Winter         240   12.0%
+  Deep Winter         306   15.3%
+  ! skin_depth/Very Deep: 32 images (1.6%) — under-represented (need ≥30, ≥3%)
+
+--------------------------------------------------------
+SUBGROUP PERFORMANCE (accuracy by visual group)
+--------------------------------------------------------
+
+Skin Depth:
+  Very Fair         59.6%  (n=436)
+  Fair              64.6%  (n=458)
+  Light             57.0%  (n=298)
+  Light-Medium      64.1%  (n=304)
+  Medium            63.0%  (n=230)
+  Medium-Deep       57.4%  (n=162)
+  Deep              45.0%  (n=80)
+  Very Deep         40.6%  (n=32)
+  gap: Fair  64.6% vs Very Deep  40.6% -> 24.0 pts [serious problem]
+
+Undertone:
+  Cool              62.0%  (n=376)
+  Neutral-Cool      59.6%  (n=344)
+  Neutral           60.2%  (n=498)
+  Neutral-Warm      59.7%  (n=380)
+  Warm              63.4%  (n=292)
+  Olive             52.7%  (n=110)
+  gap: Warm  63.4% vs Olive  52.7% -> 10.6 pts [serious problem]
+
+Image Quality:
+  Excellent         65.3%  (n=406)
+  Good              68.7%  (n=690)
+  Acceptable        63.6%  (n=484)
+  Poor              43.0%  (n=323)
+  Very Poor         22.7%  (n=97)
+  gap: Good  68.7% vs Very Poor  22.7% -> 46.0 pts [serious problem]
+
+Source:
+  Studio            68.7%  (n=99)
+  Phone selfie      61.0%  (n=1706)
+  Webcam            51.3%  (n=195)
+  gap: Studio  68.7% vs Webcam  51.3% -> 17.4 pts [serious problem]
+
+Makeup:
+  No makeup         65.2%  (n=864)
+  Light makeup      65.7%  (n=437)
+  Heavy makeup      47.6%  (n=191)
+  Filter            50.0%  (n=306)
+  Skin smoothing    56.4%  (n=202)
+  gap: Light makeup  65.7% vs Heavy makeup  47.6% -> 18.0 pts [serious problem]
+
+Season Primary:
+  Light Spring      55.7%  (n=106)
+  Bright Spring     56.2%  (n=112)
+  Warm Spring       60.8%  (n=102)
+  Light Summer      58.1%  (n=124)
+  Soft Summer       70.0%  (n=130)
+  Cool Summer       58.3%  (n=72)
+  Soft Autumn       60.5%  (n=190)
+  Warm Autumn       60.0%  (n=230)
+  Deep Autumn       65.8%  (n=316)
+  Light Winter      58.3%  (n=72)
+  Cool Winter       63.3%  (n=240)
+  Deep Winter       53.6%  (n=306)
+  gap: Soft Summer  70.0% vs Deep Winter  53.6% -> 16.4 pts [serious problem]
+
+--------------------------------------------------------
+CONFUSION (top season confusions, row-normalized)
+--------------------------------------------------------
+  Light Winter   -> Cool Winter     29.2%  (21)
+  Deep Winter    -> Deep Autumn     25.2%  (77)
+  Bright Spring  -> Light Spring    24.1%  (27)
+  Soft Autumn    -> Soft Summer     22.6%  (43)
+  Cool Summer    -> Soft Summer     22.2%  (16)
+  Light Spring   -> Bright Spring   21.7%  (23)
+  Light Spring   -> Light Summer    21.7%  (23)
+  Deep Winter    -> Cool Winter     21.2%  (65)
+  Bright Spring  -> Warm Spring     19.6%  (22)
+  Deep Autumn    -> Deep Winter     19.6%  (62)
+  Warm Spring    -> Bright Spring   19.6%  (20)
+  Light Summer   -> Light Spring    18.5%  (23)
+
+--------------------------------------------------------
+LABEL QUALITY (annotator agreement)
+--------------------------------------------------------
+  unanimous    1809  (90.5%)
+  majority      191  (9.6%)
+  split           0  (0.0%)
+  ambiguous images flagged: 191
+  boundary: Deep Autumn <-> Deep Winter  (168 images)
+  boundary: Deep Winter <-> Cool Winter  (160 images)
+  boundary: Deep Autumn <-> Warm Autumn  (148 images)
+  boundary: Deep Winter <-> Deep Autumn  (146 images)
+  boundary: Cool Winter <-> Deep Winter  (131 images)
+  accuracy by truth source:
+    majority_label  59.2%
+    annotator_1     58.4%
+
+--------------------------------------------------------
+ROBUSTNESS (stability across conditions)
+--------------------------------------------------------
+
+Lighting:
+  Natural           67.2%  (n=1130)  top2-stable 100.0%
+  Indoor warm       52.2%  (n=339)  top2-stable  92.0%
+  Indoor cool       54.5%  (n=235)  top2-stable  89.4%
+  Low light         43.4%  (n=166)  top2-stable 100.0%
+  Mixed             62.0%  (n=92)  top2-stable 100.0%
+  Overexposed       39.5%  (n=38)  top2-stable 100.0%
+
+Camera:
+  iPhone            62.0%  (n=707)  top2-stable  96.6%
+  Samsung           59.0%  (n=442)  top2-stable  97.7%
+  Budget Android    57.8%  (n=232)  top2-stable  97.8%
+  DSLR              68.7%  (n=99)  top2-stable  98.0%
+  Pixel             63.7%  (n=325)  top2-stable  98.8%
+  Webcam            51.3%  (n=195)  top2-stable  96.4%
+
+Makeup/Filters:
+  No makeup         65.2%  (n=864)  top2-stable  96.6%
+  Light makeup      65.7%  (n=437)  top2-stable  97.7%
+  Heavy makeup      47.6%  (n=191)  top2-stable  99.0%
+  Filter            50.0%  (n=306)  top2-stable  98.0%
+  Skin smoothing    56.4%  (n=202)  top2-stable  97.5%
+
+Image Quality:
+  Excellent         65.3%  (n=406)  top2-stable  97.5%
+  Acceptable        63.6%  (n=484)  top2-stable  98.1%
+  Good              68.7%  (n=690)  top2-stable  96.7%
+  Poor              43.0%  (n=323)  top2-stable  97.2%
+  Very Poor         22.7%  (n=97)  top2-stable  99.0%
+
+  quality gate: Predictions below 'Poor' quality fall under 75% accuracy — show a low-confidence warning instead of a firm season.
+
+--------------------------------------------------------
+SPLIT INTEGRITY (duplicate-people leakage)
+--------------------------------------------------------
+  leakage-free splits: YES
+  test     people=155
+  train    people=704
+  val      people=141
+
+========================================================

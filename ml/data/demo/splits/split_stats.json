@@ -1,0 +1,14 @@
+{
+  "test": {
+    "images": 16,
+    "people": 8
+  },
+  "train": {
+    "images": 56,
+    "people": 28
+  },
+  "val": {
+    "images": 8,
+    "people": 4
+  }
+}

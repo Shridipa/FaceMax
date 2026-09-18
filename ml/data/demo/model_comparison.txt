@@ -1,0 +1,21 @@
+MODEL COMPARISON (person-grouped CV, macro-F1)
+====================================================
+
+undertone  (selected: hist_gb)
+  hist_gb          0.725  <-- selected
+  random_forest    0.687
+  logreg           0.612
+
+skin_depth  (selected: heuristic)
+  heuristic          n/a   <-- selected
+
+chroma  (selected: heuristic)
+  heuristic          n/a   <-- selected
+
+contrast  (selected: heuristic)
+  heuristic          n/a   <-- selected
+
+season pipeline [rule_combiner+heuristic+heuristic+heuristic+hist_gb]
+  full-pipeline macro-F1: nan
+
+macro-F1 is the selection metric; accuracy alone hides minority-class failure.

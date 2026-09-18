@@ -1,0 +1,29 @@
+[
+  {
+    "name": "CelebAMask-HQ",
+    "official_url": "https://github.com/switchablenorms/CelebAMask-HQ",
+    "intended_use": "face parsing masks (skin/hair/eyes/lips) only - NEVER seasonal ground truth",
+    "license_gate": "unconfirmed",
+    "status": "not_downloaded",
+    "checksum": null,
+    "receipt": null
+  },
+  {
+    "name": "FFHQ",
+    "official_url": "https://github.com/NVlabs/ffhq-dataset",
+    "intended_use": "preprocessing/robustness research; per-image Flickr licensing respected",
+    "license_gate": "unconfirmed",
+    "status": "not_downloaded",
+    "checksum": null,
+    "receipt": null
+  },
+  {
+    "name": "Fitzpatrick17k",
+    "official_url": "https://github.com/mattgroh/fitzpatrick17k",
+    "intended_use": "skin-depth robustness evaluation only; Fitzpatrick labels are NOT undertone/season labels",
+    "license_gate": "unconfirmed",
+    "status": "not_downloaded",
+    "checksum": null,
+    "receipt": null
+  }
+]

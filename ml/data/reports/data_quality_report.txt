@@ -1,0 +1,34 @@
+FACEMAXX DATA QUALITY AUDIT
+========================================
+total annotated rows:      0
+rows missing season truth: 0 (left unlabelled, never fabricated)
+single-annotator rows:     0
+
+schema:
+  missing required:        none
+  duplicate image_ids:     0
+  unknown label values:    0
+  person leakage pairs:    0
+
+annotator agreement:
+  unanimous       0  (0.0%)
+  majority        0  (0.0%)
+  split           0  (0.0%)
+
+class/subgroup distributions (counts):
+  skin_depth: 
+  undertone: 
+  chroma_level: 
+  contrast_level: 
+  lighting_type: 
+  camera_type: 
+  image_quality: 
+  source: 
+  makeup: 
+  season_primary: 
+
+harmony annotations:       0 scores / 0 persons
+registry issues:           0
+holdout lock:              not locked
+
+overall: PASS

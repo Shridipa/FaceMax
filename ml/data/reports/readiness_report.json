@@ -1,0 +1,95 @@
+{
+  "status": "NOT READY",
+  "blockers": [
+    "only 0 annotated images (< 40 gate minimum)",
+    "only 0 people (< 20 gate minimum)",
+    "holdout not a verified untouched lock (state: not locked)"
+  ],
+  "train_gaps": [],
+  "advisories": [],
+  "annotated_rows": 0,
+  "pending_rows": 0,
+  "people": 0,
+  "season_counts": {
+    "Light Spring": 0,
+    "Bright Spring": 0,
+    "Warm Spring": 0,
+    "Light Summer": 0,
+    "Soft Summer": 0,
+    "Cool Summer": 0,
+    "Soft Autumn": 0,
+    "Warm Autumn": 0,
+    "Deep Autumn": 0,
+    "Light Winter": 0,
+    "Cool Winter": 0,
+    "Deep Winter": 0
+  },
+  "missing_seasons": [
+    "Light Spring",
+    "Bright Spring",
+    "Warm Spring",
+    "Light Summer",
+    "Soft Summer",
+    "Cool Summer",
+    "Soft Autumn",
+    "Warm Autumn",
+    "Deep Autumn",
+    "Light Winter",
+    "Cool Winter",
+    "Deep Winter"
+  ],
+  "underrepresented_seasons": [],
+  "depth_counts": {
+    "Very Fair": 0,
+    "Fair": 0,
+    "Light": 0,
+    "Light-Medium": 0,
+    "Medium": 0,
+    "Medium-Deep": 0,
+    "Deep": 0,
+    "Very Deep": 0
+  },
+  "underrepresented_depths": [],
+  "axis_counts": {
+    "undertone": {
+      "Cool": 0,
+      "Neutral-Cool": 0,
+      "Neutral": 0,
+      "Neutral-Warm": 0,
+      "Warm": 0,
+      "Olive": 0
+    },
+    "chroma_level": {
+      "Muted": 0,
+      "Medium": 0,
+      "Bright": 0
+    },
+    "contrast_level": {
+      "Low": 0,
+      "Medium": 0,
+      "High": 0
+    }
+  },
+  "underrepresented_axis_labels": {
+    "undertone": [],
+    "chroma_level": [],
+    "contrast_level": []
+  },
+  "multi_annotator_rows": 0,
+  "mean_agreement": 0.0,
+  "boundary_pairs": {},
+  "boundary_disagreements": 0,
+  "conflicting_disagreements": 0,
+  "condition_dissent": {},
+  "unstable_conditions": [],
+  "multi_image_people": 0,
+  "inconsistent_people": [],
+  "missing_person_ids": 0,
+  "holdout_untouched": false,
+  "holdout_test_without_truth": 0,
+  "holdout_detail": {
+    "state": "not locked",
+    "problems": []
+  },
+  "lint_invalid_annotated": 0
+}

@@ -1,0 +1,65 @@
+{
+  "target": "chroma",
+  "label_column": "chroma_level",
+  "source": "demo",
+  "dataset_version": "6467ba063e297f7b",
+  "feature_version": "facemax-color-features-v1",
+  "total_annotated_rows": 80,
+  "usable_rows": {
+    "train": 55,
+    "val": 8
+  },
+  "exclusions": {
+    "failed_feature_extraction": 1,
+    "locked_holdout_row": 16
+  },
+  "exclusion_detail": {
+    "failed_feature_extraction": [
+      "SYN00026"
+    ],
+    "locked_holdout_row": [
+      "SYN00007",
+      "SYN00008",
+      "SYN00019",
+      "SYN00020",
+      "SYN00021",
+      "SYN00022",
+      "SYN00023",
+      "SYN00024",
+      "SYN00049",
+      "SYN00050",
+      "SYN00051",
+      "SYN00052",
+      "SYN00061",
+      "SYN00062",
+      "SYN00073",
+      "SYN00074"
+    ]
+  },
+  "class_balance": [
+    {
+      "label": "Medium",
+      "images": 63,
+      "people": 32
+    }
+  ],
+  "holdout_ids": [
+    "SYN00007",
+    "SYN00008",
+    "SYN00019",
+    "SYN00020",
+    "SYN00021",
+    "SYN00022",
+    "SYN00023",
+    "SYN00024",
+    "SYN00049",
+    "SYN00050",
+    "SYN00051",
+    "SYN00052",
+    "SYN00061",
+    "SYN00062",
+    "SYN00073",
+    "SYN00074"
+  ],
+  "feature_version_note": "canonical feat_* columns only (leakage-audited)"
+}

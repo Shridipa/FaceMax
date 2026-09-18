@@ -1,5 +1,8 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
+import os from "os";
+import { execFile } from "child_process";
 import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
 import { createServer as createViteServer } from "vite";
@@ -339,6 +342,79 @@ Important:
       details: error?.message || String(error)
     });
   }
+});
+
+/**
+ * POST /api/color-analysis
+ * Accepts base64 selfie, runs the Python CV colour pipeline, returns season + axes + features.
+ */
+app.post("/api/color-analysis", (req, res) => {
+  const { image } = req.body;
+
+  if (!image) {
+    return res.status(400).json({ ok: false, error: "Image data (base64) is required." });
+  }
+
+  // Isolate base64 data from potential data URL prefixes
+  let base64Data = image;
+  let ext = ".jpg";
+  if (image.includes(";base64,")) {
+    const parts = image.split(";base64,");
+    const match = parts[0].match(/data:(.*?);/);
+    if (match) {
+      const mime = match[1];
+      if (mime.includes("png")) ext = ".png";
+      else if (mime.includes("webp")) ext = ".webp";
+    }
+    base64Data = parts[1];
+  }
+
+  // Write to temp file
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "fmax-"));
+  const tmpPath = path.join(tmpDir, `selfie${ext}`);
+
+  try {
+    fs.writeFileSync(tmpPath, Buffer.from(base64Data, "base64"));
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: "Failed to decode image data." });
+  }
+
+  // Resolve the ML directory relative to this server file
+  const mlDir = path.join(process.cwd(), "ml");
+
+  execFile(
+    "python",
+    ["-m", "facemax_color", "predict", tmpPath, "--root", "data"],
+    { cwd: mlDir, timeout: 30000, maxBuffer: 1024 * 1024 },
+    (error, stdout, stderr) => {
+      // Clean up temp file
+      try {
+        fs.unlinkSync(tmpPath);
+        fs.rmdirSync(tmpDir);
+      } catch (_) {}
+
+      if (error) {
+        console.error("Colour analysis error:", error.message, stderr);
+        return res.status(500).json({
+          ok: false,
+          error: "Colour analysis pipeline failed.",
+          details: stderr || error.message,
+        });
+      }
+
+      try {
+        const result = JSON.parse(stdout.trim());
+        res.json(result);
+      } catch (parseErr) {
+        console.error("Failed to parse colour analysis output:", stdout);
+        return res.status(500).json({
+          ok: false,
+          error: "Failed to parse colour analysis results.",
+          raw: stdout,
+        });
+      }
+    }
+  );
 });
 
 // Setup Vite Dev Server / Static Asset delivery

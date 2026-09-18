@@ -1,0 +1,2 @@
+image_id,person_id,source,license,image_quality,lighting_type,camera_type,makeup,skin_depth,skin_L,skin_a,skin_b,undertone,undertone_confidence,olive_score,hair_depth,hair_temperature,eye_depth,contrast_score,chroma_score,season_primary,season_secondary,season_confidence,annotator_1,annotator_2,annotator_3,annotation_agreement,split
+# Fill one row per image. season_secondary/annotator_* may be empty early on; the evaluator treats missing annotator columns as single-label ground truth. person_id groups images of the same human and is NEVER a model feature.

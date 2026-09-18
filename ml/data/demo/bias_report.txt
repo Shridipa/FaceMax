@@ -1,0 +1,234 @@
+========================================================
+             FACEMAXX MODEL FAIRNESS REPORT             
+========================================================
+Total images:      24
+Scored images:     24
+
+Overall Accuracy:     62.5%
+Macro F1:             51.5%
+Balanced Accuracy:    45.8%
+Top-2 Accuracy:       62.5%
+
+--------------------------------------------------------
+REPRESENTATION (dataset distribution)
+--------------------------------------------------------
+Skin Depth:
+  Very Fair             2    8.3%
+  Fair                  4   16.7%
+  Light                 2    8.3%
+  Light-Medium          2    8.3%
+  Medium                4   16.7%
+  Medium-Deep           4   16.7%
+  Deep                  6   25.0%
+Undertone:
+  Neutral-Cool          2    8.3%
+  Neutral               6   25.0%
+  Warm                 16   66.7%
+Image Quality:
+  Good                 24  100.0%
+Source:
+  Synthetic            24  100.0%
+Makeup:
+  No makeup            24  100.0%
+Season Primary:
+  Light Spring          2    8.3%
+  Warm Spring           4   16.7%
+  Light Summer          2    8.3%
+  Soft Summer           4   16.7%
+  Warm Autumn           2    8.3%
+  Deep Autumn          10   41.7%
+  ! skin_depth/Very Fair: 2 images (8.3%) - under-represented (need >=30, >=3%)
+  ! skin_depth/Fair: 4 images (16.7%) - under-represented (need >=30, >=3%)
+  ! skin_depth/Light: 2 images (8.3%) - under-represented (need >=30, >=3%)
+  ! skin_depth/Light-Medium: 2 images (8.3%) - under-represented (need >=30, >=3%)
+  ! skin_depth/Medium: 4 images (16.7%) - under-represented (need >=30, >=3%)
+  ! skin_depth/Medium-Deep: 4 images (16.7%) - under-represented (need >=30, >=3%)
+  ! skin_depth/Deep: 6 images (25.0%) - under-represented (need >=30, >=3%)
+  ! undertone/Neutral-Cool: 2 images (8.3%) - under-represented (need >=30, >=3%)
+
+--------------------------------------------------------
+SUBGROUP PERFORMANCE (accuracy by visual group)
+--------------------------------------------------------
+
+Skin Depth:
+  Very Fair          0.0%  (n=2)  (small n)
+  Fair              50.0%  (n=4)  (small n)
+  Light             50.0%  (n=2)  (small n)
+  Light-Medium      50.0%  (n=2)  (small n)
+  Medium            25.0%  (n=4)  (small n)
+  Medium-Deep      100.0%  (n=4)  (small n)
+  Deep             100.0%  (n=6)  (small n)
+
+Undertone:
+  Neutral-Cool       0.0%  (n=2)  (small n)
+  Neutral           33.3%  (n=6)  (small n)
+  Warm              81.2%  (n=16)  (small n)
+
+Image Quality:
+  Good              62.5%  (n=24)  (small n)
+
+Source:
+  Synthetic         62.5%  (n=24)  (small n)
+
+Makeup:
+  No makeup         62.5%  (n=24)  (small n)
+
+Season Primary:
+  Light Spring      50.0%  (n=2)  (small n)
+  Warm Spring       50.0%  (n=4)  (small n)
+  Light Summer       0.0%  (n=2)  (small n)
+  Soft Summer       25.0%  (n=4)  (small n)
+  Warm Autumn       50.0%  (n=2)  (small n)
+  Deep Autumn      100.0%  (n=10)  (small n)
+
+--------------------------------------------------------
+CONFUSION (top season confusions, row-normalized)
+--------------------------------------------------------
+  Light Spring   -> Cool Summer     50.0%  (1)
+  Light Summer   -> Cool Summer     50.0%  (1)
+  Light Summer   -> Warm Spring     50.0%  (1)
+  Soft Summer    -> Cool Winter     50.0%  (2)
+  Warm Autumn    -> Deep Autumn     50.0%  (1)
+  Soft Summer    -> Warm Autumn     25.0%  (1)
+  Warm Spring    -> Bright Spring   25.0%  (1)
+  Warm Spring    -> Soft Autumn     25.0%  (1)
+
+--------------------------------------------------------
+LABEL QUALITY (annotator agreement)
+--------------------------------------------------------
+  unanimous      24  (100.0%)
+  majority        0  (0.0%)
+  split           0  (0.0%)
+  ambiguous images flagged: 0
+  accuracy by truth source:
+    majority_label  62.5%
+    annotator_1     62.5%
+
+--------------------------------------------------------
+ROBUSTNESS (stability across conditions)
+--------------------------------------------------------
+
+Lighting:
+  Indoor warm       62.5%  (n=8)  top2-stable  62.5%
+  Natural          100.0%  (n=5)  top2-stable 100.0%
+  Indoor cool       50.0%  (n=10)  top2-stable  50.0%
+  Low light          0.0%  (n=1)  top2-stable   0.0%
+
+Camera:
+  DSLR              62.5%  (n=24)  top2-stable  62.5%
+
+Makeup/Filters:
+  No makeup         62.5%  (n=24)  top2-stable  62.5%
+
+Image Quality:
+  Good              62.5%  (n=24)  top2-stable  62.5%
+
+  quality gate: Predictions below 'Excellent' quality fall under 75% accuracy - show a low-confidence warning instead of a firm season.
+
+--------------------------------------------------------
+SPLIT INTEGRITY (duplicate-people leakage)
+--------------------------------------------------------
+  leakage-free splits: YES
+  test     people=12
+
+========================================================
+RECOMMENDED ACTIONS (subgroup bias => data/model fixes; quality => gate)
+
+  DATA COLLECTION:
+    - [collect_data] skin_depth/Very Fair: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Fair: 4 images (16.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Light: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Light-Medium: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Medium: 4 images (16.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Medium-Deep: 4 images (16.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Deep: 6 images (25.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] undertone/Neutral-Cool: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] undertone/Neutral: 6 images (25.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] undertone/Warm: 16 images (66.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] image_quality/Good: 24 images (100.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] source/Synthetic: 24 images (100.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+
+  MODEL / FEATURE WORK:
+    - [model_improvement] Light Spring -> Cool Summer
+        50% of Light Spring predicted as Cool Summer; add boundary examples and re-check undertone features
+    - [model_improvement] Light Summer -> Cool Summer
+        50% of Light Summer predicted as Cool Summer; add boundary examples and re-check undertone features
+    - [model_improvement] Light Summer -> Warm Spring
+        50% of Light Summer predicted as Warm Spring; add boundary examples and re-check undertone features
+    - [model_improvement] Soft Summer -> Cool Winter
+        50% of Soft Summer predicted as Cool Winter; add boundary examples and re-check undertone features
+    - [model_improvement] Warm Autumn -> Deep Autumn
+        50% of Warm Autumn predicted as Deep Autumn; add boundary examples and re-check undertone features
+    - [model_improvement] Soft Summer -> Warm Autumn
+        25% of Soft Summer predicted as Warm Autumn; add boundary examples and re-check undertone features
+    - [model_improvement] Warm Spring -> Bright Spring
+        25% of Warm Spring predicted as Bright Spring; add boundary examples and re-check undertone features
+    - [model_improvement] Warm Spring -> Soft Autumn
+        25% of Warm Spring predicted as Soft Autumn; add boundary examples and re-check undertone features
+
+  QUALITY GATE (the only confidence mechanism):
+    - [quality_gate] Excellent
+        Predictions below 'Excellent' quality fall under 75% accuracy - show a low-confidence warning instead of a firm season.
+========================================================
+
+RECOMMENDED ACTIONS (subgroup bias => data/model fixes; quality => gate)
+
+  DATA COLLECTION:
+    - [collect_data] skin_depth/Very Fair: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Fair: 4 images (16.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Light: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Light-Medium: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Medium: 4 images (16.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Medium-Deep: 4 images (16.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] skin_depth/Deep: 6 images (25.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] undertone/Neutral-Cool: 2 images (8.3%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] undertone/Neutral: 6 images (25.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] undertone/Warm: 16 images (66.7%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] image_quality/Good: 24 images (100.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+    - [collect_data] source/Synthetic: 24 images (100.0%) - under-represented (need >=30, >=3%)
+        under-represented subgroup; the model cannot learn it from a handful of images
+
+  MODEL / FEATURE WORK:
+    - [model_improvement] Light Spring -> Cool Summer
+        50% of Light Spring predicted as Cool Summer; add boundary examples and re-check undertone features
+    - [model_improvement] Light Summer -> Cool Summer
+        50% of Light Summer predicted as Cool Summer; add boundary examples and re-check undertone features
+    - [model_improvement] Light Summer -> Warm Spring
+        50% of Light Summer predicted as Warm Spring; add boundary examples and re-check undertone features
+    - [model_improvement] Soft Summer -> Cool Winter
+        50% of Soft Summer predicted as Cool Winter; add boundary examples and re-check undertone features
+    - [model_improvement] Warm Autumn -> Deep Autumn
+        50% of Warm Autumn predicted as Deep Autumn; add boundary examples and re-check undertone features
+    - [model_improvement] Soft Summer -> Warm Autumn
+        25% of Soft Summer predicted as Warm Autumn; add boundary examples and re-check undertone features
+    - [model_improvement] Warm Spring -> Bright Spring
+        25% of Warm Spring predicted as Bright Spring; add boundary examples and re-check undertone features
+    - [model_improvement] Warm Spring -> Soft Autumn
+        25% of Warm Spring predicted as Soft Autumn; add boundary examples and re-check undertone features
+
+  QUALITY GATE (the only confidence mechanism):
+    - [quality_gate] Excellent
+        Predictions below 'Excellent' quality fall under 75% accuracy - show a low-confidence warning instead of a firm season.

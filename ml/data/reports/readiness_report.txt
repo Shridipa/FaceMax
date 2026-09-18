@@ -1,0 +1,61 @@
+FACEMAXX DATA READINESS AUDIT
+==================================================
+annotated rows: 0   pending: 0   people: 0
+
+VERDICT: NOT READY
+  BLOCKED: only 0 annotated images (< 40 gate minimum)
+  BLOCKED: only 0 people (< 20 gate minimum)
+  BLOCKED: holdout not a verified untouched lock (state: not locked)
+
+1-3. SEASON COVERAGE (all 12 must exist for training)
+  Light Spring      0    <-- MISSING
+  Bright Spring     0    <-- MISSING
+  Warm Spring       0    <-- MISSING
+  Light Summer      0    <-- MISSING
+  Soft Summer       0    <-- MISSING
+  Cool Summer       0    <-- MISSING
+  Soft Autumn       0    <-- MISSING
+  Warm Autumn       0    <-- MISSING
+  Deep Autumn       0    <-- MISSING
+  Light Winter      0    <-- MISSING
+  Cool Winter       0    <-- MISSING
+  Deep Winter       0    <-- MISSING
+
+2. SKIN-DEPTH COVERAGE
+  Very Fair         0    <-- MISSING
+  Fair              0    <-- MISSING
+  Light             0    <-- MISSING
+  Light-Medium      0    <-- MISSING
+  Medium            0    <-- MISSING
+  Medium-Deep       0    <-- MISSING
+  Deep              0    <-- MISSING
+  Very Deep         0    <-- MISSING
+
+8. AXIS COVERAGE (undertone / chroma / contrast)
+  undertone       Cool:0, Neutral-Cool:0, Neutral:0, Neutral-Warm:0, Warm:0, Olive:0
+  chroma_level    Muted:0, Medium:0, Bright:0
+  contrast_level  Low:0, Medium:0, High:0
+
+4. ANNOTATOR DISAGREEMENT (multi-annotator rows only)
+  multi-annotator rows:  0
+  mean agreement:        0.000
+  disagreement rows:     0
+  boundary disagreements:   0 (0% of dissent)
+  conflicting disagreements:  0 (100% of dissent)
+
+5. CAPTURE-CONDITION LABEL STABILITY
+  (not yet measurable - needs multi-annotator rows)
+
+6. PERSON GROUPING & CONSISTENCY
+  people:                     0
+  people with 2+ images:      0
+  rows with no person_id:     0
+
+7. LOCKED HOLDOUT
+  state: not locked
+  untouched: NO
+
+9. USABILITY FOR SUPERVISED LEARNING
+  annotated rows failing row lint: 0
+
+overall: NOT READY

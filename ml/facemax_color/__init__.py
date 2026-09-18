@@ -1,0 +1,60 @@
+"""FaceMaxx colour-analysis CV/ML pipeline (the thing the bias evaluator grades)."""
+from .dataset import (
+    ANNOTATIONS_FILENAME,
+    DATA_SUBDIRS,
+    find_image,
+    init_dataset,
+    join_with_features,
+    read_annotations,
+    write_annotations,
+)
+from .colour import (
+    ExtractionResult,
+    extract_batch,
+    extract_image,
+    REGIONS,
+)
+from .models import (
+    ColourModelBundle,
+    FEATURE_COLUMNS,
+    heuristic_chroma,
+    heuristic_contrast,
+    heuristic_depth,
+    heuristic_undertone,
+    load_bundle,
+    predict_season_from_axes,
+    save_bundle,
+    season_from_axes,
+    train_axis,
+    train_bundle,
+)
+from .evaluate import EvaluationOutput, render_comparison, run_evaluation
+
+__all__ = [
+    "ANNOTATIONS_FILENAME",
+    "DATA_SUBDIRS",
+    "find_image",
+    "init_dataset",
+    "join_with_features",
+    "read_annotations",
+    "write_annotations",
+    "ExtractionResult",
+    "extract_batch",
+    "extract_image",
+    "REGIONS",
+    "ColourModelBundle",
+    "FEATURE_COLUMNS",
+    "heuristic_chroma",
+    "heuristic_contrast",
+    "heuristic_depth",
+    "heuristic_undertone",
+    "load_bundle",
+    "predict_season_from_axes",
+    "save_bundle",
+    "season_from_axes",
+    "train_axis",
+    "train_bundle",
+    "EvaluationOutput",
+    "render_comparison",
+    "run_evaluation",
+]

@@ -1,0 +1,9 @@
+# The ml/facemax_bias package is intentionally stdlib-only (Python >= 3.10):
+# no pip installs are required to run the bias pipeline, demo or tests.
+#
+# Optional extras you may add later as the ML work matures:
+#   pandas        DataFrame support in schema.validate()
+#   numpy/scikit-learn  faster metrics / model training
+#   pytest        alternative test runner (unittest works out of the box)
+#
+# The web app itself is Node-based; see ../package.json.

@@ -1,0 +1,582 @@
+{
+  "title": "FACEMAXX MODEL FAIRNESS REPORT",
+  "generated_for": "all conditions",
+  "total_images": 24,
+  "scored_images": 24,
+  "distribution": {
+    "skin_depth": {
+      "total": 24,
+      "counts": {
+        "Very Fair": 2,
+        "Fair": 4,
+        "Light": 2,
+        "Light-Medium": 2,
+        "Medium": 4,
+        "Medium-Deep": 4,
+        "Deep": 6
+      },
+      "shares": {
+        "Very Fair": 0.08333333333333333,
+        "Fair": 0.16666666666666666,
+        "Light": 0.08333333333333333,
+        "Light-Medium": 0.08333333333333333,
+        "Medium": 0.16666666666666666,
+        "Medium-Deep": 0.16666666666666666,
+        "Deep": 0.25
+      }
+    },
+    "undertone": {
+      "total": 24,
+      "counts": {
+        "Neutral-Cool": 2,
+        "Neutral": 6,
+        "Warm": 16
+      },
+      "shares": {
+        "Neutral-Cool": 0.08333333333333333,
+        "Neutral": 0.25,
+        "Warm": 0.6666666666666666
+      }
+    },
+    "contrast": {
+      "total": 24,
+      "counts": {},
+      "shares": {}
+    },
+    "chroma": {
+      "total": 24,
+      "counts": {},
+      "shares": {}
+    },
+    "lighting": {
+      "total": 24,
+      "counts": {},
+      "shares": {}
+    },
+    "camera": {
+      "total": 24,
+      "counts": {},
+      "shares": {}
+    },
+    "image_quality": {
+      "total": 24,
+      "counts": {
+        "Good": 24
+      },
+      "shares": {
+        "Good": 1.0
+      }
+    },
+    "source": {
+      "total": 24,
+      "counts": {
+        "Synthetic": 24
+      },
+      "shares": {
+        "Synthetic": 1.0
+      }
+    },
+    "makeup": {
+      "total": 24,
+      "counts": {
+        "No makeup": 24
+      },
+      "shares": {
+        "No makeup": 1.0
+      }
+    },
+    "season_primary": {
+      "total": 24,
+      "counts": {
+        "Light Spring": 2,
+        "Warm Spring": 4,
+        "Light Summer": 2,
+        "Soft Summer": 4,
+        "Warm Autumn": 2,
+        "Deep Autumn": 10
+      },
+      "shares": {
+        "Light Spring": 0.08333333333333333,
+        "Warm Spring": 0.16666666666666666,
+        "Light Summer": 0.08333333333333333,
+        "Soft Summer": 0.16666666666666666,
+        "Warm Autumn": 0.08333333333333333,
+        "Deep Autumn": 0.4166666666666667
+      }
+    }
+  },
+  "representation_flags": [
+    "skin_depth/Very Fair: 2 images (8.3%) - under-represented (need >=30, >=3%)",
+    "skin_depth/Fair: 4 images (16.7%) - under-represented (need >=30, >=3%)",
+    "skin_depth/Light: 2 images (8.3%) - under-represented (need >=30, >=3%)",
+    "skin_depth/Light-Medium: 2 images (8.3%) - under-represented (need >=30, >=3%)",
+    "skin_depth/Medium: 4 images (16.7%) - under-represented (need >=30, >=3%)",
+    "skin_depth/Medium-Deep: 4 images (16.7%) - under-represented (need >=30, >=3%)",
+    "skin_depth/Deep: 6 images (25.0%) - under-represented (need >=30, >=3%)",
+    "undertone/Neutral-Cool: 2 images (8.3%) - under-represented (need >=30, >=3%)",
+    "undertone/Neutral: 6 images (25.0%) - under-represented (need >=30, >=3%)",
+    "undertone/Warm: 16 images (66.7%) - under-represented (need >=30, >=3%)",
+    "image_quality/Good: 24 images (100.0%) - under-represented (need >=30, >=3%)",
+    "source/Synthetic: 24 images (100.0%) - under-represented (need >=30, >=3%)",
+    "makeup/No makeup: 24 images (100.0%) - under-represented (need >=30, >=3%)",
+    "season_primary/Light Spring: 2 images (8.3%) - under-represented (need >=30, >=3%)",
+    "season_primary/Warm Spring: 4 images (16.7%) - under-represented (need >=30, >=3%)",
+    "season_primary/Light Summer: 2 images (8.3%) - under-represented (need >=30, >=3%)",
+    "season_primary/Soft Summer: 4 images (16.7%) - under-represented (need >=30, >=3%)",
+    "season_primary/Warm Autumn: 2 images (8.3%) - under-represented (need >=30, >=3%)",
+    "season_primary/Deep Autumn: 10 images (41.7%) - under-represented (need >=30, >=3%)"
+  ],
+  "imbalance_ratios": {
+    "skin_depth": 3.0,
+    "season_primary": 5.0,
+    "source": 1.0
+  },
+  "schema": {
+    "missing_required": [],
+    "duplicate_images": 0,
+    "unknown_values": {}
+  },
+  "leakage": {
+    "leaked_person_ids": [],
+    "pairs": [],
+    "clean": true,
+    "person_counts": {
+      "test": 12
+    }
+  },
+  "overall": {
+    "accuracy": 0.625,
+    "macro_f1": 0.5150793650793651,
+    "balanced_accuracy": 0.4583333333333333,
+    "top2_accuracy": 0.625,
+    "n": 24
+  },
+  "subgroups": {
+    "skin_depth": {
+      "performance": {
+        "Very Fair": {
+          "n": 2.0,
+          "accuracy": 0.0,
+          "macro_f1": 0.0,
+          "small_n": 1.0
+        },
+        "Fair": {
+          "n": 4.0,
+          "accuracy": 0.5,
+          "macro_f1": 0.6666666666666666,
+          "small_n": 1.0
+        },
+        "Light": {
+          "n": 2.0,
+          "accuracy": 0.5,
+          "macro_f1": 0.6666666666666666,
+          "small_n": 1.0
+        },
+        "Light-Medium": {
+          "n": 2.0,
+          "accuracy": 0.5,
+          "macro_f1": 0.6666666666666666,
+          "small_n": 1.0
+        },
+        "Medium": {
+          "n": 4.0,
+          "accuracy": 0.25,
+          "macro_f1": 0.4,
+          "small_n": 1.0
+        },
+        "Medium-Deep": {
+          "n": 4.0,
+          "accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": 1.0
+        },
+        "Deep": {
+          "n": 6.0,
+          "accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": 1.0
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "undertone": {
+      "performance": {
+        "Neutral-Cool": {
+          "n": 2.0,
+          "accuracy": 0.0,
+          "macro_f1": 0.0,
+          "small_n": 1.0
+        },
+        "Neutral": {
+          "n": 6.0,
+          "accuracy": 0.3333333333333333,
+          "macro_f1": 0.5333333333333333,
+          "small_n": 1.0
+        },
+        "Warm": {
+          "n": 16.0,
+          "accuracy": 0.8125,
+          "macro_f1": 0.7619047619047619,
+          "small_n": 1.0
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "contrast": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "chroma": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "lighting": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "camera": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "image_quality": {
+      "performance": {
+        "Good": {
+          "n": 24.0,
+          "accuracy": 0.625,
+          "macro_f1": 0.5150793650793651,
+          "small_n": 1.0
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "source": {
+      "performance": {
+        "Synthetic": {
+          "n": 24.0,
+          "accuracy": 0.625,
+          "macro_f1": 0.5150793650793651,
+          "small_n": 1.0
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "makeup": {
+      "performance": {
+        "No makeup": {
+          "n": 24.0,
+          "accuracy": 0.625,
+          "macro_f1": 0.5150793650793651,
+          "small_n": 1.0
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "season_primary": {
+      "performance": {
+        "Light Spring": {
+          "n": 2.0,
+          "accuracy": 0.5,
+          "macro_f1": 0.6666666666666666,
+          "small_n": 1.0
+        },
+        "Warm Spring": {
+          "n": 4.0,
+          "accuracy": 0.5,
+          "macro_f1": 0.6666666666666666,
+          "small_n": 1.0
+        },
+        "Light Summer": {
+          "n": 2.0,
+          "accuracy": 0.0,
+          "macro_f1": 0.0,
+          "small_n": 1.0
+        },
+        "Soft Summer": {
+          "n": 4.0,
+          "accuracy": 0.25,
+          "macro_f1": 0.4,
+          "small_n": 1.0
+        },
+        "Warm Autumn": {
+          "n": 2.0,
+          "accuracy": 0.5,
+          "macro_f1": 0.6666666666666666,
+          "small_n": 1.0
+        },
+        "Deep Autumn": {
+          "n": 10.0,
+          "accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": 1.0
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    }
+  },
+  "confusion": {
+    "labels": [
+      "Bright Spring",
+      "Cool Summer",
+      "Cool Winter",
+      "Deep Autumn",
+      "Light Spring",
+      "Light Summer",
+      "Soft Autumn",
+      "Soft Summer",
+      "Warm Autumn",
+      "Warm Spring"
+    ],
+    "matrix": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        2
+      ]
+    ],
+    "top_confusions": [
+      {
+        "actual": "Light Spring",
+        "predicted": "Cool Summer",
+        "rate": 0.5,
+        "count": 1
+      },
+      {
+        "actual": "Light Summer",
+        "predicted": "Cool Summer",
+        "rate": 0.5,
+        "count": 1
+      },
+      {
+        "actual": "Light Summer",
+        "predicted": "Warm Spring",
+        "rate": 0.5,
+        "count": 1
+      },
+      {
+        "actual": "Soft Summer",
+        "predicted": "Cool Winter",
+        "rate": 0.5,
+        "count": 2
+      },
+      {
+        "actual": "Warm Autumn",
+        "predicted": "Deep Autumn",
+        "rate": 0.5,
+        "count": 1
+      },
+      {
+        "actual": "Soft Summer",
+        "predicted": "Warm Autumn",
+        "rate": 0.25,
+        "count": 1
+      },
+      {
+        "actual": "Warm Spring",
+        "predicted": "Bright Spring",
+        "rate": 0.25,
+        "count": 1
+      },
+      {
+        "actual": "Warm Spring",
+        "predicted": "Soft Autumn",
+        "rate": 0.25,
+        "count": 1
+      }
+    ]
+  },
+  "label_quality": {
+    "agreement_distribution": {
+      "unanimous": 24,
+      "majority": 0,
+      "split": 0
+    },
+    "ambiguous_count": 0,
+    "ambiguous_examples": [],
+    "season_boundaries": [],
+    "truth_source_comparison": {
+      "majority_label": 0.625,
+      "annotator_1": 0.625
+    }
+  },
+  "robustness": {
+    "lighting": {
+      "Indoor warm": {
+        "n": 8.0,
+        "accuracy": 0.625,
+        "macro_f1": 0.3333333333333333,
+        "top2_stability": 0.625
+      },
+      "Natural": {
+        "n": 5.0,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "top2_stability": 1.0
+      },
+      "Indoor cool": {
+        "n": 10.0,
+        "accuracy": 0.5,
+        "macro_f1": 0.3333333333333333,
+        "top2_stability": 0.5
+      },
+      "Low light": {
+        "n": 1.0,
+        "accuracy": 0.0,
+        "macro_f1": 0.0,
+        "top2_stability": 0.0
+      }
+    },
+    "camera": {
+      "DSLR": {
+        "n": 24.0,
+        "accuracy": 0.625,
+        "macro_f1": 0.5150793650793651,
+        "top2_stability": 0.625
+      }
+    },
+    "makeup_filters": {
+      "No makeup": {
+        "n": 24.0,
+        "accuracy": 0.625,
+        "macro_f1": 0.5150793650793651,
+        "top2_stability": 0.625
+      }
+    },
+    "image_quality": {
+      "Good": {
+        "n": 24.0,
+        "accuracy": 0.625,
+        "macro_f1": 0.5150793650793651,
+        "top2_stability": 0.625
+      }
+    },
+    "recommended_quality_floor": {
+      "bucket": "Excellent",
+      "message": "Predictions below 'Excellent' quality fall under 75% accuracy - show a low-confidence warning instead of a firm season."
+    }
+  }
+}

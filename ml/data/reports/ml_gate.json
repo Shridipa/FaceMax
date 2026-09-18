@@ -1,0 +1,35 @@
+{
+  "gate": "ML_TRAINING",
+  "status": "CLOSED",
+  "reasons": [
+    "only 0 annotated images (< 40); acquisition/annotation phase",
+    "only 0 people (< 20); person-grouped splits need people, not images",
+    "holdout not locked (run `audit --regen-splits` once the audit passes)"
+  ],
+  "coverage": {
+    "images_imported": 0,
+    "images_annotated": 0,
+    "images_pending": 0,
+    "people": 0,
+    "people_with_multiple_images": 0,
+    "skin_depth_counts_annotated": {
+      "Very Fair": 0,
+      "Fair": 0,
+      "Light": 0,
+      "Light-Medium": 0,
+      "Medium": 0,
+      "Medium-Deep": 0,
+      "Deep": 0,
+      "Very Deep": 0
+    },
+    "boundary_candidates_DA_DW": 0,
+    "target_people": 60,
+    "target_images": 200,
+    "target_boundary_candidates": 40
+  },
+  "holdout": {
+    "locked": false,
+    "ok": false
+  },
+  "audit_ok": true
+}

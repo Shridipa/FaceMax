@@ -1,0 +1,998 @@
+{
+  "title": "FACEMAXX MODEL FAIRNESS REPORT",
+  "generated_for": "all conditions",
+  "total_images": 2000,
+  "scored_images": 2000,
+  "distribution": {
+    "skin_depth": {
+      "total": 2000,
+      "counts": {
+        "Very Fair": 436,
+        "Fair": 458,
+        "Light": 298,
+        "Light-Medium": 304,
+        "Medium": 230,
+        "Medium-Deep": 162,
+        "Deep": 80,
+        "Very Deep": 32
+      },
+      "shares": {
+        "Very Fair": 0.218,
+        "Fair": 0.229,
+        "Light": 0.149,
+        "Light-Medium": 0.152,
+        "Medium": 0.115,
+        "Medium-Deep": 0.081,
+        "Deep": 0.04,
+        "Very Deep": 0.016
+      }
+    },
+    "undertone": {
+      "total": 2000,
+      "counts": {
+        "Cool": 376,
+        "Neutral-Cool": 344,
+        "Neutral": 498,
+        "Neutral-Warm": 380,
+        "Warm": 292,
+        "Olive": 110
+      },
+      "shares": {
+        "Cool": 0.188,
+        "Neutral-Cool": 0.172,
+        "Neutral": 0.249,
+        "Neutral-Warm": 0.19,
+        "Warm": 0.146,
+        "Olive": 0.055
+      }
+    },
+    "contrast": {
+      "total": 2000,
+      "counts": {},
+      "shares": {}
+    },
+    "chroma": {
+      "total": 2000,
+      "counts": {},
+      "shares": {}
+    },
+    "lighting": {
+      "total": 2000,
+      "counts": {},
+      "shares": {}
+    },
+    "camera": {
+      "total": 2000,
+      "counts": {},
+      "shares": {}
+    },
+    "image_quality": {
+      "total": 2000,
+      "counts": {
+        "Excellent": 406,
+        "Good": 690,
+        "Acceptable": 484,
+        "Poor": 323,
+        "Very Poor": 97
+      },
+      "shares": {
+        "Excellent": 0.203,
+        "Good": 0.345,
+        "Acceptable": 0.242,
+        "Poor": 0.1615,
+        "Very Poor": 0.0485
+      }
+    },
+    "source": {
+      "total": 2000,
+      "counts": {
+        "Studio": 99,
+        "Phone selfie": 1706,
+        "Webcam": 195
+      },
+      "shares": {
+        "Studio": 0.0495,
+        "Phone selfie": 0.853,
+        "Webcam": 0.0975
+      }
+    },
+    "makeup": {
+      "total": 2000,
+      "counts": {
+        "No makeup": 864,
+        "Light makeup": 437,
+        "Heavy makeup": 191,
+        "Filter": 306,
+        "Skin smoothing": 202
+      },
+      "shares": {
+        "No makeup": 0.432,
+        "Light makeup": 0.2185,
+        "Heavy makeup": 0.0955,
+        "Filter": 0.153,
+        "Skin smoothing": 0.101
+      }
+    },
+    "season_primary": {
+      "total": 2000,
+      "counts": {
+        "Light Spring": 106,
+        "Bright Spring": 112,
+        "Warm Spring": 102,
+        "Light Summer": 124,
+        "Soft Summer": 130,
+        "Cool Summer": 72,
+        "Soft Autumn": 190,
+        "Warm Autumn": 230,
+        "Deep Autumn": 316,
+        "Light Winter": 72,
+        "Cool Winter": 240,
+        "Deep Winter": 306
+      },
+      "shares": {
+        "Light Spring": 0.053,
+        "Bright Spring": 0.056,
+        "Warm Spring": 0.051,
+        "Light Summer": 0.062,
+        "Soft Summer": 0.065,
+        "Cool Summer": 0.036,
+        "Soft Autumn": 0.095,
+        "Warm Autumn": 0.115,
+        "Deep Autumn": 0.158,
+        "Light Winter": 0.036,
+        "Cool Winter": 0.12,
+        "Deep Winter": 0.153
+      }
+    }
+  },
+  "representation_flags": [
+    "skin_depth/Very Deep: 32 images (1.6%) \u2014 under-represented (need \u226530, \u22653%)"
+  ],
+  "imbalance_ratios": {
+    "skin_depth": 14.3125,
+    "season_primary": 4.388888888888889,
+    "source": 17.232323232323232
+  },
+  "schema": {
+    "missing_required": [],
+    "duplicate_images": 0,
+    "unknown_values": {}
+  },
+  "leakage": {
+    "leaked_person_ids": [],
+    "pairs": [],
+    "clean": true,
+    "person_counts": {
+      "test": 155,
+      "train": 704,
+      "val": 141
+    }
+  },
+  "overall": {
+    "accuracy": 0.604,
+    "macro_f1": 0.5991453509292396,
+    "balanced_accuracy": 0.6005858992120361,
+    "top2_accuracy": 0.974,
+    "n": 2000
+  },
+  "subgroups": {
+    "skin_depth": {
+      "performance": {
+        "Very Fair": {
+          "n": 436.0,
+          "accuracy": 0.5963302752293578,
+          "macro_f1": 0.5863258115467239,
+          "small_n": 0.0
+        },
+        "Fair": {
+          "n": 458.0,
+          "accuracy": 0.6462882096069869,
+          "macro_f1": 0.6436123433198746,
+          "small_n": 0.0
+        },
+        "Light": {
+          "n": 298.0,
+          "accuracy": 0.5704697986577181,
+          "macro_f1": 0.5624171994566761,
+          "small_n": 0.0
+        },
+        "Light-Medium": {
+          "n": 304.0,
+          "accuracy": 0.6414473684210527,
+          "macro_f1": 0.6267667327396725,
+          "small_n": 0.0
+        },
+        "Medium": {
+          "n": 230.0,
+          "accuracy": 0.6304347826086957,
+          "macro_f1": 0.614734399410558,
+          "small_n": 0.0
+        },
+        "Medium-Deep": {
+          "n": 162.0,
+          "accuracy": 0.5740740740740741,
+          "macro_f1": 0.4724336649580247,
+          "small_n": 0.0
+        },
+        "Deep": {
+          "n": 80.0,
+          "accuracy": 0.45,
+          "macro_f1": 0.4360329485329486,
+          "small_n": 0.0
+        },
+        "Very Deep": {
+          "n": 32.0,
+          "accuracy": 0.40625,
+          "macro_f1": 0.4276154401154401,
+          "small_n": 0.0
+        }
+      },
+      "worst_best": {
+        "worst_group": "Very Deep",
+        "worst": 0.40625,
+        "best_group": "Fair",
+        "best": 0.6462882096069869,
+        "gap": 0.24003820960698685
+      },
+      "verdict": "serious problem"
+    },
+    "undertone": {
+      "performance": {
+        "Cool": {
+          "n": 376.0,
+          "accuracy": 0.6196808510638298,
+          "macro_f1": 0.6178940463531742,
+          "small_n": 0.0
+        },
+        "Neutral-Cool": {
+          "n": 344.0,
+          "accuracy": 0.5959302325581395,
+          "macro_f1": 0.6123806367163412,
+          "small_n": 0.0
+        },
+        "Neutral": {
+          "n": 498.0,
+          "accuracy": 0.6024096385542169,
+          "macro_f1": 0.5808170835980127,
+          "small_n": 0.0
+        },
+        "Neutral-Warm": {
+          "n": 380.0,
+          "accuracy": 0.5973684210526315,
+          "macro_f1": 0.5967848902279058,
+          "small_n": 0.0
+        },
+        "Warm": {
+          "n": 292.0,
+          "accuracy": 0.6335616438356164,
+          "macro_f1": 0.614742384048527,
+          "small_n": 0.0
+        },
+        "Olive": {
+          "n": 110.0,
+          "accuracy": 0.5272727272727272,
+          "macro_f1": 0.4743749766994549,
+          "small_n": 0.0
+        }
+      },
+      "worst_best": {
+        "worst_group": "Olive",
+        "worst": 0.5272727272727272,
+        "best_group": "Warm",
+        "best": 0.6335616438356164,
+        "gap": 0.10628891656288919
+      },
+      "verdict": "serious problem"
+    },
+    "contrast": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "chroma": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "lighting": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "camera": {
+      "performance": {},
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "image_quality": {
+      "performance": {
+        "Excellent": {
+          "n": 406.0,
+          "accuracy": 0.6527093596059114,
+          "macro_f1": 0.6280946985406862,
+          "small_n": 0.0
+        },
+        "Good": {
+          "n": 690.0,
+          "accuracy": 0.6869565217391305,
+          "macro_f1": 0.6672117671349868,
+          "small_n": 0.0
+        },
+        "Acceptable": {
+          "n": 484.0,
+          "accuracy": 0.6363636363636364,
+          "macro_f1": 0.6368992750870502,
+          "small_n": 0.0
+        },
+        "Poor": {
+          "n": 323.0,
+          "accuracy": 0.43034055727554177,
+          "macro_f1": 0.42499477791306156,
+          "small_n": 0.0
+        },
+        "Very Poor": {
+          "n": 97.0,
+          "accuracy": 0.2268041237113402,
+          "macro_f1": 0.15737132397749456,
+          "small_n": 0.0
+        }
+      },
+      "worst_best": {
+        "worst_group": "Very Poor",
+        "worst": 0.2268041237113402,
+        "best_group": "Good",
+        "best": 0.6869565217391305,
+        "gap": 0.4601523980277903
+      },
+      "verdict": "serious problem"
+    },
+    "source": {
+      "performance": {
+        "Studio": {
+          "n": 99.0,
+          "accuracy": 0.6868686868686869,
+          "macro_f1": 0.655076533382985,
+          "small_n": 0.0
+        },
+        "Phone selfie": {
+          "n": 1706.0,
+          "accuracy": 0.6096131301289566,
+          "macro_f1": 0.6081979031888596,
+          "small_n": 0.0
+        },
+        "Webcam": {
+          "n": 195.0,
+          "accuracy": 0.5128205128205128,
+          "macro_f1": 0.44716794424681444,
+          "small_n": 0.0
+        }
+      },
+      "worst_best": {
+        "worst_group": "Webcam",
+        "worst": 0.5128205128205128,
+        "best_group": "Studio",
+        "best": 0.6868686868686869,
+        "gap": 0.17404817404817408
+      },
+      "verdict": "serious problem"
+    },
+    "makeup": {
+      "performance": {
+        "No makeup": {
+          "n": 864.0,
+          "accuracy": 0.6516203703703703,
+          "macro_f1": 0.6436788461259345,
+          "small_n": 0.0
+        },
+        "Light makeup": {
+          "n": 437.0,
+          "accuracy": 0.6567505720823799,
+          "macro_f1": 0.6386819724438815,
+          "small_n": 0.0
+        },
+        "Heavy makeup": {
+          "n": 191.0,
+          "accuracy": 0.47643979057591623,
+          "macro_f1": 0.4825044875661202,
+          "small_n": 0.0
+        },
+        "Filter": {
+          "n": 306.0,
+          "accuracy": 0.5,
+          "macro_f1": 0.4968356300477625,
+          "small_n": 0.0
+        },
+        "Skin smoothing": {
+          "n": 202.0,
+          "accuracy": 0.5643564356435643,
+          "macro_f1": 0.5634424914610673,
+          "small_n": 0.0
+        }
+      },
+      "worst_best": {
+        "worst_group": "Heavy makeup",
+        "worst": 0.47643979057591623,
+        "best_group": "Light makeup",
+        "best": 0.6567505720823799,
+        "gap": 0.18031078150646362
+      },
+      "verdict": "serious problem"
+    },
+    "season_primary": {
+      "performance": {
+        "Light Spring": {
+          "n": 106.0,
+          "accuracy": 0.5566037735849056,
+          "macro_f1": 0.7151515151515151,
+          "small_n": 0.0
+        },
+        "Bright Spring": {
+          "n": 112.0,
+          "accuracy": 0.5625,
+          "macro_f1": 0.72,
+          "small_n": 0.0
+        },
+        "Warm Spring": {
+          "n": 102.0,
+          "accuracy": 0.6078431372549019,
+          "macro_f1": 0.7560975609756097,
+          "small_n": 0.0
+        },
+        "Light Summer": {
+          "n": 124.0,
+          "accuracy": 0.5806451612903226,
+          "macro_f1": 0.7346938775510204,
+          "small_n": 0.0
+        },
+        "Soft Summer": {
+          "n": 130.0,
+          "accuracy": 0.7,
+          "macro_f1": 0.8235294117647058,
+          "small_n": 0.0
+        },
+        "Cool Summer": {
+          "n": 72.0,
+          "accuracy": 0.5833333333333334,
+          "macro_f1": 0.7368421052631579,
+          "small_n": 0.0
+        },
+        "Soft Autumn": {
+          "n": 190.0,
+          "accuracy": 0.6052631578947368,
+          "macro_f1": 0.7540983606557378,
+          "small_n": 0.0
+        },
+        "Warm Autumn": {
+          "n": 230.0,
+          "accuracy": 0.6,
+          "macro_f1": 0.7499999999999999,
+          "small_n": 0.0
+        },
+        "Deep Autumn": {
+          "n": 316.0,
+          "accuracy": 0.6582278481012658,
+          "macro_f1": 0.7938931297709924,
+          "small_n": 0.0
+        },
+        "Light Winter": {
+          "n": 72.0,
+          "accuracy": 0.5833333333333334,
+          "macro_f1": 0.7368421052631579,
+          "small_n": 0.0
+        },
+        "Cool Winter": {
+          "n": 240.0,
+          "accuracy": 0.6333333333333333,
+          "macro_f1": 0.7755102040816326,
+          "small_n": 0.0
+        },
+        "Deep Winter": {
+          "n": 306.0,
+          "accuracy": 0.5359477124183006,
+          "macro_f1": 0.6978723404255319,
+          "small_n": 0.0
+        }
+      },
+      "worst_best": {
+        "worst_group": "Deep Winter",
+        "worst": 0.5359477124183006,
+        "best_group": "Soft Summer",
+        "best": 0.7,
+        "gap": 0.16405228758169932
+      },
+      "verdict": "serious problem"
+    }
+  },
+  "confusion": {
+    "labels": [
+      "Bright Spring",
+      "Cool Summer",
+      "Cool Winter",
+      "Deep Autumn",
+      "Deep Winter",
+      "Light Spring",
+      "Light Summer",
+      "Light Winter",
+      "Soft Autumn",
+      "Soft Summer",
+      "Warm Autumn",
+      "Warm Spring"
+    ],
+    "matrix": [
+      [
+        63,
+        0,
+        0,
+        0,
+        0,
+        27,
+        0,
+        0,
+        0,
+        0,
+        0,
+        22
+      ],
+      [
+        0,
+        42,
+        11,
+        1,
+        0,
+        0,
+        0,
+        0,
+        2,
+        16,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        152,
+        9,
+        38,
+        0,
+        0,
+        38,
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        208,
+        62,
+        0,
+        0,
+        0,
+        0,
+        2,
+        44,
+        0
+      ],
+      [
+        0,
+        0,
+        65,
+        77,
+        164,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        23,
+        0,
+        0,
+        0,
+        0,
+        59,
+        23,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        23,
+        72,
+        0,
+        6,
+        23,
+        0,
+        0
+      ],
+      [
+        8,
+        0,
+        21,
+        1,
+        0,
+        0,
+        0,
+        42,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        115,
+        43,
+        32,
+        0
+      ],
+      [
+        0,
+        19,
+        0,
+        0,
+        0,
+        0,
+        16,
+        0,
+        4,
+        91,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        39,
+        0,
+        0,
+        0,
+        0,
+        42,
+        11,
+        138,
+        0
+      ],
+      [
+        20,
+        0,
+        0,
+        0,
+        0,
+        18,
+        2,
+        0,
+        0,
+        0,
+        0,
+        62
+      ]
+    ],
+    "top_confusions": [
+      {
+        "actual": "Light Winter",
+        "predicted": "Cool Winter",
+        "rate": 0.2916666666666667,
+        "count": 21
+      },
+      {
+        "actual": "Deep Winter",
+        "predicted": "Deep Autumn",
+        "rate": 0.25163398692810457,
+        "count": 77
+      },
+      {
+        "actual": "Bright Spring",
+        "predicted": "Light Spring",
+        "rate": 0.24107142857142858,
+        "count": 27
+      },
+      {
+        "actual": "Soft Autumn",
+        "predicted": "Soft Summer",
+        "rate": 0.22631578947368422,
+        "count": 43
+      },
+      {
+        "actual": "Cool Summer",
+        "predicted": "Soft Summer",
+        "rate": 0.2222222222222222,
+        "count": 16
+      },
+      {
+        "actual": "Light Spring",
+        "predicted": "Bright Spring",
+        "rate": 0.2169811320754717,
+        "count": 23
+      },
+      {
+        "actual": "Light Spring",
+        "predicted": "Light Summer",
+        "rate": 0.2169811320754717,
+        "count": 23
+      },
+      {
+        "actual": "Deep Winter",
+        "predicted": "Cool Winter",
+        "rate": 0.21241830065359477,
+        "count": 65
+      },
+      {
+        "actual": "Bright Spring",
+        "predicted": "Warm Spring",
+        "rate": 0.19642857142857142,
+        "count": 22
+      },
+      {
+        "actual": "Deep Autumn",
+        "predicted": "Deep Winter",
+        "rate": 0.1962025316455696,
+        "count": 62
+      },
+      {
+        "actual": "Warm Spring",
+        "predicted": "Bright Spring",
+        "rate": 0.19607843137254902,
+        "count": 20
+      },
+      {
+        "actual": "Light Summer",
+        "predicted": "Light Spring",
+        "rate": 0.18548387096774194,
+        "count": 23
+      }
+    ]
+  },
+  "label_quality": {
+    "agreement_distribution": {
+      "unanimous": 1809,
+      "majority": 191,
+      "split": 0
+    },
+    "ambiguous_count": 191,
+    "ambiguous_examples": [
+      "IMG000001",
+      "IMG000013",
+      "IMG000033",
+      "IMG000034",
+      "IMG000035",
+      "IMG000036",
+      "IMG000045",
+      "IMG000046",
+      "IMG000059",
+      "IMG000060",
+      "IMG000074",
+      "IMG000083",
+      "IMG000084",
+      "IMG000109",
+      "IMG000110",
+      "IMG000125",
+      "IMG000126",
+      "IMG000159",
+      "IMG000160",
+      "IMG000187"
+    ],
+    "season_boundaries": [
+      {
+        "primary": "Deep Autumn",
+        "secondary": "Deep Winter",
+        "count": 168
+      },
+      {
+        "primary": "Deep Winter",
+        "secondary": "Cool Winter",
+        "count": 160
+      },
+      {
+        "primary": "Deep Autumn",
+        "secondary": "Warm Autumn",
+        "count": 148
+      },
+      {
+        "primary": "Deep Winter",
+        "secondary": "Deep Autumn",
+        "count": 146
+      },
+      {
+        "primary": "Cool Winter",
+        "secondary": "Deep Winter",
+        "count": 131
+      },
+      {
+        "primary": "Warm Autumn",
+        "secondary": "Soft Autumn",
+        "count": 117
+      },
+      {
+        "primary": "Warm Autumn",
+        "secondary": "Deep Autumn",
+        "count": 113
+      },
+      {
+        "primary": "Cool Winter",
+        "secondary": "Light Winter",
+        "count": 109
+      },
+      {
+        "primary": "Soft Autumn",
+        "secondary": "Warm Autumn",
+        "count": 100
+      },
+      {
+        "primary": "Soft Autumn",
+        "secondary": "Soft Summer",
+        "count": 90
+      }
+    ],
+    "truth_source_comparison": {
+      "majority_label": 0.5915,
+      "annotator_1": 0.584
+    }
+  },
+  "robustness": {
+    "lighting": {
+      "Natural": {
+        "n": 1130.0,
+        "accuracy": 0.6716814159292035,
+        "macro_f1": 0.672536624068297,
+        "top2_stability": 1.0
+      },
+      "Indoor warm": {
+        "n": 339.0,
+        "accuracy": 0.5221238938053098,
+        "macro_f1": 0.4993301136634795,
+        "top2_stability": 0.9203539823008849
+      },
+      "Indoor cool": {
+        "n": 235.0,
+        "accuracy": 0.5446808510638298,
+        "macro_f1": 0.547024337412415,
+        "top2_stability": 0.8936170212765957
+      },
+      "Low light": {
+        "n": 166.0,
+        "accuracy": 0.43373493975903615,
+        "macro_f1": 0.3797988832790511,
+        "top2_stability": 1.0
+      },
+      "Mixed": {
+        "n": 92.0,
+        "accuracy": 0.6195652173913043,
+        "macro_f1": 0.576581605528974,
+        "top2_stability": 1.0
+      },
+      "Overexposed": {
+        "n": 38.0,
+        "accuracy": 0.39473684210526316,
+        "macro_f1": 0.41166267942583734,
+        "top2_stability": 1.0
+      }
+    },
+    "camera": {
+      "iPhone": {
+        "n": 707.0,
+        "accuracy": 0.6195190947666195,
+        "macro_f1": 0.6194639694906657,
+        "top2_stability": 0.9660537482319661
+      },
+      "Samsung": {
+        "n": 442.0,
+        "accuracy": 0.5904977375565611,
+        "macro_f1": 0.5807500995825493,
+        "top2_stability": 0.9773755656108597
+      },
+      "Budget Android": {
+        "n": 232.0,
+        "accuracy": 0.5775862068965517,
+        "macro_f1": 0.585798912813518,
+        "top2_stability": 0.978448275862069
+      },
+      "DSLR": {
+        "n": 99.0,
+        "accuracy": 0.6868686868686869,
+        "macro_f1": 0.655076533382985,
+        "top2_stability": 0.9797979797979798
+      },
+      "Pixel": {
+        "n": 325.0,
+        "accuracy": 0.6369230769230769,
+        "macro_f1": 0.6348267659788261,
+        "top2_stability": 0.9876923076923076
+      },
+      "Webcam": {
+        "n": 195.0,
+        "accuracy": 0.5128205128205128,
+        "macro_f1": 0.44716794424681444,
+        "top2_stability": 0.9641025641025641
+      }
+    },
+    "makeup_filters": {
+      "No makeup": {
+        "n": 864.0,
+        "accuracy": 0.6516203703703703,
+        "macro_f1": 0.6436788461259345,
+        "top2_stability": 0.9664351851851852
+      },
+      "Light makeup": {
+        "n": 437.0,
+        "accuracy": 0.6567505720823799,
+        "macro_f1": 0.6386819724438815,
+        "top2_stability": 0.977116704805492
+      },
+      "Heavy makeup": {
+        "n": 191.0,
+        "accuracy": 0.47643979057591623,
+        "macro_f1": 0.4825044875661202,
+        "top2_stability": 0.9895287958115183
+      },
+      "Filter": {
+        "n": 306.0,
+        "accuracy": 0.5,
+        "macro_f1": 0.4968356300477625,
+        "top2_stability": 0.9803921568627451
+      },
+      "Skin smoothing": {
+        "n": 202.0,
+        "accuracy": 0.5643564356435643,
+        "macro_f1": 0.5634424914610673,
+        "top2_stability": 0.9752475247524752
+      }
+    },
+    "image_quality": {
+      "Excellent": {
+        "n": 406.0,
+        "accuracy": 0.6527093596059114,
+        "macro_f1": 0.6280946985406862,
+        "top2_stability": 0.9753694581280788
+      },
+      "Acceptable": {
+        "n": 484.0,
+        "accuracy": 0.6363636363636364,
+        "macro_f1": 0.6368992750870502,
+        "top2_stability": 0.981404958677686
+      },
+      "Good": {
+        "n": 690.0,
+        "accuracy": 0.6869565217391305,
+        "macro_f1": 0.6672117671349868,
+        "top2_stability": 0.9666666666666667
+      },
+      "Poor": {
+        "n": 323.0,
+        "accuracy": 0.43034055727554177,
+        "macro_f1": 0.42499477791306156,
+        "top2_stability": 0.9721362229102167
+      },
+      "Very Poor": {
+        "n": 97.0,
+        "accuracy": 0.2268041237113402,
+        "macro_f1": 0.15737132397749456,
+        "top2_stability": 0.9896907216494846
+      }
+    },
+    "recommended_quality_floor": {
+      "bucket": "Poor",
+      "message": "Predictions below 'Poor' quality fall under 75% accuracy \u2014 show a low-confidence warning instead of a firm season."
+    }
+  }
+}
