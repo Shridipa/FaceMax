@@ -14,10 +14,11 @@ export async function analyzeColours(base64Image: string): Promise<ColourAnalysi
     throw new Error(errorData.error || "Analysis failed. Please try again.");
   }
 
-  const data: ColourAnalysisResponse = await response.json();
+  const data: ColourAnalysisResponse & { fallback?: boolean } = await response.json();
 
-  if (!data.ok) {
-    throw new Error(data.error || "Analysis could not complete.");
+  // Handle stub/fallback responses (e.g. Vercel deployment without Python backend)
+  if (data.fallback || !data.ok) {
+    throw new Error(data.error || "Colour analysis is not available in this deployment. Please run locally with `npm run dev`.");
   }
 
   return data;
