@@ -45,6 +45,33 @@ _MODELS_CACHE: Dict[str, Any] = {}
 MAX_IMAGE_BYTES = 8 * 1024 * 1024  # reject absurd payloads early
 
 
+def _preload_libgomp() -> None:
+    """dlopen the bundled GNU OpenMP runtime before sklearn/lightgbm load.
+
+    Vercel's Amazon Linux runtime does not ship libgomp.so.1, which the
+    scikit-learn / lightgbm manylinux wheels depend on. We bundle a portable
+    copy in api/lib/ and load it with RTLD_GLOBAL so joblib.load() works.
+    """
+    if sys.platform != "linux":
+        return
+    import ctypes
+
+    candidates = (
+        _THIS_DIR / "lib" / "libgomp.so.1",
+        Path(os.getcwd()) / "api" / "lib" / "libgomp.so.1",
+    )
+    for candidate in candidates:
+        if candidate.is_file():
+            try:
+                ctypes.CDLL(str(candidate), mode=ctypes.RTLD_GLOBAL)
+                return
+            except OSError:
+                traceback.print_exc()
+
+
+_preload_libgomp()
+
+
 # ---------------------------------------------------------------------------
 # Model loading (cached across warm invocations)
 # ---------------------------------------------------------------------------
