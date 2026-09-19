@@ -286,6 +286,16 @@ def cmd_train(args) -> int:
         best = cv.get("best")
         best_mean = cv.get("candidates", {}).get(best, {}).get("mean")
         print(f"  best baseline: {best} (CV {config.get('selection_metric')}={best_mean:.3f})")
+        # Evidence, not just a name (spec #58): runner-up, margin, audit flags.
+        reason = result.get("selection_reason") or {}
+        if reason.get("runner_up"):
+            print(
+                f"  selection: {reason['selected']} over {reason['runner_up']} "
+                f"(margin {reason.get('margin')})"
+            )
+        audit = result.get("feature_audit") or {}
+        if audit.get("flagged"):
+            print(f"  feature audit flags: {', '.join(audit['flagged'])}")
         if result.get("season_approaches"):
             for name, info in result["season_approaches"].items():
                 mean = info.get("mean")
@@ -626,6 +636,26 @@ def cmd_predict(args) -> int:
 
     features = ext.as_feature_row()
 
+    # 1b. Quality gate (spec #33/#34): refuse to colour-analyse images whose
+    # extraction is dominated by cast/clipping/mask failure - a warning is
+    # more honest than a confident wrong season.
+    from .models import quality_gate
+
+    gate = quality_gate(features)
+    if not gate["ok"]:
+        print(
+            json.dumps(
+                {
+                    "ok": False,
+                    "error": "Photo quality is too low for a reliable analysis.",
+                    "quality_problems": gate["problems"],
+                    "retry_hint": "Use diffuse natural light, avoid backlight, fill the frame with the face.",
+                }
+            ),
+            file=sys.stdout,
+        )
+        return 1
+
     # 2. Load trained models if available
     root = Path(args.root)
     model_dir = Path(args.model_dir) if args.model_dir else root / "models"
@@ -651,8 +681,15 @@ def cmd_predict(args) -> int:
                     predictor = joblib.load(model_path)
                     # SeasonPredictor has predict_row; raw pipeline has predict_proba
                     if hasattr(predictor, "predict_row"):
+                        if hasattr(predictor, "verify_feature_schema"):
+                            predictor.verify_feature_schema(features)
                         result = predictor.predict_row(features)
-                        axes_predictions[axis] = result["prediction"]
+                        if result.get("abstained"):
+                            # spec #53: uncertainty is surfaced, never faked
+                            season_primary = ""
+                            season_secondary = result.get("prediction_secondary", "")
+                            season_confidence = float(result.get("prediction_confidence", 0.0))
+                        axes_predictions[axis] = result["prediction"] or result.get("prediction_secondary", "")
                         axes_probabilities[axis] = result.get("probabilities", {result["prediction"]: 1.0})
                     else:
                         X = feature_matrix([features])

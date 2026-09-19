@@ -1,0 +1,103 @@
+{
+  "worst_classes": [
+    {
+      "label": "Neutral-Cool",
+      "f1": 0.4,
+      "recall": 0.25,
+      "precision": 1.0,
+      "support": 4
+    },
+    {
+      "label": "Neutral",
+      "f1": 0.6667,
+      "recall": 1.0,
+      "precision": 0.5,
+      "support": 2
+    },
+    {
+      "label": "Warm",
+      "f1": 0.9524,
+      "recall": 1.0,
+      "precision": 0.9091,
+      "support": 10
+    }
+  ],
+  "worst_subgroups": [
+    {
+      "attribute": "skin_depth",
+      "group": "Very Fair",
+      "accuracy": 0.5,
+      "macro_f1": 0.2667,
+      "n_images": 4,
+      "small_n": true
+    },
+    {
+      "attribute": "skin_depth",
+      "group": "Light",
+      "accuracy": 0.5,
+      "macro_f1": 0.3333,
+      "n_images": 2,
+      "small_n": true
+    },
+    {
+      "attribute": "lighting_type",
+      "group": "Indoor warm",
+      "accuracy": 0.6667,
+      "macro_f1": 0.4,
+      "n_images": 3,
+      "small_n": true
+    },
+    {
+      "attribute": "lighting_type",
+      "group": "Indoor cool",
+      "accuracy": 0.7143,
+      "macro_f1": 0.5,
+      "n_images": 7,
+      "small_n": true
+    },
+    {
+      "attribute": "camera_type",
+      "group": "DSLR",
+      "accuracy": 0.8125,
+      "macro_f1": 0.673,
+      "n_images": 16,
+      "small_n": true
+    },
+    {
+      "attribute": "makeup",
+      "group": "No makeup",
+      "accuracy": 0.8125,
+      "macro_f1": 0.673,
+      "n_images": 16,
+      "small_n": true
+    },
+    {
+      "attribute": "image_quality",
+      "group": "Good",
+      "accuracy": 0.8125,
+      "macro_f1": 0.673,
+      "n_images": 16,
+      "small_n": true
+    },
+    {
+      "attribute": "source",
+      "group": "Synthetic",
+      "accuracy": 0.8125,
+      "macro_f1": 0.673,
+      "n_images": 16,
+      "small_n": true
+    }
+  ],
+  "largest_confusion_pairs": [
+    {
+      "true": "Neutral-Cool",
+      "predicted": "Neutral",
+      "count": 2
+    },
+    {
+      "true": "Neutral-Cool",
+      "predicted": "Warm",
+      "count": 1
+    }
+  ]
+}

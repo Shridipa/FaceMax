@@ -10,22 +10,21 @@ prediction success:      79/79
 
 season distribution (demo predictions):
   Deep Autumn      35
-  Warm Spring      12
+  Warm Spring      13
   Bright Spring    12
   Soft Summer      6
   Light Spring     5
-  Cool Winter      3
-  Soft Autumn      2
+  Soft Autumn      3
+  Cool Winter      2
   Warm Autumn      2
   Deep Winter      1
-  Light Summer     1
 
 extraction failures:
   insufficient_skin_pixels: 1
 
 sample extracted features (first 3, straight from pixels):
-  SYN00001: L*=43.9 a*=5.0 b*=14.0 ITA=-23.5 undertone_proxy=9.0 contrast=22.4 -> Deep Autumn (1.00)
-  SYN00002: L*=74.5 a*=1.0 b*=10.0 ITA=67.8 undertone_proxy=9.0 contrast=34.1 -> Warm Spring (1.00)
+  SYN00001: L*=43.9 a*=5.0 b*=14.0 ITA=-23.5 undertone_proxy=9.0 contrast=22.4 -> Deep Autumn (0.99)
+  SYN00002: L*=74.5 a*=1.0 b*=10.0 ITA=67.8 undertone_proxy=9.0 contrast=34.1 -> Warm Spring (0.97)
   SYN00003: L*=43.5 a*=5.0 b*=15.0 ITA=-23.3 undertone_proxy=10.0 contrast=21.6 -> Deep Autumn (1.00)
 
 WARNING: demo statistics describe pipeline wiring, not model quality. Production fairness evaluation requires real, person-grouped, annotated data.

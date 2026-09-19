@@ -1,5 +1,5 @@
 {
-  "feature_version": "facemax-color-features-v1",
+  "feature_version": "facemax-color-features-v2",
   "feature_columns": [
     "feat_skin_L",
     "feat_skin_a",
@@ -9,12 +9,19 @@
     "feat_olive_proxy",
     "feat_chroma_proxy",
     "feat_depth_proxy",
+    "feat_skin_hue",
     "feat_hair_L",
     "feat_eye_L",
     "feat_contrast_proxy",
+    "feat_skin_region_count",
+    "feat_skin_L_spread",
+    "feat_skin_a_spread",
+    "feat_skin_b_spread",
     "feat_wb_b_minus_a",
     "feat_grey_world_shift",
-    "feat_brightness"
+    "feat_brightness",
+    "feat_highlight_clip_frac",
+    "feat_shadow_clip_frac"
   ],
   "leakage_audit": "canonical feat_* columns only; labels/annotator columns rejected by audit_feature_columns"
 }

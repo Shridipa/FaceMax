@@ -1,0 +1,226 @@
+{
+  "n_rows": 63,
+  "features": {
+    "feat_skin_L": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 21.5686,
+      "max": 81.9608,
+      "mean": 55.2661,
+      "std": 18.7175,
+      "flags": []
+    },
+    "feat_skin_a": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 1.0,
+      "max": 22.0,
+      "mean": 11.0476,
+      "std": 5.8789,
+      "flags": []
+    },
+    "feat_skin_b": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 2.0,
+      "max": 36.0,
+      "mean": 19.9603,
+      "std": 8.7497,
+      "flags": []
+    },
+    "feat_ita": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": -74.2845,
+      "max": 84.8421,
+      "mean": 10.5284,
+      "std": 43.3389,
+      "flags": []
+    },
+    "feat_undertone_proxy": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": -5.0,
+      "max": 19.0,
+      "mean": 8.9127,
+      "std": 6.0136,
+      "flags": []
+    },
+    "feat_olive_proxy": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 0.1,
+      "max": 3.5,
+      "mean": 0.671,
+      "std": 0.6115,
+      "flags": []
+    },
+    "feat_chroma_proxy": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 6.3246,
+      "max": 39.8121,
+      "mean": 23.1927,
+      "std": 9.6789,
+      "flags": []
+    },
+    "feat_depth_proxy": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 18.0392,
+      "max": 78.4314,
+      "mean": 44.7339,
+      "std": 18.7175,
+      "flags": []
+    },
+    "feat_skin_hue": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 15.9454,
+      "max": 84.2894,
+      "mean": 60.3373,
+      "std": 14.1949,
+      "flags": []
+    },
+    "feat_hair_L": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 21.5686,
+      "max": 41.1765,
+      "mean": 38.3505,
+      "std": 6.2928,
+      "flags": []
+    },
+    "feat_eye_L": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 20.7843,
+      "max": 81.5686,
+      "mean": 54.46,
+      "std": 18.7757,
+      "flags": []
+    },
+    "feat_contrast_proxy": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": -0.0,
+      "max": 41.1765,
+      "mean": 18.3473,
+      "std": 14.9193,
+      "flags": []
+    },
+    "feat_skin_region_count": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 4.0,
+      "max": 4.0,
+      "mean": 4.0,
+      "std": 0.0,
+      "flags": [
+        "constant"
+      ]
+    },
+    "feat_skin_L_spread": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 0.0,
+      "max": 6.6225,
+      "mean": 3.1774,
+      "std": 2.628,
+      "flags": []
+    },
+    "feat_skin_a_spread": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 0.0,
+      "max": 1.7321,
+      "mean": 0.5453,
+      "std": 0.5273,
+      "flags": []
+    },
+    "feat_skin_b_spread": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 0.0,
+      "max": 3.0311,
+      "mean": 0.9258,
+      "std": 0.8948,
+      "flags": []
+    },
+    "feat_wb_b_minus_a": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": -4.0,
+      "max": 19.0,
+      "mean": 8.873,
+      "std": 5.9934,
+      "flags": []
+    },
+    "feat_grey_world_shift": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 4.054,
+      "max": 42.5416,
+      "mean": 21.2916,
+      "std": 11.1418,
+      "flags": []
+    },
+    "feat_brightness": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 21.5686,
+      "max": 81.9608,
+      "mean": 55.2661,
+      "std": 18.7175,
+      "flags": []
+    },
+    "feat_highlight_clip_frac": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "std": 0.0,
+      "flags": [
+        "constant"
+      ]
+    },
+    "feat_shadow_clip_frac": {
+      "missing_pct": 0.0,
+      "invalid_count": 0,
+      "count": 63,
+      "min": 0.0,
+      "max": 0.0006,
+      "mean": 0.0,
+      "std": 0.0001,
+      "flags": [
+        "near_constant"
+      ]
+    }
+  },
+  "flagged": [
+    "feat_highlight_clip_frac",
+    "feat_shadow_clip_frac",
+    "feat_skin_region_count"
+  ]
+}

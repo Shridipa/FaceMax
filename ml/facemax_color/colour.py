@@ -70,14 +70,23 @@ class ExtractionResult:
     olive_proxy: float = float("nan")      # green-shift indicator (a* low vs b*)
     chroma_proxy: float = float("nan")     # saturation-ish (a*, b* magnitude)
     depth_proxy: float = float("nan")      # 100 - L*
+    skin_hue_deg: float = float("nan")     # CIELAB hue angle atan2(b*, a*) in degrees
     hair_L: float = float("nan")           # hair region luminance
     eye_L: float = float("nan")            # eye-region luminance
-    contrast_proxy: float = float("nan")   # hair/eye vs skin luminance spread
+    contrast_proxy: float = float("nan")   # skin minus min(hair, eye) luminance
+
+    # Multi-region skin statistics (variability flags shadow/makeup/extraction issues)
+    skin_region_count: int = 0             # how many regions produced usable samples
+    skin_L_spread: float = float("nan")    # std of region L* medians (uneven light)
+    skin_a_spread: float = float("nan")    # std of region a* medians
+    skin_b_spread: float = float("nan")    # std of region b* medians
 
     # Lighting / quality diagnostics (these feed the ROBUSTNESS sections)
     white_balance_b_minus_a: float = float("nan")  # >0 warm cast, <0 cool cast
     grey_world_shift: float = float("nan")         # magnitude of global colour cast
     brightness: float = float("nan")               # mean face L*
+    highlight_clip_frac: float = float("nan")      # share of face-box pixels ~255
+    shadow_clip_frac: float = float("nan")         # share of face-box pixels ~0
     exposure_flag: str = ""                        # ok | under | over
     face_fraction: float = float("nan")            # face box / image area
     face_box_source: str = "detector"              # detector | demo_fallback
@@ -94,12 +103,19 @@ class ExtractionResult:
             "feat_olive_proxy": self.olive_proxy,
             "feat_chroma_proxy": self.chroma_proxy,
             "feat_depth_proxy": self.depth_proxy,
+            "feat_skin_hue": self.skin_hue_deg,
             "feat_hair_L": self.hair_L,
             "feat_eye_L": self.eye_L,
             "feat_contrast_proxy": self.contrast_proxy,
+            "feat_skin_region_count": self.skin_region_count,
+            "feat_skin_L_spread": self.skin_L_spread,
+            "feat_skin_a_spread": self.skin_a_spread,
+            "feat_skin_b_spread": self.skin_b_spread,
             "feat_wb_b_minus_a": self.white_balance_b_minus_a,
             "feat_grey_world_shift": self.grey_world_shift,
             "feat_brightness": self.brightness,
+            "feat_highlight_clip_frac": self.highlight_clip_frac,
+            "feat_shadow_clip_frac": self.shadow_clip_frac,
             "feat_exposure_flag": self.exposure_flag,
             "feat_face_fraction": self.face_fraction,
             "feat_face_box_source": self.face_box_source,
@@ -210,11 +226,11 @@ def region_lab_samples(
         if sub_mask.sum() < REGION_PIXEL_MIN:
             continue
         pixels = sub_lab[sub_mask]
-        # Shadow/specular rejection per channel around joint median.
-        L = _mad_clean(pixels[:, 0])
-        keep_idx = np.abs(pixels[:, 0] - np.median(pixels[:, 0])) <= 1.5 * (
-            np.median(np.abs(pixels[:, 0] - np.median(pixels[:, 0]))) * 1.4826 + 1e-6
-        )
+        # Shadow/specular rejection around the region-median L* (keeps a* / b*
+        # of surviving pixels coherent; rejects shadow and highlight bands).
+        L_med = float(np.median(pixels[:, 0]))
+        L_mad = float(np.median(np.abs(pixels[:, 0] - L_med))) * 1.4826
+        keep_idx = np.abs(pixels[:, 0] - L_med) <= 1.5 * L_mad + 1e-6
         pixels = pixels[keep_idx]
         if len(pixels) < REGION_PIXEL_MIN:
             continue
@@ -224,6 +240,25 @@ def region_lab_samples(
             float(np.median(pixels[:, 2])),
         )
     return result
+
+
+def clipping_fractions(image_bgr: "np.ndarray", face_box: Tuple[int, int, int, int]) -> Tuple[float, float]:
+    """Share of face-box pixels at/next-to 0 (shadow) or 255 (highlight).
+
+    A cheap, model-usable proxy for exposure failure: a low-light photo has a
+    high shadow_clip_frac; a blown-out one a high highlight_clip_frac. These
+    feed the quality gate instead of silently colouring the predictions.
+    """
+    _require_cv2()
+    x, y, w, h = face_box
+    roi = image_bgr[y : y + h, x : x + w]
+    if roi.size == 0:
+        return float("nan"), float("nan")
+    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    total = float(gray.size)
+    shadow = float(np.count_nonzero(gray <= 5)) / total
+    highlight = float(np.count_nonzero(gray >= 250)) / total
+    return highlight, shadow
 
 
 def estimate_white_balance(image_bgr: "np.ndarray", face_box: Tuple[int, int, int, int]) -> Tuple[float, float]:
@@ -306,7 +341,7 @@ def extract_image(image_id: str, path: Path, fallback_box=None) -> ExtractionRes
             result.error = "regions_below_pixel_minimum"
             return result
 
-        # Global skin stats from all region pixels pooled.
+        # Global skin stats: median across region medians + region variability.
         all_L = np.array([lab[0] for lab in result.region_lab.values()])
         all_a = np.array([lab[1] for lab in result.region_lab.values()])
         all_b = np.array([lab[2] for lab in result.region_lab.values()])
@@ -315,6 +350,11 @@ def extract_image(image_id: str, path: Path, fallback_box=None) -> ExtractionRes
             float(np.median(all_a)),
             float(np.median(all_b)),
         )
+        result.skin_region_count = len(result.region_lab)
+        # Cross-region spread: uneven lighting / makeup / shadow shows up here.
+        result.skin_L_spread = float(np.std(all_L))
+        result.skin_a_spread = float(np.std(all_a))
+        result.skin_b_spread = float(np.std(all_b))
 
         # Derived colour-science features -------------------------------
         L, A, B = result.skin_L, result.skin_a, result.skin_b
@@ -325,6 +365,7 @@ def extract_image(image_id: str, path: Path, fallback_box=None) -> ExtractionRes
         result.olive_proxy = float(A / max(B, 1e-6))   # low a*/b* ratio = olive/green cast
         result.chroma_proxy = float(np.hypot(A, B))
         result.depth_proxy = float(100.0 - L)
+        result.skin_hue_deg = float(np.degrees(np.arctan2(B, A)) % 360.0)  # CIELAB hue angle
 
         hair_L, eye_L = hair_eye_luminance(image, box)
         result.hair_L, result.eye_L = hair_L, eye_L
@@ -335,6 +376,9 @@ def extract_image(image_id: str, path: Path, fallback_box=None) -> ExtractionRes
         wb, grey = estimate_white_balance(image, box)
         result.white_balance_b_minus_a = wb
         result.grey_world_shift = grey
+        hi_clip, sh_clip = clipping_fractions(image, box)
+        result.highlight_clip_frac = hi_clip
+        result.shadow_clip_frac = sh_clip
         result.brightness = L
         result.exposure_flag = "ok"
         if L < 35:

@@ -1,0 +1,117 @@
+{
+  "worst_classes": [
+    {
+      "label": "Medium",
+      "f1": 0.0,
+      "recall": 0.0,
+      "precision": 0.0,
+      "support": 2
+    },
+    {
+      "label": "Light",
+      "f1": 0.6667,
+      "recall": 0.5,
+      "precision": 1.0,
+      "support": 2
+    },
+    {
+      "label": "Very Fair",
+      "f1": 1.0,
+      "recall": 1.0,
+      "precision": 1.0,
+      "support": 4
+    },
+    {
+      "label": "Fair",
+      "f1": 1.0,
+      "recall": 1.0,
+      "precision": 1.0,
+      "support": 4
+    },
+    {
+      "label": "Deep",
+      "f1": 1.0,
+      "recall": 1.0,
+      "precision": 1.0,
+      "support": 4
+    }
+  ],
+  "worst_subgroups": [
+    {
+      "attribute": "skin_depth",
+      "group": "Medium",
+      "accuracy": 0.0,
+      "macro_f1": 0.0,
+      "n_images": 2,
+      "small_n": true
+    },
+    {
+      "attribute": "skin_depth",
+      "group": "Light",
+      "accuracy": 0.5,
+      "macro_f1": 0.3333,
+      "n_images": 2,
+      "small_n": true
+    },
+    {
+      "attribute": "lighting_type",
+      "group": "Low light",
+      "accuracy": 0.5,
+      "macro_f1": 0.3333,
+      "n_images": 2,
+      "small_n": true
+    },
+    {
+      "attribute": "lighting_type",
+      "group": "Natural",
+      "accuracy": 0.75,
+      "macro_f1": 0.5,
+      "n_images": 4,
+      "small_n": true
+    },
+    {
+      "attribute": "camera_type",
+      "group": "DSLR",
+      "accuracy": 0.8125,
+      "macro_f1": 0.5238,
+      "n_images": 16,
+      "small_n": true
+    },
+    {
+      "attribute": "makeup",
+      "group": "No makeup",
+      "accuracy": 0.8125,
+      "macro_f1": 0.5238,
+      "n_images": 16,
+      "small_n": true
+    },
+    {
+      "attribute": "image_quality",
+      "group": "Good",
+      "accuracy": 0.8125,
+      "macro_f1": 0.5238,
+      "n_images": 16,
+      "small_n": true
+    },
+    {
+      "attribute": "source",
+      "group": "Synthetic",
+      "accuracy": 0.8125,
+      "macro_f1": 0.5238,
+      "n_images": 16,
+      "small_n": true
+    }
+  ],
+  "largest_confusion_pairs": [
+    {
+      "true": "Medium",
+      "predicted": "Medium-Deep",
+      "count": 2
+    },
+    {
+      "true": "Light",
+      "predicted": "Light-Medium",
+      "count": 1
+    }
+  ]
+}

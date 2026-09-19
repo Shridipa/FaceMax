@@ -1,0 +1,36 @@
+DATA STATUS: SYNTHETIC DEMO - NOT A FACEMAXX PERFORMANCE BENCHMARK
+MODEL STATUS: DEMO/SYNTHETIC
+
+LOCKED HOLDOUT EVALUATION
+================================================================
+model:            undertone-lightgbm-v001  (target: undertone)
+evaluated:        2026-09-19 22:15:39
+holdout size:     16 images / 8 people
+
+accuracy=0.812  balanced_accuracy=0.750  top2_accuracy=0.938
+macro P/R/F1=0.402/0.375/0.337  weighted_f1=0.779
+
+per-class (support = holdout images):
+  label              prec    rec     f1  support
+  Cool              0.000  0.000  0.000        0
+  Neutral-Cool      1.000  0.250  0.400        4
+  Neutral           0.500  1.000  0.667        2
+  Neutral-Warm      0.000  0.000  0.000        0
+  Warm              0.909  1.000  0.952       10
+  Olive             0.000  0.000  0.000        0
+
+calibration (holdout): ECE=0.1888  Brier=0.3765
+
+robustness / subgroup performance (frozen evaluator verdicts):
+    small-sample subgroups (unstable, flagged not hidden): Deep, Fair, Light, Medium, Very Fair
+    small-sample subgroups (unstable, flagged not hidden): Indoor cool, Indoor warm, Low light, Natural
+    small-sample subgroups (unstable, flagged not hidden): DSLR
+    small-sample subgroups (unstable, flagged not hidden): No makeup
+    small-sample subgroups (unstable, flagged not hidden): Good
+    small-sample subgroups (unstable, flagged not hidden): Synthetic
+
+error analysis (worst first):
+  worst classes: Neutral-Cool(f1=0.40, n=4), Neutral(f1=0.67, n=2), Warm(f1=0.95, n=10)
+  largest confusion pairs: Neutral-Cool->Neutral(2), Neutral-Cool->Warm(1)
+
+the holdout was scored exactly once for this artifact; no tuning used it.

@@ -38,7 +38,14 @@ from facemax_bias.vocab import CHROMA_ORDER, CONTRAST_ORDER, SEASON_ORDER, SKIN_
 
 from .models import FEATURE_COLUMNS, ColourModelBundle, train_bundle
 from .readiness import SEASON_NEIGHBOURS
-from .training_data import TARGETS, TrainingData, LeakageError, audit_feature_columns, matrices
+from .training_data import (
+    TARGETS,
+    TrainingData,
+    LeakageError,
+    audit_feature_columns,
+    feature_audit,
+    matrices,
+)
 
 try:
     import joblib
@@ -48,7 +55,7 @@ except ImportError:  # pragma: no cover
 try:
     from sklearn.base import BaseEstimator, ClassifierMixin, clone
     from sklearn.calibration import CalibratedClassifierCV
-    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
     from sklearn.frozen import FrozenEstimator
     from sklearn.linear_model import LogisticRegression
     from sklearn.metrics import (
@@ -89,7 +96,9 @@ DEFAULT_CONFIG = {
     "selection_metric": "macro_f1",
     "class_weight": "balanced",
     "n_jobs": 1,  # 1 avoids joblib/loky pool storms on small tabular data; raise for large runs
-    "models": ["logreg", "random_forest", "xgboost", "lightgbm"],
+    "models": [
+        "logreg", "random_forest", "extra_trees", "xgboost", "lightgbm", "hist_gb",
+    ],
     "season_approaches": ["direct", "axis_first", "hierarchical"],
     "hierarchical_axis_backend": "random_forest",
     "calibration": {
@@ -146,7 +155,14 @@ def _sample_weights(y: "np.ndarray") -> "np.ndarray":
 
 
 def make_candidates(config: Dict[str, Any], seed: int) -> Dict[str, Any]:
-    """The four tabular baselines (missing optional deps are skipped with a note)."""
+    """The candidate registry (missing optional deps are skipped with a note).
+
+    hist_gb is sklearn's HistGradientBoostingClassifier - the same family as
+    the historical `hist_gb` line in old model_comparison artifacts, now a
+    first-class registered candidate (see the provenance header note in
+    models.render_comparison_header for why old comparison files cannot be
+    compared with these runs).
+    """
     requested = list(config.get("models") or DEFAULT_CONFIG["models"])
     cw = config.get("class_weight") or None
     n_jobs = int(config.get("n_jobs", 1))
@@ -160,6 +176,17 @@ def make_candidates(config: Dict[str, Any], seed: int) -> Dict[str, Any]:
         candidates["random_forest"] = RandomForestClassifier(
             n_estimators=300, min_samples_leaf=2, class_weight=cw,
             random_state=seed, n_jobs=n_jobs,
+        )
+    if "extra_trees" in requested:
+        candidates["extra_trees"] = ExtraTreesClassifier(
+            n_estimators=300, min_samples_leaf=2, class_weight=cw,
+            random_state=seed, n_jobs=n_jobs,
+        )
+    if "hist_gb" in requested:
+        from sklearn.ensemble import HistGradientBoostingClassifier
+
+        candidates["hist_gb"] = HistGradientBoostingClassifier(
+            max_iter=300, learning_rate=0.08, random_state=seed,
         )
     if "xgboost" in requested and XGBClassifier is not None:
         candidates["xgboost"] = _XGBAdapter(
@@ -182,7 +209,7 @@ def make_candidates(config: Dict[str, Any], seed: int) -> Dict[str, Any]:
 
 def _fit(name: str, model: Any, X: "np.ndarray", y: "np.ndarray") -> Any:
     """Fit with class-weight sample weights for models lacking class_weight."""
-    if name == "xgboost":
+    if name in ("xgboost", "hist_gb"):
         model.fit(X, y, sample_weight=_sample_weights(y))
     else:
         model.fit(X, y)
@@ -287,6 +314,18 @@ def compute_metrics(y_true: Sequence[str], y_pred: Sequence[str], labels: Sequen
     }
 
 
+def top2_accuracy(truth: Sequence[str], probs_rows: Sequence[Dict[str, float]]) -> float:
+    """Share of rows where the truth is one of the two highest-probability labels."""
+    if not truth:
+        return 0.0
+    hits = 0
+    for actual, probs in zip(truth, probs_rows):
+        ranked = sorted(probs.items(), key=lambda kv: -kv[1])[:2]
+        if any(label == actual for label, _ in ranked):
+            hits += 1
+    return float(hits / len(truth))
+
+
 def boundary_analysis(y_true: Sequence[str], y_pred: Sequence[str]) -> Dict[str, Any]:
     """Errors classified by seasonal-wheel distance (readiness.SEASON_NEIGHBOURS).
 
@@ -380,10 +419,12 @@ def grouped_cv(
     for name, template in candidates.items():
         fold_records: List[Dict[str, Any]] = []
         scores: List[float] = []
+        fold_metrics: List[Dict[str, Any]] = []
         for fold_idx, (tr, te) in enumerate(folds, 1):
             model = _fit(name, clone(template), X[tr], y[tr])
             pred = model.predict(X[te])
             metric = compute_metrics(y[te], pred, labels)
+            fold_metrics.append(metric)
             fold_records.append({
                 "fold": fold_idx,
                 "train_images": int(len(tr)),
@@ -402,6 +443,26 @@ def grouped_cv(
             "folds": fold_records,
             "mean": float(np.mean(scores)),
             "std": float(np.std(scores)),
+            # PERSISTED per-candidate aggregates (spec #41: never discard
+            # computed evaluation information) - means over the same folds.
+            "mean_accuracy": float(np.mean([m["accuracy"] for m in fold_metrics])),
+            "mean_balanced_accuracy": float(np.mean([m["balanced_accuracy"] for m in fold_metrics])),
+            "mean_macro_precision": float(np.mean([m["macro_precision"] for m in fold_metrics])),
+            "mean_macro_recall": float(np.mean([m["macro_recall"] for m in fold_metrics])),
+            "mean_weighted_f1": float(np.mean([m["weighted_f1"] for m in fold_metrics])),
+            "per_class_mean": {
+                label: {
+                    key: float(np.mean([m["per_class"][label][key] for m in fold_metrics]))
+                    for key in ("precision", "recall", "f1")
+                }
+                for label in labels
+            },
+            "confusion_matrix_sum": {
+                "labels": list(labels),
+                "matrix": np.sum(
+                    [np.array(m["confusion_matrix"]["matrix"]) for m in fold_metrics], axis=0
+                ).astype(int).tolist(),
+            },
         }
     ranked = sorted(
         ((name, r["mean"]) for name, r in results.items()),
@@ -507,6 +568,8 @@ class SeasonPredictor:
     axis_models: Dict[str, Any] = field(default_factory=dict)  # hierarchical
     head: Any = None                   # hierarchical
     calibrated: bool = False
+    abstain_margin: float = 0.0        # top1-top2 prob gap below this -> abstain
+    feature_version: str = ""         # schema check at inference (spec #45)
 
     def _numeric_row(self, features: Dict[str, Any]) -> "np.ndarray":
         from .dataset import coerce_feature_row
@@ -552,15 +615,44 @@ class SeasonPredictor:
         order = np.argsort(-probs)
         primary = classes[order[0]]
         confidence = float(probs[order[0]])
+        runner_up = classes[order[1]] if len(order) > 1 else ""
+        runner_up_prob = float(probs[order[1]]) if len(order) > 1 else 0.0
         secondary = ""
-        if len(order) > 1 and float(probs[order[1]]) >= self.secondary_min_prob:
-            secondary = classes[order[1]]
+        if runner_up and runner_up_prob >= self.secondary_min_prob:
+            secondary = runner_up
+
+        # Abstention (spec #53): when the top two calibrated probabilities are
+        # genuinely close, say so instead of manufacturing certainty.
+        abstain = bool(self.abstain_margin > 0.0 and (confidence - runner_up_prob) < self.abstain_margin)
         return {
-            "prediction": primary,
-            "prediction_secondary": secondary,
+            "prediction": "" if abstain else primary,
+            "prediction_secondary": runner_up if abstain else secondary,
             "prediction_confidence": round(confidence, 4),
             "probabilities": {c: round(float(p), 6) for c, p in zip(classes, probs)},
+            "abstained": abstain,
+            "abstain_reason": (
+                f"top-2 probability gap {confidence - runner_up_prob:.3f} below "
+                f"abstain_margin {self.abstain_margin:.3f}; treat as ambiguous between "
+                f"{primary} and {runner_up}" if abstain else ""
+            ),
         }
+
+    def verify_feature_schema(self, features: Dict[str, Any]) -> None:
+        """Refuse to predict when the feature schema does not match the model.
+
+        A silent column mismatch would produce confident nonsense; failing
+        loudly here is the whole point of persisting feature_schema.json.
+        """
+        from .dataset import coerce_feature_row
+
+        feats = coerce_feature_row(features)
+        missing = [c for c in self.feature_columns if c not in feats]
+        if missing:
+            raise ValueError(
+                "feature schema mismatch: model expects columns missing from the "
+                f"input features: {missing} (feature_version={self.feature_version!r}); "
+                "re-extract with a matching feature version instead of predicting blindly"
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -654,6 +746,7 @@ def save_artifact(
         "git_commit": git_commit(),
         "data_source": data.source,
         "smoke": bool(smoke),
+        "selection_reason": metrics.get("selection_reason"),
     }
     if extra:
         metadata.update(extra)
@@ -712,6 +805,17 @@ def render_model_card(metadata: Dict[str, Any], metrics: Dict[str, Any], config:
         best = cv.get("best")
         lines.append(f"- CV selection metric {config.get('selection_metric')}: best={best} "
                      f"({cv.get('candidates', {}).get(best, {}).get('mean', float('nan')):.3f})")
+        reason = metrics.get("selection_reason") or {}
+        if reason:
+            lines.append(
+                f"- selection: {reason.get('selected')} chosen over runner-up "
+                f"{reason.get('runner_up')} (margin {reason.get('margin')})"
+            )
+        ablation = metrics.get("ablation") or {}
+        if ablation and ablation.get("variants"):
+            lines.append("- feature-group ablation (same folds/backend, macro-F1):")
+            for variant, stats in ablation["variants"].items():
+                lines.append(f"    {variant:<28} {stats.get('mean'):.3f}")
     holdout = metrics.get("holdout")
     if holdout:
         lines.append(f"- locked holdout: accuracy={holdout.get('accuracy'):.3f} "
@@ -719,15 +823,23 @@ def render_model_card(metadata: Dict[str, Any], metrics: Dict[str, Any], config:
     calib = metrics.get("calibration")
     if calib:
         lines.append(f"- calibration: method={calib.get('method')} ECE={calib.get('ece')} Brier={calib.get('brier')}")
+        if calib.get("note"):
+            lines.append(f"  ({calib.get('note')})")
     lines.append("")
     lines.append("## Known limitations")
-    lines.append(
-        "- trained on the annotated FaceMaxx dataset only; small classes are unstable\n"
-        "- lighting/makeup/quality shifts can move predictions (see robustness section)\n"
-        "- seasonal boundaries (e.g. Deep Autumn <-> Deep Winter) carry genuine ambiguity\n"
-        "- olive undertone is partly culture-dependent; labels reflect this project's handbook\n"
-        "- NOT a benchmark beyond the recorded holdout numbers"
-    )
+    limitations = [
+        "- trained on the annotated FaceMaxx dataset only; small classes are unstable",
+        "- lighting/makeup/quality shifts can move predictions (see robustness section)",
+        "- seasonal boundaries (e.g. Deep Autumn <-> Deep Winter) carry genuine ambiguity",
+        "- olive undertone is partly culture-dependent; labels reflect this project's handbook",
+        "- NOT a benchmark beyond the recorded holdout numbers",
+    ]
+    if metadata.get("smoke"):
+        limitations.insert(0, "- **SMOKE TEST ARTIFACT: trained on synthetic demo data. NOT FOR PRODUCTION. NOT A BENCHMARK.**")
+    audit = metrics.get("feature_audit") or {}
+    if audit.get("flagged"):
+        limitations.append(f"- flagged features (see feature_audit.json): {', '.join(audit['flagged'])}")
+    lines.extend(limitations)
     lines.append("")
     lines.append("## Bias / robustness")
     robustness = metrics.get("robustness")
@@ -825,6 +937,10 @@ def run_training(
     train_rows = _rows_for(data, ("train", "val"))
     X, y, groups = matrices(data, splits=("train", "val"))
 
+    # Feature audit FIRST (spec: inspect before trusting models). Reported
+    # into metrics.json + feature_audit.json; never silently drops columns.
+    audit = feature_audit(train_rows)
+
     candidates = make_candidates(config, seed)
     cv = grouped_cv(
         X, y, groups, candidates, labels, seed,
@@ -837,12 +953,33 @@ def run_training(
         "cv": cv,
         "n_train_val_rows": len(train_rows),
         "n_people": len(set(groups)),
+        "feature_audit": audit,
     }
     if cv.get("skipped"):
         return result
 
     best_name = cv["best"]
     selection_metric = str(config.get("selection_metric", "macro_f1"))
+    # Evidence, not just a name (spec #58): why this candidate won, and what
+    # the runner-up scored, recorded alongside the artifact.
+    ranking = cv.get("ranking") or []
+    runner_up = ranking[1] if len(ranking) > 1 else None
+    selection_reason = {
+        "metric": selection_metric,
+        "selected": best_name,
+        "selected_mean": ranking[0]["mean"] if ranking else None,
+        "runner_up": runner_up["model"] if runner_up else None,
+        "runner_up_mean": runner_up["mean"] if runner_up else None,
+        "margin": (
+            ranking[0]["mean"] - runner_up["mean"]
+            if runner_up else None
+        ),
+        "note": (
+            f"highest person-grouped CV {selection_metric} over the same folds; "
+            "heuristic baseline kept separately as model zero"
+        ),
+    }
+    result["selection_reason"] = selection_reason
 
     # ---- refit the winner on all train+val rows -----------------------------
     best_model = _fit(best_name, candidates[best_name], X, y)
@@ -853,7 +990,12 @@ def run_training(
         # Compare approaches 1-3 objectively (spec #3); pick by CV macro-F1.
         approach_scores = _season_approach_cv(data, config, seed, selection_metric)
         result["season_approaches"] = approach_scores
-        approach_rows = {k: v for k, v in approach_scores.items() if v.get("mean") == v.get("mean")}
+        # Only approaches that actually ran have a numeric mean (skipped ones
+        # carry {skipped: True, reason: ...} and must not crash selection).
+        approach_rows = {
+            k: v for k, v in approach_scores.items()
+            if isinstance(v.get("mean"), (int, float)) and v["mean"] == v["mean"]
+        }
         best_approach = max(approach_rows, key=lambda k: approach_rows[k]["mean"]) if approach_rows else "direct"
         best_approach_score = approach_rows.get(best_approach, {}).get("mean", float("-inf"))
         direct_score = cv["candidates"][best_name]["mean"]
@@ -882,6 +1024,8 @@ def run_training(
             pipeline=best_model,
         )
         model_type = best_name
+    predictor.abstain_margin = float((config.get("secondary_rule") or {}).get("abstain_margin", 0.0))
+    predictor.feature_version = data.feature_version
 
     # ---- calibration on the val split only (if it exists) --------------------
     val_rows = _rows_for(data, ("val",))
@@ -902,13 +1046,30 @@ def run_training(
             base_classes = {str(c) for c in np.ravel(getattr(base, "classes_", []))}
             val_classes = {str(v) for v in np.unique(y_val)}
             missing = sorted(base_classes - val_classes)
+            # Guard: a calibrator fitted on ~n rows/classes cannot be trusted
+            # (spec #27: do NOT over-calibrate tiny data). Rule of thumb kept
+            # conservative: >= 20 rows AND >= 5 rows per class, else report
+            # insufficiency honestly instead of manufacturing confidence.
+            n_classes = max(len(base_classes), 1)
+            insufficient = len(y_val) < 20 or len(y_val) < 5 * n_classes
             if missing:
                 calibration_info = {
                     "method": "none",
+                    "sufficient": False,
                     "note": (
                         "validation split does not contain classes "
                         f"{missing}; raw probabilities kept (calibration "
                         "requires every class to appear in the calibration data)"
+                    ),
+                }
+            elif insufficient:
+                calibration_info = {
+                    "method": "none",
+                    "sufficient": False,
+                    "note": (
+                        f"insufficient data for reliable calibration: {len(y_val)} "
+                        f"validation rows across {n_classes} classes (want >= 20 rows "
+                        "and >= 5 per class); raw probabilities kept"
                     ),
                 }
             else:
@@ -920,14 +1081,32 @@ def run_training(
                 predictor.calibrated = method != "none"
                 calibration_info = {
                     "method": method,
+                    "sufficient": True,
                     "n_calibration_rows": len(y_val),
                     "note": "fitted on the validation split only; holdout untouched",
                 }
     result["calibration"] = calibration_info
 
+    # Same-folds feature-group ablation (reported, never auto-applied).
+    # Reuses the already-selected winner: no extra candidate CV round.
+    try:
+        result["ablation"] = _ablation_inner(data, config, seed, selection_metric, backend=best_name)
+    except Exception as exc:  # ablation is diagnostic; never block training
+        result["ablation"] = {"skipped": True, "reason": str(exc)}
+
     model_id, artifact_dir = save_artifact(
         models_root, data.target, model_type, predictor,
-        {"cv": cv, "calibration": calibration_info}, config, data, seed, smoke,
+        {
+            "cv": cv,
+            "calibration": calibration_info,
+            "selection_reason": selection_reason,
+            "feature_audit": audit,
+            "ablation": result.get("ablation"),
+        },
+        config, data, seed, smoke,
+    )
+    (artifact_dir / "feature_audit.json").write_text(
+        json.dumps(audit, indent=2, default=str) + "\n", encoding="utf-8"
     )
     result.update({"model_id": model_id, "artifact_dir": str(artifact_dir)})
     return result
@@ -935,6 +1114,100 @@ def run_training(
 
 def _medians(X: "np.ndarray", columns: List[str]) -> Dict[str, float]:
     return {col: float(np.median(X[:, j])) for j, col in enumerate(columns)}
+
+
+# ---------------------------------------------------------------------------
+# feature-group ablation (spec #50: prove which features actually help)
+# ---------------------------------------------------------------------------
+
+FEATURE_GROUPS: Dict[str, Tuple[str, ...]] = {
+    "skin_core": (
+        "feat_skin_L", "feat_skin_a", "feat_skin_b", "feat_ita",
+        "feat_undertone_proxy", "feat_olive_proxy", "feat_chroma_proxy",
+        "feat_depth_proxy", "feat_skin_hue",
+    ),
+    "hair_eye": ("feat_hair_L", "feat_eye_L", "feat_contrast_proxy"),
+    "region_variability": (
+        "feat_skin_region_count", "feat_skin_L_spread",
+        "feat_skin_a_spread", "feat_skin_b_spread",
+    ),
+    "quality_lighting": (
+        "feat_wb_b_minus_a", "feat_grey_world_shift", "feat_brightness",
+        "feat_highlight_clip_frac", "feat_shadow_clip_frac",
+    ),
+}
+
+
+def cv_best_name(data: TrainingData, config: Dict[str, Any], seed: int) -> str:
+    """Standalone best-candidate selection (run_training passes its own winner)."""
+    labels = list(TARGETS[data.target]["order"])
+    X, y, groups = matrices(data, splits=("train", "val"))
+    cv = grouped_cv(
+        X, y, groups, make_candidates(config, seed), labels, seed,
+        n_splits=int(config.get("cv_folds", 5)),
+        min_class_samples=int(config.get("min_class_samples", 5)),
+        selection_metric=str(config.get("selection_metric", "macro_f1")),
+    )
+    return cv.get("best") or "logreg"
+
+
+def _ablation_inner(
+    data: TrainingData,
+    config: Dict[str, Any],
+    seed: int,
+    selection_metric: str,
+    backend: Optional[str] = None,
+) -> Dict[str, Any]:
+    from sklearn.model_selection import StratifiedGroupKFold as _SGKF
+
+    if backend is None:
+        backend = cv_best_name(data, config, seed)
+    labels = list(TARGETS[data.target]["order"])
+    X_full, y, groups = matrices(data, splits=("train", "val"))
+    rows = _rows_for(data, ("train", "val"))
+    skf = _SGKF(
+        n_splits=_n_splits(y, groups, int(config.get("cv_folds", 5)), int(config.get("min_class_samples", 5))),
+        shuffle=True, random_state=seed,
+    )
+    folds = list(skf.split(X_full, y, groups))
+    candidates = {backend: make_candidates(config, seed)[backend]}
+
+    variants: Dict[str, Optional[Tuple[str, ...]]] = {"full": None}
+    cumulative: Tuple[str, ...] = ()
+    group_order = ["skin_core", "hair_eye", "region_variability", "quality_lighting"]
+    for position, group in enumerate(group_order, 1):
+        cumulative = cumulative + FEATURE_GROUPS[group]
+        variants["+".join(group_order[:position])] = cumulative
+
+    out: Dict[str, Any] = {"backend": backend, "variants": {}}
+    for name, columns in variants.items():
+        if columns is None:
+            X = X_full
+        else:
+            idx = [list(FEATURE_COLUMNS).index(c) for c in columns if c in list(FEATURE_COLUMNS)]
+            X = X_full[:, idx]
+        scores: List[float] = []
+        for _fold, (tr, te) in enumerate(folds, 1):
+            model = _fit(backend, clone(candidates[backend]), X[tr], y[tr])
+            pred = model.predict(X[te])
+            metric = compute_metrics(y[te], pred, labels)
+            scores.append(metric[selection_metric])
+        out["variants"][name] = {
+            "n_features": int(X.shape[1]),
+            "mean": float(np.mean(scores)) if scores else float("nan"),
+            "std": float(np.std(scores)) if scores else float("nan"),
+        }
+    best_variant = max(
+        (k for k in out["variants"] if out["variants"][k]["mean"] == out["variants"][k]["mean"]),
+        key=lambda k: out["variants"][k]["mean"],
+        default="full",
+    )
+    out["best_variant"] = best_variant
+    out["note"] = (
+        "same folds/backend for every variant; the full set stays the deployed "
+        "default unless a variant wins by a margin worth acting on"
+    )
+    return out
 
 
 def _build_season_predictor(

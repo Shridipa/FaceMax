@@ -60,6 +60,9 @@ except ImportError as exc:  # pragma: no cover
     )
 
 # Feature columns produced by colour.extract_image().as_feature_row()
+# (facemax-color-features-v2). The v1 block is unchanged on top; the new
+# columns (hue, region variability, clipping) are diagnostics the models may
+# use, while quality GATING lives in colour.quality_gate().
 FEATURE_COLUMNS = [
     "feat_skin_L",
     "feat_skin_a",
@@ -69,12 +72,19 @@ FEATURE_COLUMNS = [
     "feat_olive_proxy",
     "feat_chroma_proxy",
     "feat_depth_proxy",
+    "feat_skin_hue",
     "feat_hair_L",
     "feat_eye_L",
     "feat_contrast_proxy",
+    "feat_skin_region_count",
+    "feat_skin_L_spread",
+    "feat_skin_a_spread",
+    "feat_skin_b_spread",
     "feat_wb_b_minus_a",
     "feat_grey_world_shift",
     "feat_brightness",
+    "feat_highlight_clip_frac",
+    "feat_shadow_clip_frac",
 ]
 
 AXES = {
@@ -86,6 +96,53 @@ AXES = {
 }
 
 MIN_CLASS_SAMPLES = 8  # below this, fallback heuristic is used for the axis
+
+# Quality gate: skin hue outside this band means the measured "skin colour" is
+# dominated by a colour cast or a failed mask (healthy human skin in CIELAB has
+# hue ~ 20-70 deg; a strong blue cast pushes it far outside). This is a REJECT
+# band for unreliable extraction, not a beauty/vocab judgement, and it is
+# applied to the measured pixels only.
+SKIN_HUE_MIN_DEG = 10.0
+SKIN_HUE_MAX_DEG = 85.0
+
+
+def quality_gate(features: Dict[str, Any]) -> Dict[str, Any]:
+    """Decide whether extracted features are reliable enough to predict on.
+
+    Deliberately conservative and interpretable: only HARD extraction-failure
+    signals reject. It never looks at labels or identity, and it never invents
+    a prediction for rejected input.
+    """
+    def _num(key: str) -> float:
+        try:
+            value = float(features.get(key))
+        except (TypeError, ValueError):
+            return float("nan")
+        return value
+
+    problems = []
+    if not bool(features.get("feat_ok", True)):
+        problems.append("feature extraction failed for this image")
+    hue = _num("feat_skin_hue")
+    if hue == hue and not (SKIN_HUE_MIN_DEG <= hue <= SKIN_HUE_MAX_DEG):
+        problems.append(
+            f"skin hue {hue:.0f} deg outside the plausible human band "
+            f"[{SKIN_HUE_MIN_DEG:.0f}, {SKIN_HUE_MAX_DEG:.0f}] (colour cast or bad mask)"
+        )
+    shadow = _num("feat_shadow_clip_frac")
+    if shadow == shadow and shadow > 0.30:
+        problems.append(f"{shadow * 100:.0f}% of face pixels are fully clipped shadows (low light)")
+    highlight = _num("feat_highlight_clip_frac")
+    if highlight == highlight and highlight > 0.30:
+        problems.append(f"{highlight * 100:.0f}% of face pixels are blown out (overexposed)")
+    pixels = _num("feat_skin_pixels")
+    if pixels == pixels and pixels < 40 * len(REGIONS_IMPORT) // 2:
+        problems.append("too few skin pixels for stable colour statistics")
+    return {"ok": not problems, "problems": problems}
+
+
+# imported lazily by quality_gate to avoid a circular import at module load
+from .colour import REGIONS as REGIONS_IMPORT  # noqa: E402
 
 
 def feature_matrix(rows: List[Dict], columns: Optional[List[str]] = None) -> "np.ndarray":
@@ -269,6 +326,19 @@ def _make_candidates(seed: int) -> Dict[str, Any]:
     }
 
 
+# Provenance header required on every model-comparison output so results from
+# different datasets/folds/features are never quoted side by side (the old
+# model_comparison.txt mixed an older hist_gb=0.725 run with the newer
+# candidate registry and could be read as one experiment).
+def render_comparison_header(dataset_version: str, feature_version: str, folds_note: str) -> str:
+    return (
+        "dataset_version:  " + str(dataset_version) + "\n"
+        "feature_version:  " + str(feature_version) + "\n"
+        + folds_note + "\n"
+        "(numbers from different dataset/feature/fold provenance are NOT comparable)"
+    )
+
+
 @dataclass
 class AxisModel:
     axis: str
@@ -292,6 +362,7 @@ class AxisModel:
 class ColourModelBundle:
     axes: Dict[str, AxisModel]
     comparison: Dict[str, Any] = field(default_factory=dict)
+    comparison_provenance: Dict[str, Any] = field(default_factory=dict)
 
     def predict(self, features: Dict[str, Any]) -> Dict[str, Any]:
         """Full prediction for one image's features."""
@@ -391,7 +462,14 @@ def train_bundle(
         "backend": "rule_combiner+" + "+".join(sorted(m.backend for m in bundle.axes.values())),
         "cv_macro_f1": season_scores,
     }
+    from .training_data import FEATURE_VERSION  # lazy: training_data imports this module
+
     bundle.comparison = comparison
+    bundle.comparison_provenance = {
+        "dataset_rows": len(rows),
+        "people": len({str(r.get("person_id") or i) for i, r in enumerate(rows)}),
+        "feature_version": FEATURE_VERSION,
+    }
     return bundle
 
 

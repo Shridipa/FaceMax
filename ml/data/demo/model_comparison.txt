@@ -1,10 +1,14 @@
 MODEL COMPARISON (person-grouped CV, macro-F1)
 ====================================================
+dataset_version:  rows=80 people=40
+feature_version:  facemax-color-features-v2
+person-grouped GroupKFold, seed per call
+(numbers from different dataset/feature/fold provenance are NOT comparable)
 
-undertone  (selected: hist_gb)
-  hist_gb          0.725  <-- selected
-  random_forest    0.687
-  logreg           0.612
+undertone  (selected: random_forest)
+  random_forest    0.695  <-- selected
+  hist_gb          0.651
+  logreg           0.611
 
 skin_depth  (selected: heuristic)
   heuristic          n/a   <-- selected
@@ -15,7 +19,7 @@ chroma  (selected: heuristic)
 contrast  (selected: heuristic)
   heuristic          n/a   <-- selected
 
-season pipeline [rule_combiner+heuristic+heuristic+heuristic+hist_gb]
+season pipeline [rule_combiner+heuristic+heuristic+heuristic+random_forest]
   full-pipeline macro-F1: nan
 
 macro-F1 is the selection metric; accuracy alone hides minority-class failure.

@@ -28,6 +28,7 @@ from .training import (
     calibration_report,
     compute_metrics,
     robustness_report,
+    top2_accuracy,
 )
 from .training_data import TARGETS, TrainingData
 
@@ -70,6 +71,21 @@ def _prob_matrix(
         for j, label in enumerate(labels):
             matrix[i, j] = float(probs.get(label, 0.0))
     return matrix
+
+
+def _prob_dicts(
+    predictor: SeasonPredictor,
+    rows: List[Dict[str, Any]],
+    labels: List[str],
+) -> List[Dict[str, float]]:
+    """Row probability dicts aligned to canonical labels (for top-2 accuracy)."""
+    dicts: List[Dict[str, float]] = []
+    for row in rows:
+        features = {c: row.get(c) for c in predictor.feature_columns}
+        out = predictor.predict_row(features)
+        probs = out.get("probabilities") or {}
+        dicts.append({label: float(probs.get(label, 0.0)) for label in labels})
+    return dicts
 
 
 def run_holdout_evaluation(
@@ -122,6 +138,14 @@ def run_holdout_evaluation(
 
     metrics = compute_metrics(truth, preds, labels)
 
+    # Abstained rows are reported, not punished: prediction=="" counts as an
+    # error in accuracy (honest), but the abstain rate is surfaced so the
+    # frontend/threshold owner can see how often the model refused.
+    abstained = [r for r in rows if str(r.get("prediction", "")) == ""]
+    metrics["top2_accuracy"] = round(top2_accuracy(truth, _prob_dicts(predictor, rows, labels)), 4)
+    metrics["abstained_rows"] = len(abstained)
+    metrics["abstain_rate"] = round(len(abstained) / len(rows), 4) if rows else 0.0
+
     # Calibration scores on holdout probabilities (the honest test of the
     # val-fitted calibrator; never refitted here).
     prob_matrix = _prob_matrix(predictor, rows, labels)
@@ -135,6 +159,9 @@ def run_holdout_evaluation(
     # Robustness via the FROZEN evaluator (small-n flags preserved).
     robustness = robustness_report(rows, truth_key=data.label_column)
 
+    # Structured error analysis (worst classes/subgroups/pairs), spec #52.
+    error_analysis = _error_analysis(metrics, robustness, truth, preds)
+
     evaluated = {
         "model_id": model_id,
         "evaluated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -144,6 +171,7 @@ def run_holdout_evaluation(
         "calibration_scores": calib_scores,
         "boundary": boundary,
         "robustness": robustness,
+        "error_analysis": error_analysis,
     }
 
     # Write results back into the artifact so the card/registry stay truthful.
@@ -161,6 +189,7 @@ def run_holdout_evaluation(
             "calibration_scores": calib_scores,
             "boundary": boundary,
             "robustness": robustness,
+            "error_analysis": error_analysis,
             "holdout_evaluated_at": evaluated["evaluated_at"],
             "holdout_rows": len(rows),
             "holdout_people": evaluated["holdout_people"],
@@ -169,6 +198,9 @@ def run_holdout_evaluation(
     metrics_path.write_text(json.dumps(stored, indent=2, default=str) + "\n", encoding="utf-8")
     (artifact_dir / "confusion_matrix.json").write_text(
         json.dumps(metrics["confusion_matrix"], indent=2) + "\n", encoding="utf-8"
+    )
+    (artifact_dir / "error_analysis.json").write_text(
+        json.dumps(error_analysis, indent=2, default=str) + "\n", encoding="utf-8"
     )
     # Refresh the model card so robustness/holdout sections are populated.
     from .training import load_config  # default config supplies card scaffolding
@@ -180,19 +212,82 @@ def run_holdout_evaluation(
     return evaluated
 
 
+def _error_analysis(
+    metrics: Dict[str, Any],
+    robustness: Dict[str, Any],
+    truth: List[str],
+    preds: List[str],
+) -> Dict[str, Any]:
+    """Worst classes, worst subgroups and largest confusion pairs, ranked.
+
+    Purely descriptive: reads the already-computed metrics so the failure
+    story is one JSON away instead of buried inside matrices.
+    """
+    per_class = metrics.get("per_class") or {}
+    worst_classes = sorted(
+        (
+            {
+                "label": label,
+                "f1": round(stats["f1"], 4),
+                "recall": round(stats["recall"], 4),
+                "precision": round(stats["precision"], 4),
+                "support": stats["support"],
+            }
+            for label, stats in per_class.items()
+            if stats.get("support", 0) > 0
+        ),
+        key=lambda item: (item["f1"], -item["support"]),
+    )
+    worst_subgroups: List[Dict[str, Any]] = []
+    for attribute, info in (robustness or {}).items():
+        for value, stats in (info.get("subgroups") or {}).items():
+            worst_subgroups.append(
+                {
+                    "attribute": attribute,
+                    "group": value,
+                    "accuracy": stats.get("accuracy"),
+                    "macro_f1": stats.get("macro_f1"),
+                    "n_images": stats.get("n_images"),
+                    "small_n": stats.get("small_n"),
+                }
+            )
+    worst_subgroups.sort(key=lambda item: (item.get("macro_f1") if item.get("macro_f1") is not None else 1.0,))
+
+    confusion: List[Dict[str, Any]] = []
+    labels = (metrics.get("confusion_matrix") or {}).get("labels") or []
+    matrix = (metrics.get("confusion_matrix") or {}).get("matrix") or []
+    for i, true_label in enumerate(labels):
+        for j, pred_label in enumerate(labels):
+            if i != j and matrix[i][j]:
+                confusion.append(
+                    {"true": true_label, "predicted": pred_label, "count": int(matrix[i][j])}
+                )
+    confusion.sort(key=lambda item: -item["count"])
+    return {
+        "worst_classes": worst_classes[:5],
+        "worst_subgroups": worst_subgroups[:8],
+        "largest_confusion_pairs": confusion[:10],
+    }
+
+
 def _render_card_from_stored(metadata: Dict[str, Any], stored: Dict[str, Any], config: Dict[str, Any]) -> str:
     """Model card rendered from artifact metrics (post-holdout refresh)."""
     from .training import render_model_card
 
+    calibration = stored.get("calibration") or {}
     metrics = {
         "cv": stored.get("cv") or {},
         "holdout": stored.get("holdout"),
         "calibration": {
-            "method": (stored.get("calibration") or {}).get("method"),
+            "method": calibration.get("method"),
+            "note": calibration.get("note"),
             "ece": (stored.get("calibration_scores") or {}).get("ece"),
             "brier": (stored.get("calibration_scores") or {}).get("brier"),
         },
         "robustness": stored.get("robustness"),
+        "selection_reason": stored.get("selection_reason"),
+        "feature_audit": stored.get("feature_audit"),
+        "ablation": stored.get("ablation"),
     }
     return render_model_card(metadata, metrics, config)
 
@@ -214,11 +309,17 @@ def render_holdout_report(evaluated: Dict[str, Any], target: str, demo: bool = F
     lines.append("")
     lines.append(
         f"accuracy={m['accuracy']:.3f}  balanced_accuracy={m['balanced_accuracy']:.3f}"
+        f"  top2_accuracy={m.get('top2_accuracy', float('nan')):.3f}"
     )
     lines.append(
         f"macro P/R/F1={m['macro_precision']:.3f}/{m['macro_recall']:.3f}/{m['macro_f1']:.3f}"
         f"  weighted_f1={m['weighted_f1']:.3f}"
     )
+    if m.get("abstained_rows"):
+        lines.append(
+            f"abstained: {m['abstained_rows']}/{m['n']} rows "
+            f"({m.get('abstain_rate', 0.0) * 100:.1f}%) - ambiguous, surfaced as secondary season"
+        )
     lines.append("")
     lines.append("per-class (support = holdout images):")
     lines.append(f"  {'label':<16} {'prec':>6} {'rec':>6} {'f1':>6} {'support':>8}")
@@ -264,6 +365,22 @@ def render_holdout_report(evaluated: Dict[str, Any], target: str, demo: bool = F
             ]
             if small:
                 lines.append(f"    small-sample subgroups (unstable, flagged not hidden): {', '.join(small)}")
+    errors = evaluated.get("error_analysis")
+    if errors:
+        lines.append("")
+        lines.append("error analysis (worst first):")
+        if errors.get("worst_classes"):
+            worst = ", ".join(
+                f"{item['label']}(f1={item['f1']:.2f}, n={item['support']})"
+                for item in errors["worst_classes"][:3]
+            )
+            lines.append(f"  worst classes: {worst}")
+        if errors.get("largest_confusion_pairs"):
+            pairs = ", ".join(
+                f"{item['true']}->{item['predicted']}({item['count']})"
+                for item in errors["largest_confusion_pairs"][:5]
+            )
+            lines.append(f"  largest confusion pairs: {pairs}")
     lines.append("")
     lines.append("the holdout was scored exactly once for this artifact; no tuning used it.")
     return "\n".join(lines)

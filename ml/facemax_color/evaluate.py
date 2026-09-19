@@ -121,10 +121,24 @@ def run_evaluation(
 
 
 def render_comparison(bundle: ColourModelBundle) -> str:
-    """Human-readable model-comparison table (LogReg vs RF vs HGB per axis)."""
+    """Human-readable model-comparison table (LogReg vs RF vs HGB per axis).
+
+    A provenance header (dataset/feature versions) is always included so the
+    table cannot be misread across experiments (the historical hist_gb=0.725
+    line came from an earlier feature/dataset generation).
+    """
+    from .models import render_comparison_header
+    from .training_data import FEATURE_VERSION
+
+    prov = bundle.comparison_provenance or {}
     lines = [
         "MODEL COMPARISON (person-grouped CV, macro-F1)",
         "=" * 52,
+        render_comparison_header(
+            f"rows={prov.get('dataset_rows', '?')} people={prov.get('people', '?')}",
+            prov.get("feature_version", FEATURE_VERSION),
+            "person-grouped GroupKFold, seed per call",
+        ),
     ]
     for axis, info in bundle.comparison.items():
         scores = info.get("cv_macro_f1") or {}

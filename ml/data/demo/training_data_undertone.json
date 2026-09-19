@@ -2,8 +2,8 @@
   "target": "undertone",
   "label_column": "undertone",
   "source": "demo",
-  "dataset_version": "6467ba063e297f7b",
-  "feature_version": "facemax-color-features-v1",
+  "dataset_version": "4aff0f893ce2caf6",
+  "feature_version": "facemax-color-features-v2",
   "total_annotated_rows": 80,
   "usable_rows": {
     "train": 55,

@@ -22,10 +22,14 @@ metadata).
 4. **Training data** — source (`real`/`demo`), rows, people,
    `dataset_version` digest, `feature_version`.
 5. **Evaluation** — validation strategy (person-grouped StratifiedGroupKFold,
-   fold count), CV selection metric and score, locked-holdout numbers
-   (accuracy, macro-F1, n), calibration method + ECE + Brier.
+   fold count), CV selection metric and score, the selection evidence
+   (runner-up + margin), the feature-group ablation table, locked-holdout
+   numbers (accuracy, macro-F1, n, top-2 accuracy), calibration method +
+   ECE + Brier (or the explicit insufficiency note).
 6. **Known limitations** — small classes, lighting/makeup/quality
-   sensitivity, seasonal boundary ambiguity, olive undertone ambiguity;
+   sensitivity, seasonal boundary ambiguity, olive undertone ambiguity,
+   flagged features from `feature_audit.json`; smoke artifacts open with
+   **"SMOKE TEST ARTIFACT ... NOT FOR PRODUCTION. NOT A BENCHMARK."**;
    never claims beyond the recorded holdout.
 7. **Bias / robustness** — per-axis worst/best subgroup and gap from the
    frozen evaluator, small-sample subgroups flagged.

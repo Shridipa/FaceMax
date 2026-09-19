@@ -138,11 +138,21 @@ run manifest and metrics. No approach is assumed better — measured.
 Every evaluation reports accuracy, balanced accuracy, macro precision/recall/
 F1, weighted F1, per-class precision/recall/F1/support, and the confusion
 matrix. Season models additionally get **boundary analysis** (see below).
+Holdout evaluations add **top-2 accuracy** and the **abstain rate**.
+
+### Metric persistence (do not regress)
+
+Everything `compute_metrics()` computes is persisted: every CV candidate
+records per-candidate `mean_accuracy`, `mean_balanced_accuracy`,
+`mean_macro_precision`, `mean_macro_recall`, `mean_weighted_f1`,
+`per_class_mean` (precision/recall/f1 per class) and `confusion_matrix_sum`
+alongside the fold table — not just the selection metric. The holdout block
+adds `top2_accuracy` and abstention counts.
 
 ## Secondary-season rule (documented, configurable)
 
 ```json
-"secondary_rule": { "secondary_min_prob": 0.10 }
+"secondary_rule": { "secondary_min_prob": 0.10, "abstain_margin": 0.0 }
 ```
 
 > Primary = highest calibrated probability.
@@ -153,6 +163,61 @@ matrix. Season models additionally get **boundary analysis** (see below).
 Do not treat the second-highest raw softmax as a secondary season; the rule
 and threshold live in `configs/color_training.json` and every artifact
 records the threshold it used.
+
+### Abstention (uncertainty is surfaced, never faked)
+
+When `abstain_margin > 0` and the calibrated top-2 probability gap falls
+below the margin, `predict_row` returns `"abstained": true` with an **empty
+primary** and the runner-up as the honest alternative ("between Deep Autumn
+and Deep Winter"). Abstained rows count as errors in accuracy (never hidden)
+but are reported separately as `abstain_rate` in the holdout metrics.
+Keep the margin at 0 until a threshold is validated on real data.
+
+## Selection evidence + feature audit + ablation
+
+Every run persists (and `train` prints):
+
+- **selection_reason** — winner, runner-up, CV margin, metric used;
+- **feature_audit.json** — per feature: missing %, min/max/mean/std, invalid
+  count, and flags for `constant` / `near_constant` / `heavily_missing`
+  columns (reported, never silently dropped);
+- **ablation** — the winner re-scored on the SAME folds with cumulative
+  feature groups (skin_core → +hair_eye → +region_variability →
+  +quality_lighting → full). Diagnostic only: the full set stays deployed
+  unless a variant's advantage is judged meaningful.
+
+`evaluate` additionally writes **error_analysis.json** (worst classes, worst
+subgroups, largest confusion pairs) and refreshes the model card.
+
+## Candidate registry (one authoritative comparison)
+
+`models` in the config selects from: `logreg`, `random_forest`,
+`extra_trees`, `xgboost`, `lightgbm`, `hist_gb` — all scored on identical
+folds/features/seed. `hist_gb` is sklearn's HistGradientBoostingClassifier:
+the same family as the historical `hist_gb = 0.725` line in old
+`model_comparison.txt` artifacts, which came from an earlier dataset/feature
+generation and is NOT comparable to current runs. Every comparison output now
+starts with a provenance header (dataset rows/people + feature version + a
+"not comparable across provenance" warning) so stale numbers can never be
+read as one experiment again.
+
+## Feature schema versioning
+
+`FEATURE_VERSION = "facemax-color-features-v2"` adds `feat_skin_hue`,
+`feat_skin_region_count`, `feat_skin_L_spread`, `feat_skin_a_spread`,
+`feat_skin_b_spread`, `feat_highlight_clip_frac`, `feat_shadow_clip_frac`
+on top of the unchanged v1 block. `feature_schema.json` is persisted with
+every artifact and `predict_row`/`verify_feature_schema` refuses to predict
+when the input features do not carry the model's columns (loud failure
+instead of silent garbage).
+
+## Quality gate at inference
+
+`models.quality_gate()` rejects images whose extraction is dominated by
+cast/mask/clipping failure (skin hue outside the plausible human band,
+>30% shadow or highlight clipping, too few skin pixels) with
+"Photo quality is too low for a reliable analysis." — a warning is more
+honest than a confident wrong season (the old demo low-light = 0.0 result).
 
 ## Calibration
 

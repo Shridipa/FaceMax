@@ -1,0 +1,2856 @@
+{
+  "cv": {
+    "skipped": false,
+    "class_counts": {
+      "Deep": 9,
+      "Fair": 20,
+      "Light": 4,
+      "Light-Medium": 6,
+      "Medium": 4,
+      "Medium-Deep": 14,
+      "Very Fair": 6
+    },
+    "candidates": {
+      "logreg": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0032",
+              "SP0033",
+              "SP0035",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0018",
+              "SP0022",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 4,
+              "Light": 2,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 4
+            },
+            "macro_f1": 0.40624999999999994
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0026",
+              "SP0035",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 2,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.46904761904761905
+          },
+          {
+            "fold": 3,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0020",
+              "SP0027",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Deep": 3,
+              "Fair": 4,
+              "Light": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5714285714285714
+          },
+          {
+            "fold": 4,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0027",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0019",
+              "SP0023",
+              "SP0028",
+              "SP0032",
+              "SP0033"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.3138888888888889
+          }
+        ],
+        "mean": 0.4401537698412698,
+        "std": 0.09375528495118739,
+        "mean_accuracy": 0.6072916666666667,
+        "mean_balanced_accuracy": 0.6652777777777779,
+        "mean_macro_precision": 0.4770833333333333,
+        "mean_macro_recall": 0.453125,
+        "mean_weighted_f1": 0.6110119047619047,
+        "per_class_mean": {
+          "Very Fair": {
+            "precision": 0.4583333333333333,
+            "recall": 0.625,
+            "f1": 0.5166666666666666
+          },
+          "Fair": {
+            "precision": 0.8541666666666666,
+            "recall": 0.49999999999999994,
+            "f1": 0.5843253968253967
+          },
+          "Light": {
+            "precision": 0.5,
+            "recall": 0.375,
+            "f1": 0.41666666666666663
+          },
+          "Light-Medium": {
+            "precision": 0.25,
+            "recall": 0.25,
+            "f1": 0.25
+          },
+          "Medium": {
+            "precision": 0.29166666666666663,
+            "recall": 0.375,
+            "f1": 0.325
+          },
+          "Medium-Deep": {
+            "precision": 0.65,
+            "recall": 0.625,
+            "f1": 0.6309523809523809
+          },
+          "Deep": {
+            "precision": 0.8125,
+            "recall": 0.875,
+            "f1": 0.7976190476190476
+          },
+          "Very Deep": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Very Fair",
+            "Fair",
+            "Light",
+            "Light-Medium",
+            "Medium",
+            "Medium-Deep",
+            "Deep",
+            "Very Deep"
+          ],
+          "matrix": [
+            [
+              5,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              4,
+              9,
+              4,
+              3,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1,
+              2,
+              1,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              1,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              3,
+              8,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              8,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "random_forest": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0032",
+              "SP0033",
+              "SP0035",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0018",
+              "SP0022",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 4,
+              "Light": 2,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 4
+            },
+            "macro_f1": 0.5208333333333333
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0026",
+              "SP0035",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 2,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5886363636363636
+          },
+          {
+            "fold": 3,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0020",
+              "SP0027",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Deep": 3,
+              "Fair": 4,
+              "Light": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5932539682539683
+          },
+          {
+            "fold": 4,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0027",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0019",
+              "SP0023",
+              "SP0028",
+              "SP0032",
+              "SP0033"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5416666666666666
+          }
+        ],
+        "mean": 0.5610975829725829,
+        "std": 0.030786311334390394,
+        "mean_accuracy": 0.8114583333333334,
+        "mean_balanced_accuracy": 0.8159722222222223,
+        "mean_macro_precision": 0.5947916666666666,
+        "mean_macro_recall": 0.5572916666666667,
+        "mean_weighted_f1": 0.8306472462722463,
+        "per_class_mean": {
+          "Very Fair": {
+            "precision": 0.75,
+            "recall": 0.75,
+            "f1": 0.75
+          },
+          "Fair": {
+            "precision": 1.0,
+            "recall": 0.8333333333333334,
+            "f1": 0.9058441558441558
+          },
+          "Light": {
+            "precision": 0.5,
+            "recall": 0.375,
+            "f1": 0.41666666666666663
+          },
+          "Light-Medium": {
+            "precision": 0.375,
+            "recall": 0.25,
+            "f1": 0.29166666666666663
+          },
+          "Medium": {
+            "precision": 0.41666666666666663,
+            "recall": 0.5,
+            "f1": 0.45
+          },
+          "Medium-Deep": {
+            "precision": 0.8666666666666667,
+            "recall": 0.75,
+            "f1": 0.7817460317460317
+          },
+          "Deep": {
+            "precision": 0.85,
+            "recall": 1.0,
+            "f1": 0.8928571428571428
+          },
+          "Very Deep": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Very Fair",
+            "Fair",
+            "Light",
+            "Light-Medium",
+            "Medium",
+            "Medium-Deep",
+            "Deep",
+            "Very Deep"
+          ],
+          "matrix": [
+            [
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              17,
+              0,
+              1,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              1,
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              2,
+              10,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "extra_trees": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0032",
+              "SP0033",
+              "SP0035",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0018",
+              "SP0022",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 4,
+              "Light": 2,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 4
+            },
+            "macro_f1": 0.7071428571428572
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0026",
+              "SP0035",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 2,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.6
+          },
+          {
+            "fold": 3,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0020",
+              "SP0027",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Deep": 3,
+              "Fair": 4,
+              "Light": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5520833333333333
+          },
+          {
+            "fold": 4,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0027",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0019",
+              "SP0023",
+              "SP0028",
+              "SP0032",
+              "SP0033"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5833333333333333
+          }
+        ],
+        "mean": 0.610639880952381,
+        "std": 0.058310694328385385,
+        "mean_accuracy": 0.8885416666666667,
+        "mean_balanced_accuracy": 0.8854166666666666,
+        "mean_macro_precision": 0.6276041666666666,
+        "mean_macro_recall": 0.609375,
+        "mean_weighted_f1": 0.8987103174603174,
+        "per_class_mean": {
+          "Very Fair": {
+            "precision": 0.75,
+            "recall": 0.75,
+            "f1": 0.75
+          },
+          "Fair": {
+            "precision": 0.9375,
+            "recall": 0.9375,
+            "f1": 0.9375
+          },
+          "Light": {
+            "precision": 0.5,
+            "recall": 0.375,
+            "f1": 0.41666666666666663
+          },
+          "Light-Medium": {
+            "precision": 0.5,
+            "recall": 0.5,
+            "f1": 0.5
+          },
+          "Medium": {
+            "precision": 0.41666666666666663,
+            "recall": 0.5,
+            "f1": 0.45
+          },
+          "Medium-Deep": {
+            "precision": 1.0,
+            "recall": 0.8125,
+            "f1": 0.8809523809523809
+          },
+          "Deep": {
+            "precision": 0.9166666666666666,
+            "recall": 1.0,
+            "f1": 0.95
+          },
+          "Very Deep": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Very Fair",
+            "Fair",
+            "Light",
+            "Light-Medium",
+            "Medium",
+            "Medium-Deep",
+            "Deep",
+            "Very Deep"
+          ],
+          "matrix": [
+            [
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              19,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              4,
+              1,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              2,
+              11,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              9,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "hist_gb": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0032",
+              "SP0033",
+              "SP0035",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0018",
+              "SP0022",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 4,
+              "Light": 2,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 4
+            },
+            "macro_f1": 0.5416666666666667
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0026",
+              "SP0035",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 2,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5450757575757577
+          },
+          {
+            "fold": 3,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0020",
+              "SP0027",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Deep": 3,
+              "Fair": 4,
+              "Light": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5
+          },
+          {
+            "fold": 4,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0027",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0019",
+              "SP0023",
+              "SP0028",
+              "SP0032",
+              "SP0033"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.28422619047619047
+          }
+        ],
+        "mean": 0.4677421536796537,
+        "std": 0.10742904322347904,
+        "mean_accuracy": 0.6375,
+        "mean_balanced_accuracy": 0.6465277777777777,
+        "mean_macro_precision": 0.546875,
+        "mean_macro_recall": 0.44791666666666663,
+        "mean_weighted_f1": 0.6718772546897547,
+        "per_class_mean": {
+          "Very Fair": {
+            "precision": 0.425,
+            "recall": 0.375,
+            "f1": 0.363095238095238
+          },
+          "Fair": {
+            "precision": 0.725,
+            "recall": 0.5833333333333333,
+            "f1": 0.6252705627705627
+          },
+          "Light": {
+            "precision": 0.5,
+            "recall": 0.25,
+            "f1": 0.3333333333333333
+          },
+          "Light-Medium": {
+            "precision": 0.6,
+            "recall": 0.625,
+            "f1": 0.5595238095238095
+          },
+          "Medium": {
+            "precision": 0.5,
+            "recall": 0.375,
+            "f1": 0.41666666666666663
+          },
+          "Medium-Deep": {
+            "precision": 0.7499999999999999,
+            "recall": 0.75,
+            "f1": 0.7357142857142858
+          },
+          "Deep": {
+            "precision": 0.875,
+            "recall": 0.625,
+            "f1": 0.7083333333333333
+          },
+          "Very Deep": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Very Fair",
+            "Fair",
+            "Light",
+            "Light-Medium",
+            "Medium",
+            "Medium-Deep",
+            "Deep",
+            "Very Deep"
+          ],
+          "matrix": [
+            [
+              3,
+              3,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              5,
+              11,
+              3,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              5,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              0,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              2,
+              1,
+              10,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              3,
+              6,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "xgboost": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0032",
+              "SP0033",
+              "SP0035",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0018",
+              "SP0022",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 4,
+              "Light": 2,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 4
+            },
+            "macro_f1": 0.40654761904761905
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0026",
+              "SP0035",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 2,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.49583333333333335
+          },
+          {
+            "fold": 3,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0020",
+              "SP0027",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Deep": 3,
+              "Fair": 4,
+              "Light": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5163690476190476
+          },
+          {
+            "fold": 4,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0027",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0019",
+              "SP0023",
+              "SP0028",
+              "SP0032",
+              "SP0033"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5654761904761905
+          }
+        ],
+        "mean": 0.4960565476190476,
+        "std": 0.05754038275264971,
+        "mean_accuracy": 0.746875,
+        "mean_balanced_accuracy": 0.7145833333333333,
+        "mean_macro_precision": 0.5364583333333333,
+        "mean_macro_recall": 0.484375,
+        "mean_weighted_f1": 0.7644841269841269,
+        "per_class_mean": {
+          "Very Fair": {
+            "precision": 0.75,
+            "recall": 0.75,
+            "f1": 0.75
+          },
+          "Fair": {
+            "precision": 0.9375,
+            "recall": 0.9375,
+            "f1": 0.9375
+          },
+          "Light": {
+            "precision": 0.5,
+            "recall": 0.25,
+            "f1": 0.3333333333333333
+          },
+          "Light-Medium": {
+            "precision": 0.375,
+            "recall": 0.25,
+            "f1": 0.29166666666666663
+          },
+          "Medium": {
+            "precision": 0.29166666666666663,
+            "recall": 0.375,
+            "f1": 0.325
+          },
+          "Medium-Deep": {
+            "precision": 0.75,
+            "recall": 0.6875,
+            "f1": 0.7000000000000001
+          },
+          "Deep": {
+            "precision": 0.6875,
+            "recall": 0.625,
+            "f1": 0.6309523809523809
+          },
+          "Very Deep": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Very Fair",
+            "Fair",
+            "Light",
+            "Light-Medium",
+            "Medium",
+            "Medium-Deep",
+            "Deep",
+            "Very Deep"
+          ],
+          "matrix": [
+            [
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              19,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              1,
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              0,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              2,
+              9,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              3,
+              6,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "lightgbm": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0032",
+              "SP0033",
+              "SP0035",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0018",
+              "SP0022",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 4,
+              "Light": 2,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 4
+            },
+            "macro_f1": 0.5895833333333333
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0026",
+              "SP0035",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium": 2,
+              "Medium-Deep": 2,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.6166666666666667
+          },
+          {
+            "fold": 3,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0015",
+              "SP0020",
+              "SP0027",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Deep": 3,
+              "Fair": 4,
+              "Light": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.5520833333333333
+          },
+          {
+            "fold": 4,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0005",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0027",
+              "SP0029",
+              "SP0031",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0004",
+              "SP0006",
+              "SP0007",
+              "SP0019",
+              "SP0023",
+              "SP0028",
+              "SP0032",
+              "SP0033"
+            ],
+            "test_class_distribution": {
+              "Deep": 2,
+              "Fair": 6,
+              "Light-Medium": 2,
+              "Medium-Deep": 4,
+              "Very Fair": 2
+            },
+            "macro_f1": 0.39166666666666666
+          }
+        ],
+        "mean": 0.5375,
+        "std": 0.08726406683802396,
+        "mean_accuracy": 0.8104166666666667,
+        "mean_balanced_accuracy": 0.78125,
+        "mean_macro_precision": 0.5677083333333334,
+        "mean_macro_recall": 0.5390625,
+        "mean_weighted_f1": 0.8118055555555557,
+        "per_class_mean": {
+          "Very Fair": {
+            "precision": 0.75,
+            "recall": 0.75,
+            "f1": 0.75
+          },
+          "Fair": {
+            "precision": 0.9375,
+            "recall": 0.9375,
+            "f1": 0.9375
+          },
+          "Light": {
+            "precision": 0.5,
+            "recall": 0.25,
+            "f1": 0.3333333333333333
+          },
+          "Light-Medium": {
+            "precision": 0.375,
+            "recall": 0.25,
+            "f1": 0.29166666666666663
+          },
+          "Medium": {
+            "precision": 0.41666666666666663,
+            "recall": 0.5,
+            "f1": 0.45
+          },
+          "Medium-Deep": {
+            "precision": 0.7291666666666666,
+            "recall": 0.75,
+            "f1": 0.7208333333333333
+          },
+          "Deep": {
+            "precision": 0.8333333333333333,
+            "recall": 0.875,
+            "f1": 0.8166666666666667
+          },
+          "Very Deep": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Very Fair",
+            "Fair",
+            "Light",
+            "Light-Medium",
+            "Medium",
+            "Medium-Deep",
+            "Deep",
+            "Very Deep"
+          ],
+          "matrix": [
+            [
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              19,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              2,
+              1,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              2,
+              10,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              8,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "ranking": [
+      {
+        "model": "extra_trees",
+        "mean": 0.610639880952381
+      },
+      {
+        "model": "random_forest",
+        "mean": 0.5610975829725829
+      },
+      {
+        "model": "lightgbm",
+        "mean": 0.5375
+      },
+      {
+        "model": "xgboost",
+        "mean": 0.4960565476190476
+      },
+      {
+        "model": "hist_gb",
+        "mean": 0.4677421536796537
+      },
+      {
+        "model": "logreg",
+        "mean": 0.4401537698412698
+      }
+    ],
+    "best": "extra_trees"
+  },
+  "calibration": {
+    "method": "none",
+    "sufficient": false,
+    "note": "validation split does not contain classes ['Light', 'Light-Medium', 'Medium', 'Very Fair']; raw probabilities kept (calibration requires every class to appear in the calibration data)"
+  },
+  "selection_reason": {
+    "metric": "macro_f1",
+    "selected": "extra_trees",
+    "selected_mean": 0.610639880952381,
+    "runner_up": "random_forest",
+    "runner_up_mean": 0.5610975829725829,
+    "margin": 0.04954229797979803,
+    "note": "highest person-grouped CV macro_f1 over the same folds; heuristic baseline kept separately as model zero"
+  },
+  "feature_audit": {
+    "n_rows": 63,
+    "features": {
+      "feat_skin_L": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 21.5686,
+        "max": 81.9608,
+        "mean": 55.2661,
+        "std": 18.7175,
+        "flags": []
+      },
+      "feat_skin_a": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 1.0,
+        "max": 22.0,
+        "mean": 11.0476,
+        "std": 5.8789,
+        "flags": []
+      },
+      "feat_skin_b": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 2.0,
+        "max": 36.0,
+        "mean": 19.9603,
+        "std": 8.7497,
+        "flags": []
+      },
+      "feat_ita": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -74.2845,
+        "max": 84.8421,
+        "mean": 10.5284,
+        "std": 43.3389,
+        "flags": []
+      },
+      "feat_undertone_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -5.0,
+        "max": 19.0,
+        "mean": 8.9127,
+        "std": 6.0136,
+        "flags": []
+      },
+      "feat_olive_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.1,
+        "max": 3.5,
+        "mean": 0.671,
+        "std": 0.6115,
+        "flags": []
+      },
+      "feat_chroma_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 6.3246,
+        "max": 39.8121,
+        "mean": 23.1927,
+        "std": 9.6789,
+        "flags": []
+      },
+      "feat_depth_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 18.0392,
+        "max": 78.4314,
+        "mean": 44.7339,
+        "std": 18.7175,
+        "flags": []
+      },
+      "feat_skin_hue": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 15.9454,
+        "max": 84.2894,
+        "mean": 60.3373,
+        "std": 14.1949,
+        "flags": []
+      },
+      "feat_hair_L": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 21.5686,
+        "max": 41.1765,
+        "mean": 38.3505,
+        "std": 6.2928,
+        "flags": []
+      },
+      "feat_eye_L": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 20.7843,
+        "max": 81.5686,
+        "mean": 54.46,
+        "std": 18.7757,
+        "flags": []
+      },
+      "feat_contrast_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -0.0,
+        "max": 41.1765,
+        "mean": 18.3473,
+        "std": 14.9193,
+        "flags": []
+      },
+      "feat_skin_region_count": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 4.0,
+        "max": 4.0,
+        "mean": 4.0,
+        "std": 0.0,
+        "flags": [
+          "constant"
+        ]
+      },
+      "feat_skin_L_spread": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 6.6225,
+        "mean": 3.1774,
+        "std": 2.628,
+        "flags": []
+      },
+      "feat_skin_a_spread": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 1.7321,
+        "mean": 0.5453,
+        "std": 0.5273,
+        "flags": []
+      },
+      "feat_skin_b_spread": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 3.0311,
+        "mean": 0.9258,
+        "std": 0.8948,
+        "flags": []
+      },
+      "feat_wb_b_minus_a": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -4.0,
+        "max": 19.0,
+        "mean": 8.873,
+        "std": 5.9934,
+        "flags": []
+      },
+      "feat_grey_world_shift": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 4.054,
+        "max": 42.5416,
+        "mean": 21.2916,
+        "std": 11.1418,
+        "flags": []
+      },
+      "feat_brightness": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 21.5686,
+        "max": 81.9608,
+        "mean": 55.2661,
+        "std": 18.7175,
+        "flags": []
+      },
+      "feat_highlight_clip_frac": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0,
+        "flags": [
+          "constant"
+        ]
+      },
+      "feat_shadow_clip_frac": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 0.0006,
+        "mean": 0.0,
+        "std": 0.0001,
+        "flags": [
+          "near_constant"
+        ]
+      }
+    },
+    "flagged": [
+      "feat_highlight_clip_frac",
+      "feat_shadow_clip_frac",
+      "feat_skin_region_count"
+    ]
+  },
+  "ablation": {
+    "backend": "extra_trees",
+    "variants": {
+      "full": {
+        "n_features": 21,
+        "mean": 0.610639880952381,
+        "std": 0.058310694328385385
+      },
+      "skin_core": {
+        "n_features": 9,
+        "mean": 0.5497880591630592,
+        "std": 0.04430256623526084
+      },
+      "skin_core+hair_eye": {
+        "n_features": 12,
+        "mean": 0.6316468253968254,
+        "std": 0.04913539350929917
+      },
+      "skin_core+hair_eye+region_variability": {
+        "n_features": 16,
+        "mean": 0.6145833333333333,
+        "std": 0.03454817489953543
+      },
+      "skin_core+hair_eye+region_variability+quality_lighting": {
+        "n_features": 21,
+        "mean": 0.610639880952381,
+        "std": 0.058310694328385385
+      }
+    },
+    "best_variant": "skin_core+hair_eye",
+    "note": "same folds/backend for every variant; the full set stays the deployed default unless a variant wins by a margin worth acting on"
+  },
+  "holdout": {
+    "n": 16,
+    "accuracy": 0.8125,
+    "balanced_accuracy": 0.7,
+    "macro_precision": 0.5,
+    "macro_recall": 0.4375,
+    "macro_f1": 0.4583333333333333,
+    "weighted_f1": 0.8333333333333334,
+    "per_class": {
+      "Very Fair": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 4
+      },
+      "Fair": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 4
+      },
+      "Light": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666,
+        "support": 2
+      },
+      "Light-Medium": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "Medium": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 2
+      },
+      "Medium-Deep": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "Deep": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 4
+      },
+      "Very Deep": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "Very Fair",
+        "Fair",
+        "Light",
+        "Light-Medium",
+        "Medium",
+        "Medium-Deep",
+        "Deep",
+        "Very Deep"
+      ],
+      "matrix": [
+        [
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "top2_accuracy": 0.875,
+    "abstained_rows": 0,
+    "abstain_rate": 0.0
+  },
+  "calibration_scores": {
+    "ece": 0.2017,
+    "brier": 0.3601
+  },
+  "boundary": null,
+  "robustness": {
+    "skin_depth": {
+      "subgroups": {
+        "Deep": {
+          "n_images": 4,
+          "n_people": 2,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        },
+        "Fair": {
+          "n_images": 4,
+          "n_people": 2,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        },
+        "Light": {
+          "n_images": 2,
+          "n_people": 1,
+          "accuracy": 0.5,
+          "balanced_accuracy": 0.5,
+          "macro_f1": 0.3333,
+          "small_n": true
+        },
+        "Medium": {
+          "n_images": 2,
+          "n_people": 1,
+          "accuracy": 0.0,
+          "balanced_accuracy": 0.0,
+          "macro_f1": 0.0,
+          "small_n": true
+        },
+        "Very Fair": {
+          "n_images": 4,
+          "n_people": 2,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "lighting_type": {
+      "subgroups": {
+        "Indoor cool": {
+          "n_images": 7,
+          "n_people": 7,
+          "accuracy": 0.8571,
+          "balanced_accuracy": 0.8,
+          "macro_f1": 0.6667,
+          "small_n": true
+        },
+        "Indoor warm": {
+          "n_images": 3,
+          "n_people": 3,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        },
+        "Low light": {
+          "n_images": 2,
+          "n_people": 2,
+          "accuracy": 0.5,
+          "balanced_accuracy": 0.5,
+          "macro_f1": 0.3333,
+          "small_n": true
+        },
+        "Natural": {
+          "n_images": 4,
+          "n_people": 4,
+          "accuracy": 0.75,
+          "balanced_accuracy": 0.6667,
+          "macro_f1": 0.5,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "camera_type": {
+      "subgroups": {
+        "DSLR": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.7,
+          "macro_f1": 0.5238,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "makeup": {
+      "subgroups": {
+        "No makeup": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.7,
+          "macro_f1": 0.5238,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "image_quality": {
+      "subgroups": {
+        "Good": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.7,
+          "macro_f1": 0.5238,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "source": {
+      "subgroups": {
+        "Synthetic": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.7,
+          "macro_f1": 0.5238,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    }
+  },
+  "error_analysis": {
+    "worst_classes": [
+      {
+        "label": "Medium",
+        "f1": 0.0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "support": 2
+      },
+      {
+        "label": "Light",
+        "f1": 0.6667,
+        "recall": 0.5,
+        "precision": 1.0,
+        "support": 2
+      },
+      {
+        "label": "Very Fair",
+        "f1": 1.0,
+        "recall": 1.0,
+        "precision": 1.0,
+        "support": 4
+      },
+      {
+        "label": "Fair",
+        "f1": 1.0,
+        "recall": 1.0,
+        "precision": 1.0,
+        "support": 4
+      },
+      {
+        "label": "Deep",
+        "f1": 1.0,
+        "recall": 1.0,
+        "precision": 1.0,
+        "support": 4
+      }
+    ],
+    "worst_subgroups": [
+      {
+        "attribute": "skin_depth",
+        "group": "Medium",
+        "accuracy": 0.0,
+        "macro_f1": 0.0,
+        "n_images": 2,
+        "small_n": true
+      },
+      {
+        "attribute": "skin_depth",
+        "group": "Light",
+        "accuracy": 0.5,
+        "macro_f1": 0.3333,
+        "n_images": 2,
+        "small_n": true
+      },
+      {
+        "attribute": "lighting_type",
+        "group": "Low light",
+        "accuracy": 0.5,
+        "macro_f1": 0.3333,
+        "n_images": 2,
+        "small_n": true
+      },
+      {
+        "attribute": "lighting_type",
+        "group": "Natural",
+        "accuracy": 0.75,
+        "macro_f1": 0.5,
+        "n_images": 4,
+        "small_n": true
+      },
+      {
+        "attribute": "camera_type",
+        "group": "DSLR",
+        "accuracy": 0.8125,
+        "macro_f1": 0.5238,
+        "n_images": 16,
+        "small_n": true
+      },
+      {
+        "attribute": "makeup",
+        "group": "No makeup",
+        "accuracy": 0.8125,
+        "macro_f1": 0.5238,
+        "n_images": 16,
+        "small_n": true
+      },
+      {
+        "attribute": "image_quality",
+        "group": "Good",
+        "accuracy": 0.8125,
+        "macro_f1": 0.5238,
+        "n_images": 16,
+        "small_n": true
+      },
+      {
+        "attribute": "source",
+        "group": "Synthetic",
+        "accuracy": 0.8125,
+        "macro_f1": 0.5238,
+        "n_images": 16,
+        "small_n": true
+      }
+    ],
+    "largest_confusion_pairs": [
+      {
+        "true": "Medium",
+        "predicted": "Medium-Deep",
+        "count": 2
+      },
+      {
+        "true": "Light",
+        "predicted": "Light-Medium",
+        "count": 1
+      }
+    ]
+  },
+  "holdout_evaluated_at": "2026-09-19 22:15:57",
+  "holdout_rows": 16,
+  "holdout_people": 8
+}

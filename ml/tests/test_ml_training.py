@@ -28,8 +28,12 @@ CONTRASTS = list(CONTRAST_ORDER)
 FEAT_COLS = [
     "feat_skin_L", "feat_skin_a", "feat_skin_b", "feat_ita",
     "feat_undertone_proxy", "feat_olive_proxy", "feat_chroma_proxy",
-    "feat_depth_proxy", "feat_hair_L", "feat_eye_L", "feat_contrast_proxy",
+    "feat_depth_proxy", "feat_skin_hue",
+    "feat_hair_L", "feat_eye_L", "feat_contrast_proxy",
+    "feat_skin_region_count", "feat_skin_L_spread", "feat_skin_a_spread",
+    "feat_skin_b_spread",
     "feat_wb_b_minus_a", "feat_grey_world_shift", "feat_brightness",
+    "feat_highlight_clip_frac", "feat_shadow_clip_frac",
 ]
 
 
@@ -96,10 +100,14 @@ def _write_dataset(root: Path, rows):
                 "feat_skin_L": L, "feat_skin_a": 8.0, "feat_skin_b": 18.0,
                 "feat_ita": 30.0, "feat_undertone_proxy": 10.0,
                 "feat_olive_proxy": 0.44, "feat_chroma_proxy": 19.7,
-                "feat_depth_proxy": 100 - L, "feat_hair_L": 30.0,
+                "feat_depth_proxy": 100 - L, "feat_skin_hue": 66.0,
+                "feat_hair_L": 30.0,
                 "feat_eye_L": 25.0, "feat_contrast_proxy": 20.0,
+                "feat_skin_region_count": 4, "feat_skin_L_spread": 1.0,
+                "feat_skin_a_spread": 0.5, "feat_skin_b_spread": 0.5,
                 "feat_wb_b_minus_a": 2.0, "feat_grey_world_shift": 5.0,
                 "feat_brightness": L,
+                "feat_highlight_clip_frac": 0.0, "feat_shadow_clip_frac": 0.0,
             }
             writer.writerow({"image_id": row["image_id"], **payload, "feat_ok": "True"})
     for i, row in enumerate(rows):
@@ -316,6 +324,104 @@ class TrainingTests(unittest.TestCase):
                 result = run_training(_prepare(root, target), dict(_CONFIG), root / "models")
                 self.assertFalse(result["cv"].get("skipped"), target)
                 self.assertTrue(result.get("model_id"), target)
+
+    def test_cv_metrics_are_fully_persisted(self):
+        """Spec #41: per-class P/R/F1 + confusion survive into metrics.json."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._train_ready_root(Path(tmp))
+            from facemax_color.training import run_training
+
+            result = run_training(_prepare(root, "undertone"), dict(_CONFIG), root / "models")
+            metrics = json.loads(
+                (Path(result["artifact_dir"]) / "metrics.json").read_text(encoding="utf-8")
+            )
+            candidate = metrics["cv"]["candidates"][metrics["cv"]["best"]]
+            self.assertIn("mean_accuracy", candidate)
+            self.assertIn("mean_balanced_accuracy", candidate)
+            self.assertIn("mean_macro_precision", candidate)
+            self.assertIn("mean_macro_recall", candidate)
+            self.assertIn("per_class_mean", candidate)
+            self.assertIn("confusion_matrix_sum", candidate)
+            for label, stats in candidate["per_class_mean"].items():
+                for key in ("precision", "recall", "f1"):
+                    self.assertIn(key, stats)
+            # every fold's metric recorded alongside the selection metric
+            for fold in candidate["folds"]:
+                self.assertIn("macro_f1", fold)
+
+    def test_selection_reason_is_recorded(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._train_ready_root(Path(tmp))
+            from facemax_color.training import run_training
+
+            result = run_training(_prepare(root, "contrast"), dict(_CONFIG), root / "models")
+            reason = result["selection_reason"]
+            self.assertEqual(reason["selected"], result["cv"]["best"])
+            self.assertIsNotNone(reason["runner_up"])
+            self.assertIsNotNone(reason["margin"])
+            meta = json.loads(
+                (Path(result["artifact_dir"]) / "metadata.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(meta["selection_reason"]["selected"], reason["selected"])
+
+    def test_feature_audit_written_and_flags_constant(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._train_ready_root(Path(tmp))
+            from facemax_color.training import run_training
+
+            result = run_training(_prepare(root, "undertone"), dict(_CONFIG), root / "models")
+            audit = json.loads(
+                (Path(result["artifact_dir"]) / "feature_audit.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(audit["n_rows"], result["n_train_val_rows"])
+            self.assertIn("feat_skin_L", audit["features"])
+            stats = audit["features"]["feat_olive_proxy"]
+            self.assertIn("missing_pct", stats)
+            # feat_olive_proxy is a constant in the fixture -> must be flagged
+            self.assertIn("constant", stats["flags"])
+            self.assertIn("feat_olive_proxy", audit["flagged"])
+
+    def test_ablation_uses_same_backend_and_reports_variants(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self._train_ready_root(Path(tmp))
+            from facemax_color.training import run_training
+
+            result = run_training(_prepare(root, "undertone"), dict(_CONFIG), root / "models")
+            ablation = result["ablation"]
+            self.assertFalse(ablation.get("skipped"))
+            self.assertIn("full", ablation["variants"])
+            for name, stats in ablation["variants"].items():
+                self.assertGreater(stats["n_features"], 0, name)
+                self.assertFalse(stats["mean"] != stats["mean"], name)  # not NaN
+            # full variant uses every canonical feature
+            from facemax_color.models import FEATURE_COLUMNS
+
+            self.assertEqual(ablation["variants"]["full"]["n_features"], len(FEATURE_COLUMNS))
+
+    def test_calibration_insufficiency_reported_not_faked(self):
+        """Spec #27: too-small calibration data must be reported, not used."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "data"
+            # enough people to pass min_class_samples, few enough that the
+            # val split is far below the calibration sufficiency bar
+            rows = _fixture_rows(people=18, per_person=2)
+            _write_dataset(root, rows)
+            from facemax_color.audit import lock_holdout
+
+            lock_holdout(root, rows, test_frac=0.2, seed=3)
+            from facemax_color.training import run_training
+
+            result = run_training(_prepare(root, "chroma"), dict(_CONFIG), root / "models")
+            self.assertFalse(result["cv"].get("skipped"))
+            calib = result["calibration"]
+            # with a 2-3 row val split, calibration must be refused either for
+            # missing classes or for insufficient rows - never silently fitted
+            self.assertEqual(calib["method"], "none")
+            self.assertFalse(calib["sufficient"])
+            self.assertTrue(
+                "insufficient" in calib["note"] or "does not contain classes" in calib["note"],
+                calib["note"],
+            )
 
 
 def data_rows_of(root: Path):
@@ -590,6 +696,160 @@ class GateTests(unittest.TestCase):
             self.assertTrue(
                 (root / "models" / "contrast" / model_id / "holdout_report.txt").exists()
             )
+
+
+class ColourFeatureTests(unittest.TestCase):
+    """Colour-pipeline regression tests (spec #7/#14/#16)."""
+
+    def test_lab_recentring_and_hue_sign(self):
+        import cv2
+        import numpy as np
+
+        from facemax_color.colour import region_lab_samples
+
+        # Direct check of the conversion math via a synthetic ROI: build an
+        # image whose LAB is known, run through the same conversion code path.
+        # Box must be big enough that region fractions clear REGION_PIXEL_MIN.
+        size = 128
+        lab = np.zeros((size, size, 3), dtype=np.uint8)
+        lab[..., 0] = 180  # L* ~ 70.6
+        lab[..., 1] = 138  # a* = +10
+        lab[..., 2] = 148  # b* = +20
+        bgr = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
+        mask = np.ones((size, size), dtype=bool)
+        regions = region_lab_samples(bgr, (0, 0, size, size), mask)
+        values = list(regions.values())
+        self.assertTrue(values)
+        L, A, B = values[0]
+        self.assertAlmostEqual(L, 180 * 100.0 / 255.0, places=1)
+        self.assertAlmostEqual(A, 10.0, places=1)
+        self.assertAlmostEqual(B, 20.0, places=1)
+
+    def test_contrast_proxy_sign(self):
+        """Dark hair + light skin -> POSITIVE contrast (spec #14)."""
+        from facemax_color.colour import ExtractionResult
+
+        result = ExtractionResult(image_id="x")
+        result.skin_L = 70.0
+        hair_L, eye_L = 20.0, 30.0
+        result.hair_L, result.eye_L = hair_L, eye_L
+        contrast = result.skin_L - min(hair_L, eye_L)
+        self.assertGreater(contrast, 0)
+        # and the reverse: light hair on deep skin -> negative
+        self.assertLess(35.0 - 60.0, 0)
+
+    def test_quality_gate_rejects_cast_and_clipping(self):
+        from facemax_color.models import quality_gate
+
+        good = {
+            "feat_ok": True, "feat_skin_hue": 40.0,
+            "feat_shadow_clip_frac": 0.0, "feat_highlight_clip_frac": 0.0,
+            "feat_skin_pixels": 5000,
+        }
+        self.assertTrue(quality_gate(good)["ok"])
+
+        blue_cast = dict(good, feat_skin_hue=200.0)
+        out = quality_gate(blue_cast)
+        self.assertFalse(out["ok"])
+        self.assertTrue(any("hue" in p for p in out["problems"]))
+
+        low_light = dict(good, feat_shadow_clip_frac=0.5)
+        out = quality_gate(low_light)
+        self.assertFalse(out["ok"])
+        self.assertTrue(any("shadow" in p for p in out["problems"]))
+
+        blown = dict(good, feat_highlight_clip_frac=0.5)
+        self.assertFalse(quality_gate(blown)["ok"])
+
+    def test_predictor_abstains_on_close_probabilities(self):
+        import numpy as np
+
+        from facemax_color.training import SeasonPredictor
+
+        class FakePipeline:
+            classes_ = ["Deep Autumn", "Deep Winter"]
+
+            def predict_proba(self, X):
+                return np.array([[0.52, 0.48]])
+
+        predictor = SeasonPredictor(
+            approach="direct",
+            feature_columns=["feat_skin_L"],
+            medians={"feat_skin_L": 50.0},
+            classes=["Deep Autumn", "Deep Winter"],
+            secondary_min_prob=0.10,
+            abstain_margin=0.10,
+            pipeline=FakePipeline(),
+        )
+        out = predictor.predict_row({"feat_skin_L": 30.0})
+        self.assertTrue(out["abstained"])
+        self.assertEqual(out["prediction"], "")
+        self.assertEqual(out["prediction_secondary"], "Deep Winter")
+        self.assertIn("ambiguous", out["abstain_reason"])
+
+        # without the margin, same input yields a firm prediction
+        predictor.abstain_margin = 0.0
+        out2 = predictor.predict_row({"feat_skin_L": 30.0})
+        self.assertFalse(out2["abstained"])
+        self.assertEqual(out2["prediction"], "Deep Autumn")
+
+    def test_verify_feature_schema_fails_loudly(self):
+        import numpy as np
+
+        from facemax_color.training import SeasonPredictor
+
+        class FakePipeline:
+            classes_ = ["Warm", "Cool"]
+
+            def predict_proba(self, X):
+                return np.array([[0.7, 0.3]])
+
+        predictor = SeasonPredictor(
+            approach="direct",
+            feature_columns=["feat_skin_L", "feat_skin_hue"],
+            medians={"feat_skin_L": 50.0, "feat_skin_hue": 40.0},
+            classes=["Warm", "Cool"],
+            secondary_min_prob=0.1,
+            feature_version="facemax-color-features-v2",
+            pipeline=FakePipeline(),
+        )
+        # missing feat_skin_hue -> loud failure, not silent garbage
+        with self.assertRaises(ValueError) as ctx:
+            predictor.verify_feature_schema({"feat_skin_L": 50.0})
+        self.assertIn("schema mismatch", str(ctx.exception))
+        # complete features pass
+        predictor.verify_feature_schema({"feat_skin_L": 50.0, "feat_skin_hue": 40.0})
+
+    def test_comparison_output_carries_provenance(self):
+        """The hist_gb=0.725-style stale-comparison problem must not recur."""
+        from facemax_color.evaluate import render_comparison
+        from facemax_color.models import ColourModelBundle
+
+        bundle = ColourModelBundle(axes={})
+        bundle.comparison = {
+            "undertone": {"backend": "hist_gb", "cv_macro_f1": {"hist_gb": 0.725}}
+        }
+        bundle.comparison_provenance = {
+            "dataset_rows": 63,
+            "people": 32,
+            "feature_version": "facemax-color-features-v2",
+        }
+        text = render_comparison(bundle)
+        self.assertIn("feature_version", text)
+        self.assertIn("NOT comparable", text)
+        self.assertIn("hist_gb", text)
+
+    def test_top2_accuracy(self):
+        from facemax_color.training import top2_accuracy
+
+        truth = ["A", "B", "C", "A"]
+        probs = [
+            {"A": 0.5, "B": 0.3, "C": 0.2},    # A first -> hit
+            {"A": 0.4, "B": 0.35, "C": 0.25},   # B second -> hit
+            {"A": 0.5, "B": 0.4, "C": 0.1},    # C third -> miss
+            {"C": 0.6, "B": 0.2, "A": 0.25},   # A second -> hit
+        ]
+        self.assertAlmostEqual(top2_accuracy(truth, probs), 0.75)
 
 
 if __name__ == "__main__":

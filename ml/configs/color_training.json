@@ -5,7 +5,7 @@
   "selection_metric": "macro_f1",
   "class_weight": "balanced",
   "n_jobs": 1,
-  "models": ["logreg", "random_forest", "xgboost", "lightgbm"],
+  "models": ["logreg", "random_forest", "extra_trees", "xgboost", "lightgbm", "hist_gb"],
   "season_approaches": ["direct", "axis_first", "hierarchical"],
   "hierarchical_axis_backend": "random_forest",
   "calibration": {
@@ -14,6 +14,7 @@
     "bins": 15
   },
   "secondary_rule": {
-    "secondary_min_prob": 0.10
+    "secondary_min_prob": 0.10,
+    "abstain_margin": 0.0
   }
 }

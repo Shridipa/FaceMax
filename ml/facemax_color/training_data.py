@@ -49,7 +49,7 @@ TARGETS: Dict[str, Dict[str, Any]] = {
     "season": {"column": "season_primary", "order": SEASON_ORDER},
 }
 
-FEATURE_VERSION = "facemax-color-features-v1"
+FEATURE_VERSION = "facemax-color-features-v2"
 
 
 class LeakageError(RuntimeError):
@@ -362,3 +362,70 @@ def save_report(data: TrainingData, out_path: Path) -> None:
         "feature_version_note": "canonical feat_* columns only (leakage-audited)",
     }
     out_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# feature audit (spec #16: inspect features BEFORE trusting models)
+# ---------------------------------------------------------------------------
+
+def feature_audit(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Per-feature health report over usable rows.
+
+    For every canonical feature: missing %, min/max/mean/std, invalid count,
+    and flags for constant / near-constant / heavily-missing columns. The
+    audit REPORTS, it does not delete: a flagged column still trains, but the
+    reason it is flagged is persisted in feature_audit.json.
+    """
+    from .dataset import coerce_feature_row
+
+    rows = [r for r in rows if r.get("_label_ok") and r.get("_person_ok")]
+    audit: Dict[str, Any] = {"n_rows": len(rows), "features": {}}
+    for column in FEATURE_COLUMNS:
+        raw = [r.get(column) for r in rows]
+        values = []
+        invalid = 0
+        for value in raw:
+            if value is None or value == "":
+                continue
+            try:
+                number = float(value)
+            except (TypeError, ValueError):
+                invalid += 1
+                continue
+            if np.isfinite(number):
+                values.append(number)
+            else:
+                invalid += 1
+        n = len(rows)
+        missing = n - len(values)
+        stats: Dict[str, Any] = {
+            "missing_pct": round(100.0 * missing / n, 2) if n else 0.0,
+            "invalid_count": invalid,
+            "count": len(values),
+        }
+        if values:
+            arr = np.array(values, dtype=np.float64)
+            std = float(np.std(arr))
+            stats.update(
+                {
+                    "min": round(float(arr.min()), 4),
+                    "max": round(float(arr.max()), 4),
+                    "mean": round(float(arr.mean()), 4),
+                    "std": round(std, 4),
+                }
+            )
+            if std == 0.0:
+                stats["flags"] = ["constant"]
+            elif std < 1e-3:
+                stats["flags"] = ["near_constant"]
+            else:
+                stats["flags"] = []
+        else:
+            stats["flags"] = ["all_missing"]
+        if stats["missing_pct"] >= 50.0:
+            stats.setdefault("flags", []).append("heavily_missing")
+        audit["features"][column] = stats
+    audit["flagged"] = sorted(
+        {c for c, s in audit["features"].items() if s.get("flags")}
+    )
+    return audit

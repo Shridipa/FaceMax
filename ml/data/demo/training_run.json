@@ -11,8 +11,10 @@
     "models": [
       "logreg",
       "random_forest",
+      "extra_trees",
       "xgboost",
-      "lightgbm"
+      "lightgbm",
+      "hist_gb"
     ],
     "season_approaches": [
       "direct",
@@ -29,5 +31,16 @@
       "secondary_min_prob": 0.1
     }
   },
-  "results": {}
+  "results": {
+    "undertone": {
+      "model_id": "undertone-lightgbm-v001",
+      "n_train_val_rows": 63,
+      "n_people": 32
+    },
+    "skin_depth": {
+      "model_id": "skin_depth-extra_trees-v001",
+      "n_train_val_rows": 63,
+      "n_people": 32
+    }
+  }
 }

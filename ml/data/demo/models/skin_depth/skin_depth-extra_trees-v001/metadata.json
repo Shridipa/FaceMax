@@ -1,0 +1,36 @@
+{
+  "model_id": "skin_depth-extra_trees-v001",
+  "model_type": "extra_trees",
+  "target": "skin_depth",
+  "label_column": "skin_depth",
+  "feature_version": "facemax-color-features-v2",
+  "dataset_version": "4aff0f893ce2caf6",
+  "training_timestamp": "2026-09-19 22:14:07",
+  "training_rows": 63,
+  "training_people": 32,
+  "validation_strategy": "person-grouped StratifiedGroupKFold",
+  "hyperparameters": {
+    "random_seed": "42",
+    "cv_folds": "5",
+    "min_class_samples": "3",
+    "selection_metric": "macro_f1",
+    "class_weight": "balanced",
+    "n_jobs": "1",
+    "models": "['logreg', 'random_forest', 'extra_trees', 'xgboost', 'lightgbm', 'hist_gb']",
+    "season_approaches": "['direct', 'axis_first', 'hierarchical']",
+    "hierarchical_axis_backend": "random_forest"
+  },
+  "random_seed": 42,
+  "git_commit": "1aec8cf",
+  "data_source": "demo",
+  "smoke": true,
+  "selection_reason": {
+    "metric": "macro_f1",
+    "selected": "extra_trees",
+    "selected_mean": 0.610639880952381,
+    "runner_up": "random_forest",
+    "runner_up_mean": 0.5610975829725829,
+    "margin": 0.04954229797979803,
+    "note": "highest person-grouped CV macro_f1 over the same folds; heuristic baseline kept separately as model zero"
+  }
+}
