@@ -6,6 +6,11 @@
   "functions": {
     "api/analyze.ts": {
       "maxDuration": 30
+    },
+    "api/color-analysis.py": {
+      "maxDuration": 60,
+      "memory": 1769,
+      "excludeFiles": "{ml/tests/**,ml/**/__pycache__/**,ml/.pytest_cache/**,ml/data/demo/training_data_*.json,ml/data/demo/fallback_boxes.json,ml/data/raw/**,ml/data/processed/**}"
     }
   },
   "rewrites": [

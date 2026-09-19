@@ -1,0 +1,8 @@
+# Runtime deps for the /api/color-analysis Python serverless function.
+# Versions are pinned to the environment the demo models were trained with,
+# so the joblib pickles load cleanly on Vercel's Python 3.12 runtime.
+numpy==2.2.6
+opencv-python-headless==4.12.0.88
+scikit-learn==1.9.0
+joblib==1.5.2
+lightgbm==4.7.0

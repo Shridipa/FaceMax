@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Upload, Check, ArrowLeft, Camera, X } from "lucide-react";
-import { analyzeColours, readFileAsBase64, isValidImageType } from "../services/api";
+import { analyzeColours, readFileAsBase64, isValidImageType, downscaleImage } from "../services/api";
 import type { ColourAnalysisResponse } from "../types/api";
 
 const GUIDELINES = [
@@ -91,8 +91,10 @@ export default function Analyze() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     const base64 = canvas.toDataURL("image/jpeg", 0.92);
-    setPreview(base64);
-    stopCamera();
+    downscaleImage(base64).then((scaled) => {
+      setPreview(scaled);
+      stopCamera();
+    });
   }, [stopCamera]);
 
   // Handle file upload
