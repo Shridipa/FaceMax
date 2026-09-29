@@ -96,11 +96,15 @@ def _load_axis_predictor(axis: str):
         _MODELS_CACHE[cache_key] = (None, None)
         return None, None
 
+    # Pick the NEWEST version per axis (artifact dirs are ...-vNNN; the old
+    # code took the alphabetically-first, so a trained v002 was shadowed by
+    # v001). Keeps the API contract identical - just the right artifact.
+
     try:
         import joblib
 
-        predictor = joblib.load(model_files[0])
-        entry = (predictor, model_files[0].parent.name)
+        predictor = joblib.load(model_files[-1])
+        entry = (predictor, model_files[-1].parent.name)
     except Exception:
         traceback.print_exc()
         entry = (None, None)
@@ -163,6 +167,24 @@ def analyze_image(data_url_or_b64: str) -> Tuple[int, Dict[str, Any]]:
             return 200, {"ok": False, "error": msg}
 
         features = ext.as_feature_row()
+
+        # 2b. Quality gate (ML spec #14/#15): refuse to colour-analyse images
+        # whose extraction is dominated by colour cast / clipping / mask
+        # failure. "Photo quality is insufficient..." is more honest than a
+        # confident wrong season. Same gate as the CLI predict path.
+        from facemax_color.models import quality_gate
+
+        gate = quality_gate(features)
+        if not gate.get("ok"):
+            return 200, {
+                "ok": False,
+                "error": "Photo quality is insufficient for reliable colour analysis.",
+                "quality_problems": gate.get("problems", []),
+                "retry_hint": (
+                    "Use diffuse natural light, avoid backlight and filters, "
+                    "and fill the frame with your face."
+                ),
+            }
 
         # 3. Per-axis predictions: trained model when present, else heuristic.
         axes_predictions: Dict[str, str] = {}

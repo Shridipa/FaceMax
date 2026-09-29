@@ -1,0 +1,346 @@
+{
+  "dataset": "CelebAMask-HQ",
+  "sample": [
+    0,
+    1,
+    100,
+    5000,
+    15000,
+    29999
+  ],
+  "transformation": {
+    "mask_to_image": "nearest-neighbour resize (official masks are 512x512; images 1024x1024); binary labels preserved; recorded per image as mask_resize_applied"
+  },
+  "per_image": [
+    {
+      "image_id": 0,
+      "image_read_ok": true,
+      "mask_classes_found": [
+        "hair",
+        "l_brow",
+        "l_eye",
+        "l_lip",
+        "mouth",
+        "neck",
+        "nose",
+        "r_brow",
+        "r_eye",
+        "skin",
+        "u_lip"
+      ],
+      "unknown_classes": [],
+      "image_size": [
+        1024,
+        1024
+      ],
+      "mask_native_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "mask_resize_applied": true,
+      "masks_readable": 11,
+      "masks_expected": 11,
+      "skin_px": 388752,
+      "exclude_px": 574948,
+      "skin_exclude_overlap_px": 64064,
+      "region_lab_samples_regions": [
+        "chin",
+        "forehead",
+        "left_cheek",
+        "right_cheek"
+      ],
+      "lab_sample": {
+        "forehead": [
+          67.06,
+          15.0,
+          28.0
+        ],
+        "left_cheek": [
+          44.31,
+          20.0,
+          29.0
+        ]
+      },
+      "ok": false
+    },
+    {
+      "image_id": 1,
+      "image_read_ok": true,
+      "mask_classes_found": [
+        "cloth",
+        "hair",
+        "l_brow",
+        "l_ear",
+        "l_eye",
+        "l_lip",
+        "mouth",
+        "neck",
+        "nose",
+        "r_brow",
+        "r_ear",
+        "r_eye",
+        "skin",
+        "u_lip"
+      ],
+      "unknown_classes": [],
+      "image_size": [
+        1024,
+        1024
+      ],
+      "mask_native_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "mask_resize_applied": true,
+      "masks_readable": 14,
+      "masks_expected": 14,
+      "skin_px": 386816,
+      "exclude_px": 541928,
+      "skin_exclude_overlap_px": 31612,
+      "region_lab_samples_regions": [
+        "chin",
+        "forehead",
+        "left_cheek",
+        "right_cheek"
+      ],
+      "lab_sample": {
+        "forehead": [
+          75.69,
+          10.0,
+          27.0
+        ],
+        "left_cheek": [
+          70.98,
+          11.0,
+          26.0
+        ]
+      },
+      "ok": false
+    },
+    {
+      "image_id": 100,
+      "image_read_ok": true,
+      "mask_classes_found": [
+        "cloth",
+        "hair",
+        "l_brow",
+        "l_ear",
+        "l_eye",
+        "l_lip",
+        "mouth",
+        "neck",
+        "nose",
+        "r_brow",
+        "r_ear",
+        "r_eye",
+        "skin",
+        "u_lip"
+      ],
+      "unknown_classes": [],
+      "image_size": [
+        1024,
+        1024
+      ],
+      "mask_native_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "mask_resize_applied": true,
+      "masks_readable": 14,
+      "masks_expected": 14,
+      "skin_px": 361952,
+      "exclude_px": 290232,
+      "skin_exclude_overlap_px": 33384,
+      "region_lab_samples_regions": [
+        "chin",
+        "forehead",
+        "left_cheek",
+        "right_cheek"
+      ],
+      "lab_sample": {
+        "forehead": [
+          57.25,
+          3.0,
+          29.0
+        ],
+        "left_cheek": [
+          68.24,
+          1.0,
+          20.0
+        ]
+      },
+      "ok": false
+    },
+    {
+      "image_id": 5000,
+      "image_read_ok": true,
+      "mask_classes_found": [
+        "hair",
+        "l_brow",
+        "l_ear",
+        "l_eye",
+        "l_lip",
+        "mouth",
+        "neck",
+        "nose",
+        "r_brow",
+        "r_ear",
+        "r_eye",
+        "skin",
+        "u_lip"
+      ],
+      "unknown_classes": [],
+      "image_size": [
+        1024,
+        1024
+      ],
+      "mask_native_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "mask_resize_applied": true,
+      "masks_readable": 13,
+      "masks_expected": 13,
+      "skin_px": 375584,
+      "exclude_px": 468380,
+      "skin_exclude_overlap_px": 30136,
+      "region_lab_samples_regions": [
+        "chin",
+        "forehead",
+        "left_cheek",
+        "right_cheek"
+      ],
+      "lab_sample": {
+        "forehead": [
+          74.12,
+          12.0,
+          17.0
+        ],
+        "left_cheek": [
+          73.33,
+          13.0,
+          18.0
+        ]
+      },
+      "ok": false
+    },
+    {
+      "image_id": 15000,
+      "image_read_ok": true,
+      "mask_classes_found": [
+        "cloth",
+        "hair",
+        "l_brow",
+        "l_eye",
+        "l_lip",
+        "neck",
+        "nose",
+        "r_brow",
+        "r_eye",
+        "skin",
+        "u_lip"
+      ],
+      "unknown_classes": [],
+      "image_size": [
+        1024,
+        1024
+      ],
+      "mask_native_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "mask_resize_applied": true,
+      "masks_readable": 11,
+      "masks_expected": 11,
+      "skin_px": 366172,
+      "exclude_px": 550620,
+      "skin_exclude_overlap_px": 74932,
+      "region_lab_samples_regions": [
+        "chin",
+        "forehead",
+        "left_cheek",
+        "right_cheek"
+      ],
+      "lab_sample": {
+        "forehead": [
+          5.88,
+          0.0,
+          3.0
+        ],
+        "left_cheek": [
+          72.55,
+          14.0,
+          30.0
+        ]
+      },
+      "ok": false
+    },
+    {
+      "image_id": 29999,
+      "image_read_ok": true,
+      "mask_classes_found": [
+        "ear_r",
+        "hair",
+        "l_ear",
+        "l_eye",
+        "l_lip",
+        "mouth",
+        "neck",
+        "nose",
+        "r_brow",
+        "r_ear",
+        "r_eye",
+        "skin",
+        "u_lip"
+      ],
+      "unknown_classes": [],
+      "image_size": [
+        1024,
+        1024
+      ],
+      "mask_native_sizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "mask_resize_applied": true,
+      "masks_readable": 13,
+      "masks_expected": 13,
+      "skin_px": 369264,
+      "exclude_px": 643928,
+      "skin_exclude_overlap_px": 157524,
+      "region_lab_samples_regions": [
+        "chin",
+        "forehead",
+        "left_cheek",
+        "right_cheek"
+      ],
+      "lab_sample": {
+        "forehead": [
+          16.47,
+          14.0,
+          17.0
+        ],
+        "left_cheek": [
+          64.71,
+          19.0,
+          19.0
+        ]
+      },
+      "ok": false
+    }
+  ],
+  "note": "masks are geometry only; no colour/undertone/season labels derived",
+  "all_ok": false
+}

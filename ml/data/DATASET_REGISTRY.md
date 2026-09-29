@@ -36,7 +36,8 @@ Rules:
 - **attribution required:** yes - cite the CelebAMask-HQ paper (Lee et al., CVPR 2020 "MaskGAN")
 - **intended use:** face parsing masks (skin/hair/eyes/lips) for segmentation supervision; NEVER seasonal ground truth
 - **known limitations:** constricted pose/lighting diversity; celebrity skew; NOT seasonal labels
-- **human-check: terms reviewed and accepted:** [ ]
+- **ingestion provenance (recorded 2026-09-28):** official archive downloaded via gdown from the project README's Google Drive id 1badu11NqxGf6qM3PTTooQDJvQbejgbTv (verified against https://github.com/switchablenorms/CelebAMask-HQ README); sha256 5dc46a36cba18d216b9a031902508b1398e7e4c545bbc9699bec32412c530ca6 (3,153,930,546 bytes); receipt data/ingest/CelebAMask-HQ.receipt.json (verify --rehash OK); stored at data/raw/external/CelebAMask-HQ/; use restricted to non-commercial research - masks are geometry only, NEVER undertone/season ground truth; no redistribution.
+- **human-check: terms reviewed and accepted:** [x] (2026-09-28, via project confirmation dialog; non-commercial research use only)
 - **downloaded:** no
 - **checksum (sha256):**
 - **preprocessing version:**
@@ -70,6 +71,7 @@ Rules:
 - **attribution required:** yes - cite Groh et al. CVPR 2021 (fitzpatrick17k paper) and Groh et al. CSCW 2022
 - **intended use:** skin-DEPTH robustness EVALUATION ONLY; Fitzpatrick types I-VI are sun-reactivity/dermatology labels and are NOT undertone/season/chroma labels
 - **known limitations:** dermatoscopic/clinical images (not portraits); Fitzpatrick labels subjective on diseased skin; three-level fitzpatrick scale in csv (-1 = unknown)
+- **ingestion provenance (recorded 2026-09-28):** official annotations CSV downloaded from https://raw.githubusercontent.com/mattgroh/fitzpatrick17k/main/fitzpatrick17k.csv; sha256 851dfaabf1791c2a8b1c2957619f3e0673cf0002f4ce924a5c02d185c7d4a1cd (4,104,341 bytes); receipt data/ingest/Fitzpatrick17k.receipt.json (verify --rehash OK); stored at data/raw/external/Fitzpatrick17k/fitzpatrick17k.csv; 16,577 rows validated (16,012 labelled / 565 unknown) with zero FaceMaxx-axis contamination; IMAGE FILES NOT OBTAINED (official request form required); labels kept as fitzpatrick_scale/three_partition/nine_partition - never converted to undertone/skin_depth/season.
 - **human-check: terms reviewed and accepted:** [ ]
 - **downloaded:** no
 - **checksum (sha256):**

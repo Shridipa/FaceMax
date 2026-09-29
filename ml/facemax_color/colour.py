@@ -362,7 +362,13 @@ def extract_image(image_id: str, path: Path, fallback_box=None) -> ExtractionRes
             np.degrees(np.arctan((L - 50.0) / max(abs(B), 1e-6))) * (1.0 if B >= 0 else -1.0)
         )
         result.undertone_proxy = float(B - A)          # warm >= 0, cool < 0
-        result.olive_proxy = float(A / max(B, 1e-6))   # low a*/b* ratio = olive/green cast
+        # Olive proxy = a*/b* magnitude ratio (low a* vs b* = green/olive cast).
+        # Sign-safe: for genuinely COOL skin a* can be <= 0, and a plain A/B
+        # division would flip the signal (negative ratio reads "very olive").
+        # We want olive-ness to track a* DEPLETION relative to b*, so use the
+        # magnitudes and clamp negatives of a* to 0 (a* <= 0 means NO redness,
+        # which is maximum olive-ness, not an anti-olive signal).
+        result.olive_proxy = float(max(A, 0.0) / max(abs(B), 1e-6))
         result.chroma_proxy = float(np.hypot(A, B))
         result.depth_proxy = float(100.0 - L)
         result.skin_hue_deg = float(np.degrees(np.arctan2(B, A)) % 360.0)  # CIELAB hue angle

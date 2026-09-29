@@ -33,12 +33,12 @@
   },
   "results": {
     "undertone": {
-      "model_id": "undertone-lightgbm-v001",
+      "model_id": "undertone-lightgbm-v002",
       "n_train_val_rows": 63,
       "n_people": 32
     },
     "skin_depth": {
-      "model_id": "skin_depth-extra_trees-v001",
+      "model_id": "skin_depth-extra_trees-v002",
       "n_train_val_rows": 63,
       "n_people": 32
     }

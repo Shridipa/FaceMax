@@ -1,0 +1,9 @@
+{
+  "n": 16577,
+  "labelled": 16012,
+  "unknown_type": 565,
+  "problems": [],
+  "ok": true,
+  "note": "Fitzpatrick types are sun-reactivity labels; they are never converted to FaceMaxx undertone/depth/season labels.",
+  "note_ftp_scale": "fitzpatrick_scale is the 3-level column per registry known-limitations; -1 = unknown"
+}

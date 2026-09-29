@@ -11,3 +11,8 @@ __pycache__/
 .pytest_cache/
 .venv/
 .vercel
+
+# Raw external datasets are licensed / multi-GB and never enter version
+# control (see ml/data/DATASET_REGISTRY.md); receipts + provenance live in
+# ml/data/ingest/ instead.
+ml/data/raw/

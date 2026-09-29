@@ -26,10 +26,41 @@ from .dataset import REGISTRY_FILENAME, init_dataset
 
 INGEST_DIRNAME = "ingest"
 SOURCES_FILENAME = "sources.json"
+# External datasets live under raw/external/<dataset>/ - NEVER under demo/.
+EXTERNAL_RAW_DIRNAME = "external"
 
 
 class IngestError(RuntimeError):
     """Raised when an ingestion step violates the data rules."""
+
+
+def external_raw_dir(root: Path, dataset: str) -> Path:
+    """Designated real-data directory for an external dataset's files.
+
+    Synthetic demo data lives in ``<root>/demo``; this helper keeps external
+    datasets physically separated (data-isolation rule).
+    """
+    safe = _safe_name(dataset)
+    return Path(root) / "raw" / EXTERNAL_RAW_DIRNAME / safe
+
+
+def assert_not_demo_path(archive: Path, root: Path) -> None:
+    """Refuse archives that live inside the synthetic demo tree.
+
+    Demo data (root/demo/**) must never enter real-data ingestion - not as
+    source, not as archive, not by symlink-looking path accidents.
+    """
+    root = Path(root).resolve()
+    try:
+        resolved = Path(archive).resolve()
+    except OSError:  # unresolvable path: let later existence checks handle it
+        return
+    demo_root = (root / "demo").resolve()
+    if resolved == demo_root or demo_root in resolved.parents:
+        raise IngestError(
+            f"refusing demo-tree archive for real ingestion: {resolved} "
+            "(synthetic demo data never enters the real dataset)"
+        )
 
 
 # External datasets under consideration. ``license_gate`` must be flipped to
@@ -148,6 +179,8 @@ def record_download(
         raise IngestError(f"unknown dataset {dataset!r}; known sources: {known}")
     if not archive.exists():
         raise IngestError(f"archive not found: {archive}")
+    # Data isolation: an archive from the synthetic demo tree is never real data.
+    assert_not_demo_path(archive, root)
 
     license_text = _registry_license(root, entry["name"])
     if license_text is None or not license_text:
@@ -162,6 +195,16 @@ def record_download(
         )
 
     checksum = sha256_file(archive)
+
+    # Idempotency: re-recording the SAME archive (same dataset + sha256) is a
+    # no-op that returns the existing receipt - no duplicate records, no
+    # overwrite, no receipt-date churn. A DIFFERENT archive is a new download
+    # and replaces the receipt explicitly.
+    if entry.get("status") == "downloaded" and entry.get("checksum") == checksum and entry.get("receipt"):
+        existing_path = _ingest_dir(root) / entry["receipt"]
+        if existing_path.exists():
+            return json.loads(existing_path.read_text(encoding="utf-8"))
+
     receipt_name = f"{_safe_name(entry['name'])}.receipt.json"
     receipt = {
         "dataset": entry["name"],

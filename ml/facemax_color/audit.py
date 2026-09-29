@@ -263,15 +263,34 @@ def audit_dataset(
     return result
 
 
-def write_split_manifests(root: Path, rows: List[Dict], test_frac: float = 0.2, seed: int = 7) -> Dict[str, int]:
+def write_split_manifests(
+    root: Path,
+    rows: List[Dict],
+    test_frac: float = 0.2,
+    seed: int = 7,
+    label_column: Optional[str] = None,
+) -> Dict[str, int]:
     """Person-grouped split + manifests under data/splits/. Returns counts.
 
-    Uses facemax_bias.leakage.grouped_split (frozen evaluator logic) so the
-    split policy is identical everywhere. Manifests are the artifact to freeze:
-    later runs must reuse them rather than re-split.
+    Uses facemax_bias.leakage (frozen evaluator logic) so the split policy is
+    identical everywhere. Manifests are the artifact to freeze: later runs must
+    reuse them rather than re-split.
+
+    ``label_column``: when given (e.g. "season_primary"), the CLASS-AWARE
+    person-grouped splitter is used so val/test keep every label class
+    represented (a val split missing a class can never support calibration).
+    Coverage is attempted with whole people only; when impossible it falls
+    back to the plain grouped policy - never manufactured (spec #6).
     """
     root = Path(root)
-    split_rows = grouped_split([dict(r) for r in rows], test_frac=test_frac, seed=seed)
+    if label_column:
+        from facemax_bias.leakage import grouped_split_class_aware
+
+        split_rows = grouped_split_class_aware(
+            [dict(r) for r in rows], test_frac=test_frac, seed=seed, label_column=label_column
+        )
+    else:
+        split_rows = grouped_split([dict(r) for r in rows], test_frac=test_frac, seed=seed)
     counts: Dict[str, int] = {}
     for split in ("train", "val", "test"):
         ids = sorted(str(r.get("image_id")) for r in split_rows if r.get("split") == split)
@@ -295,7 +314,7 @@ def _digest_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def lock_holdout(root: Path, rows: List[Dict], test_frac: float = 0.15, seed: int = 7) -> Dict[str, Any]:
+def lock_holdout(root: Path, rows: List[Dict], test_frac: float = 0.15, seed: int = 7, label_column: Optional[str] = None) -> Dict[str, Any]:
     """Re-split, write manifests, then FREEZE them with a tamper-evident lock.
 
     The lock file (data/splits/holdout.lock.json) stores sha256 digests of every
@@ -309,8 +328,15 @@ def lock_holdout(root: Path, rows: List[Dict], test_frac: float = 0.15, seed: in
     import time
 
     root = Path(root)
-    counts = write_split_manifests(root, rows, test_frac=test_frac, seed=seed)
-    split_rows = grouped_split([dict(r) for r in rows], test_frac=test_frac, seed=seed)
+    counts = write_split_manifests(root, rows, test_frac=test_frac, seed=seed, label_column=label_column)
+    if label_column:
+        from facemax_bias.leakage import grouped_split_class_aware
+
+        split_rows = grouped_split_class_aware(
+            [dict(r) for r in rows], test_frac=test_frac, seed=seed, label_column=label_column
+        )
+    else:
+        split_rows = grouped_split([dict(r) for r in rows], test_frac=test_frac, seed=seed)
     check = leakage_check(split_rows)
     if not check["clean"]:
         raise RuntimeError(f"refusing to lock: split has person leakage: {check['pairs'][:3]}")

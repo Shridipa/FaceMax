@@ -3,10 +3,10 @@
     "name": "CelebAMask-HQ",
     "official_url": "https://github.com/switchablenorms/CelebAMask-HQ",
     "intended_use": "face parsing masks (skin/hair/eyes/lips) only - NEVER seasonal ground truth",
-    "license_gate": "unconfirmed",
-    "status": "not_downloaded",
-    "checksum": null,
-    "receipt": null
+    "license_gate": "confirmed",
+    "status": "downloaded",
+    "checksum": "5dc46a36cba18d216b9a031902508b1398e7e4c545bbc9699bec32412c530ca6",
+    "receipt": "CelebAMask-HQ.receipt.json"
   },
   {
     "name": "FFHQ",
@@ -21,9 +21,9 @@
     "name": "Fitzpatrick17k",
     "official_url": "https://github.com/mattgroh/fitzpatrick17k",
     "intended_use": "skin-depth robustness evaluation only; Fitzpatrick labels are NOT undertone/season labels",
-    "license_gate": "unconfirmed",
-    "status": "not_downloaded",
-    "checksum": null,
-    "receipt": null
+    "license_gate": "confirmed",
+    "status": "downloaded",
+    "checksum": "851dfaabf1791c2a8b1c2957619f3e0673cf0002f4ce924a5c02d185c7d4a1cd",
+    "receipt": "Fitzpatrick17k.receipt.json"
   }
 ]

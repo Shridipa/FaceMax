@@ -1,0 +1,8 @@
+{
+  "dataset": "CelebAMask-HQ",
+  "archive": "data\\raw\\external\\CelebAMask-HQ\\CelebAMask-HQ.zip",
+  "sha256": "5dc46a36cba18d216b9a031902508b1398e7e4c545bbc9699bec32412c530ca6",
+  "bytes": 3153930546,
+  "license": "non-commercial research purposes ONLY (verified: official page states \"available for non-commercial research purposes only\"; use restricted to non-commercial research and educational purposes)",
+  "recorded": "2026-09-28"
+}

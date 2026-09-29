@@ -27,6 +27,7 @@ from .training import (
     boundary_analysis,
     calibration_report,
     compute_metrics,
+    ordinal_adjacency_report,
     robustness_report,
     top2_accuracy,
 )
@@ -155,6 +156,13 @@ def run_holdout_evaluation(
 
     # Boundary analysis (season only - the wheel is a season concept).
     boundary = boundary_analysis(truth, preds) if data.target == "season" else None
+    # Ordinal adjacency diagnostics (skin_depth only): are errors NEAR misses
+    # on the depth scale or real jumps? Diagnostic - never restates accuracy.
+    ordinal = (
+        ordinal_adjacency_report(truth, preds, TARGETS["skin_depth"]["order"])
+        if data.target == "skin_depth"
+        else None
+    )
 
     # Robustness via the FROZEN evaluator (small-n flags preserved).
     robustness = robustness_report(rows, truth_key=data.label_column)
@@ -170,6 +178,7 @@ def run_holdout_evaluation(
         "metrics": metrics,
         "calibration_scores": calib_scores,
         "boundary": boundary,
+        "ordinal_adjacency": ordinal,
         "robustness": robustness,
         "error_analysis": error_analysis,
     }
@@ -188,6 +197,7 @@ def run_holdout_evaluation(
             "holdout": metrics,
             "calibration_scores": calib_scores,
             "boundary": boundary,
+            "ordinal_adjacency": ordinal,
             "robustness": robustness,
             "error_analysis": error_analysis,
             "holdout_evaluated_at": evaluated["evaluated_at"],
@@ -283,8 +293,8 @@ def _render_card_from_stored(metadata: Dict[str, Any], stored: Dict[str, Any], c
             "note": calibration.get("note"),
             "ece": (stored.get("calibration_scores") or {}).get("ece"),
             "brier": (stored.get("calibration_scores") or {}).get("brier"),
-        },
-        "robustness": stored.get("robustness"),
+        },            "robustness": stored.get("robustness"),
+        "ordinal_adjacency": stored.get("ordinal_adjacency"),
         "selection_reason": stored.get("selection_reason"),
         "feature_audit": stored.get("feature_audit"),
         "ablation": stored.get("ablation"),

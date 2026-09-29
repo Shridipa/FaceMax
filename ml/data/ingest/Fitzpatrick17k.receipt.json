@@ -1,0 +1,8 @@
+{
+  "dataset": "Fitzpatrick17k",
+  "archive": "data\\raw\\external\\Fitzpatrick17k\\fitzpatrick17k.csv",
+  "sha256": "851dfaabf1791c2a8b1c2957619f3e0673cf0002f4ce924a5c02d185c7d4a1cd",
+  "bytes": 4104341,
+  "license": "CC BY-NC-SA 3.0 Unported (verified: \"Licensing\" section of the official README; original images from Atlas Dermatologico and DermaAmin)",
+  "recorded": "2026-09-28"
+}

@@ -172,7 +172,7 @@ def _ensure_demo_splits(demo_dir: Path, seed: int) -> Dict[str, int]:
     real flow (manifest-driven prep + holdout evaluation) using the SAME
     frozen grouped_split logic. Real data NEVER gets splits from here.
     """
-    from facemax_bias.leakage import grouped_split, leakage_check, split_stats
+    from facemax_bias.leakage import grouped_split_class_aware, leakage_check, split_stats
 
     splits_dir = demo_dir / "splits"
     if (splits_dir / "train.txt").exists():
@@ -185,7 +185,12 @@ def _ensure_demo_splits(demo_dir: Path, seed: int) -> Dict[str, int]:
         return {}  # no demo tree yet; per-target handling reports it clearly
     if not rows:
         return {}
-    split_rows = grouped_split([dict(r) for r in rows], test_frac=0.2, seed=seed)
+    # Class-aware person-grouped split so the val split keeps every class
+    # present (calibration otherwise gets skipped, spec #6). Whole people
+    # only; plain fallback when coverage is impossible. Demo-only path.
+    split_rows = grouped_split_class_aware(
+        [dict(r) for r in rows], test_frac=0.2, seed=seed, label_column="season_primary"
+    )
     check = leakage_check(split_rows)
     if not check["clean"]:  # defensive: grouped_split is person-grouped
         raise RuntimeError(f"demo split has person leakage: {check['pairs'][:3]}")
@@ -445,12 +450,21 @@ def cmd_audit(args) -> int:
         return 1
 
     if args.regen_splits or args.splits:
+        # Class-aware person-grouped split: keeps val/test class coverage so
+        # calibration stays possible (spec #6). Whole people only; falls back
+        # to the plain policy when full coverage is impossible. Never splits a
+        # person and never duplicates rows to manufacture coverage.
+        label_column = "season_primary" if any(
+            str(r.get("season_primary") or "").strip() for r in rows
+        ) else None
+        if label_column:
+            print("split policy: person-grouped + class-aware (whole people; coverage attempted, never manufactured)")
         if args.regen_splits:
-            lock = lock_holdout(root, rows, test_frac=args.test_frac, seed=args.seed)
+            lock = lock_holdout(root, rows, test_frac=args.test_frac, seed=args.seed, label_column=label_column)
             print(f"holdout LOCKED: {lock['counts']}")
             print("the test split is now the frozen fairness holdout - never train on it")
         else:
-            counts = write_split_manifests(root, rows, test_frac=args.test_frac, seed=args.seed)
+            counts = write_split_manifests(root, rows, test_frac=args.test_frac, seed=args.seed, label_column=label_column)
             print(f"\nsplit manifests written to {root / 'splits'}: {counts}")
             print("consider `audit --regen-splits` to also freeze them with a holdout lock")
     elif lock_path.exists():
@@ -511,6 +525,23 @@ def cmd_ingest(args) -> int:
                 return 0
             print(f"verify FAILED: {status.get('reason')}", file=sys.stderr)
             return 1
+        if args.ingest_cmd == "status":
+            from .external_datasets import external_dataset_status
+
+            rows = external_dataset_status(root)
+            print(f"{'dataset':<16} {'license':<12} {'archive':<10} {'extracted':<10} tasks")
+            for row in rows:
+                archive_state = "downloaded" if row["downloaded"] else "-"
+                print(
+                    f"{row['name']:<16} {row['license_gate']:<12} "
+                    f"{archive_state:<10} {'yes' if row['extracted'] else '-':<10} "
+                    f"{', '.join(row['tasks']) or '-'}"
+                )
+            print(
+                "\nexternal datasets are NEVER seasonal/undertone ground truth - "
+                "see DATASET_REGISTRY.md"
+            )
+            return 0
     except IngestError as exc:
         print(f"ingest error: {exc}", file=sys.stderr)
         return 1
@@ -677,7 +708,8 @@ def cmd_predict(args) -> int:
             if model_files:
                 try:
                     import joblib
-                    model_path = model_files[0]
+                    # newest version wins (artifact dirs sort as ...-vNNN)
+                    model_path = model_files[-1]
                     predictor = joblib.load(model_path)
                     # SeasonPredictor has predict_row; raw pipeline has predict_proba
                     if hasattr(predictor, "predict_row"):
@@ -919,6 +951,9 @@ def main(argv=None) -> int:
     p_ver.add_argument("--dataset", required=True)
     p_ver.add_argument("--rehash", action="store_true", help="re-hash the archive now")
     p_ver.set_defaults(func=cmd_ingest)
+    p_stat = ing_sub.add_parser("status", help="registered datasets: license/archive/extracted state + permitted tasks")
+    p_stat.add_argument("--root", default="data")
+    p_stat.set_defaults(func=cmd_ingest)
 
     p = sub.add_parser("annot", help="annotation workflow (import/queue/record/merge/coverage)")
     annot_sub = p.add_subparsers(dest="annot_cmd", required=True)

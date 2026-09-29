@@ -1,0 +1,2461 @@
+{
+  "cv": {
+    "skipped": false,
+    "class_counts": {
+      "Neutral": 18,
+      "Neutral-Cool": 4,
+      "Warm": 41
+    },
+    "candidates": {
+      "logreg": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0034",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0022",
+              "SP0033",
+              "SP0035",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.2698412698412698
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0033",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0034"
+            ],
+            "test_class_distribution": {
+              "Neutral": 6,
+              "Warm": 10
+            },
+            "macro_f1": 0.3181818181818182
+          },
+          {
+            "fold": 3,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.375
+          },
+          {
+            "fold": 4,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0002",
+              "SP0004",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Warm": 11
+            },
+            "macro_f1": 0.3333333333333333
+          }
+        ],
+        "mean": 0.32408910533910534,
+        "std": 0.0376001949600692,
+        "mean_accuracy": 0.90625,
+        "mean_balanced_accuracy": 0.8125,
+        "mean_macro_precision": 0.32329545454545455,
+        "mean_macro_recall": 0.3263888888888889,
+        "mean_weighted_f1": 0.9007034632034632,
+        "per_class_mean": {
+          "Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral-Cool": {
+            "precision": 0.125,
+            "recall": 0.125,
+            "f1": 0.125
+          },
+          "Neutral": {
+            "precision": 0.8375,
+            "recall": 0.8333333333333334,
+            "f1": 0.8314393939393939
+          },
+          "Neutral-Warm": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Warm": {
+            "precision": 0.9772727272727273,
+            "recall": 1.0,
+            "f1": 0.9880952380952381
+          },
+          "Olive": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Cool",
+            "Neutral-Cool",
+            "Neutral",
+            "Neutral-Warm",
+            "Warm",
+            "Olive"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              15,
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              41,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "random_forest": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0034",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0022",
+              "SP0033",
+              "SP0035",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.3
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0033",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0034"
+            ],
+            "test_class_distribution": {
+              "Neutral": 6,
+              "Warm": 10
+            },
+            "macro_f1": 0.3181818181818182
+          },
+          {
+            "fold": 3,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.38888888888888884
+          },
+          {
+            "fold": 4,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0002",
+              "SP0004",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Warm": 11
+            },
+            "macro_f1": 0.3333333333333333
+          }
+        ],
+        "mean": 0.33510101010101007,
+        "std": 0.03322123022618286,
+        "mean_accuracy": 0.921875,
+        "mean_balanced_accuracy": 0.8541666666666667,
+        "mean_macro_precision": 0.34027777777777773,
+        "mean_macro_recall": 0.3472222222222222,
+        "mean_weighted_f1": 0.9164772727272728,
+        "per_class_mean": {
+          "Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral-Cool": {
+            "precision": 0.125,
+            "recall": 0.25,
+            "f1": 0.16666666666666666
+          },
+          "Neutral": {
+            "precision": 0.9166666666666666,
+            "recall": 0.8333333333333334,
+            "f1": 0.8439393939393939
+          },
+          "Neutral-Warm": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Warm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "Olive": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Cool",
+            "Neutral-Cool",
+            "Neutral",
+            "Neutral-Warm",
+            "Warm",
+            "Olive"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              3,
+              15,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              41,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "extra_trees": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0034",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0022",
+              "SP0033",
+              "SP0035",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.3
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0033",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0034"
+            ],
+            "test_class_distribution": {
+              "Neutral": 6,
+              "Warm": 10
+            },
+            "macro_f1": 0.3333333333333333
+          },
+          {
+            "fold": 3,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.29437229437229434
+          },
+          {
+            "fold": 4,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0002",
+              "SP0004",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Warm": 11
+            },
+            "macro_f1": 0.3333333333333333
+          }
+        ],
+        "mean": 0.31525974025974024,
+        "std": 0.018182784451751203,
+        "mean_accuracy": 0.921875,
+        "mean_balanced_accuracy": 0.8125,
+        "mean_macro_precision": 0.3125,
+        "mean_macro_recall": 0.32291666666666663,
+        "mean_weighted_f1": 0.9018668831168831,
+        "per_class_mean": {
+          "Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral-Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral": {
+            "precision": 0.9166666666666666,
+            "recall": 0.9375,
+            "f1": 0.9142857142857143
+          },
+          "Neutral-Warm": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Warm": {
+            "precision": 0.9583333333333334,
+            "recall": 1.0,
+            "f1": 0.9772727272727273
+          },
+          "Olive": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Cool",
+            "Neutral-Cool",
+            "Neutral",
+            "Neutral-Warm",
+            "Warm",
+            "Olive"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              17,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              41,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "hist_gb": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0034",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0022",
+              "SP0033",
+              "SP0035",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.25789473684210523
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0033",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0034"
+            ],
+            "test_class_distribution": {
+              "Neutral": 6,
+              "Warm": 10
+            },
+            "macro_f1": 0.3333333333333333
+          },
+          {
+            "fold": 3,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.3
+          },
+          {
+            "fold": 4,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0002",
+              "SP0004",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Warm": 11
+            },
+            "macro_f1": 0.3333333333333333
+          }
+        ],
+        "mean": 0.30614035087719293,
+        "std": 0.031001047451004026,
+        "mean_accuracy": 0.90625,
+        "mean_balanced_accuracy": 0.8041666666666666,
+        "mean_macro_precision": 0.29861111111111105,
+        "mean_macro_recall": 0.31875,
+        "mean_weighted_f1": 0.8917763157894736,
+        "per_class_mean": {
+          "Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral-Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral": {
+            "precision": 0.7916666666666666,
+            "recall": 0.9375,
+            "f1": 0.8500000000000001
+          },
+          "Neutral-Warm": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Warm": {
+            "precision": 1.0,
+            "recall": 0.975,
+            "f1": 0.9868421052631579
+          },
+          "Olive": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Cool",
+            "Neutral-Cool",
+            "Neutral",
+            "Neutral-Warm",
+            "Warm",
+            "Olive"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              17,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              0,
+              40,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "xgboost": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0034",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0022",
+              "SP0033",
+              "SP0035",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.27777777777777773
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0033",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0034"
+            ],
+            "test_class_distribution": {
+              "Neutral": 6,
+              "Warm": 10
+            },
+            "macro_f1": 0.3333333333333333
+          },
+          {
+            "fold": 3,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.3
+          },
+          {
+            "fold": 4,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0002",
+              "SP0004",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Warm": 11
+            },
+            "macro_f1": 0.3333333333333333
+          }
+        ],
+        "mean": 0.31111111111111106,
+        "std": 0.02357022603955159,
+        "mean_accuracy": 0.921875,
+        "mean_balanced_accuracy": 0.8125,
+        "mean_macro_precision": 0.30277777777777776,
+        "mean_macro_recall": 0.32291666666666663,
+        "mean_weighted_f1": 0.9041666666666666,
+        "per_class_mean": {
+          "Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral-Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral": {
+            "precision": 0.8166666666666667,
+            "recall": 0.9375,
+            "f1": 0.8666666666666667
+          },
+          "Neutral-Warm": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Warm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "Olive": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Cool",
+            "Neutral-Cool",
+            "Neutral",
+            "Neutral-Warm",
+            "Warm",
+            "Olive"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              17,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              41,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "lightgbm": {
+        "folds": [
+          {
+            "fold": 1,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0034",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0000",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0022",
+              "SP0033",
+              "SP0035",
+              "SP0037"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.27777777777777773
+          },
+          {
+            "fold": 2,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0002",
+              "SP0004",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0022",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0033",
+              "SP0035",
+              "SP0037",
+              "SP0038",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0034"
+            ],
+            "test_class_distribution": {
+              "Neutral": 6,
+              "Warm": 10
+            },
+            "macro_f1": 0.3333333333333333
+          },
+          {
+            "fold": 3,
+            "train_images": 47,
+            "train_people": 24,
+            "test_images": 16,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0002",
+              "SP0004",
+              "SP0008",
+              "SP0012",
+              "SP0013",
+              "SP0014",
+              "SP0015",
+              "SP0016",
+              "SP0017",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0021",
+              "SP0022",
+              "SP0023",
+              "SP0027",
+              "SP0029",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0039"
+            ],
+            "test_people_ids": [
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0026",
+              "SP0028",
+              "SP0031",
+              "SP0038"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Neutral-Cool": 2,
+              "Warm": 10
+            },
+            "macro_f1": 0.4259259259259259
+          },
+          {
+            "fold": 4,
+            "train_images": 48,
+            "train_people": 24,
+            "test_images": 15,
+            "test_people": 8,
+            "train_people_ids": [
+              "SP0000",
+              "SP0001",
+              "SP0005",
+              "SP0006",
+              "SP0007",
+              "SP0008",
+              "SP0013",
+              "SP0015",
+              "SP0018",
+              "SP0019",
+              "SP0020",
+              "SP0022",
+              "SP0023",
+              "SP0026",
+              "SP0027",
+              "SP0028",
+              "SP0029",
+              "SP0031",
+              "SP0032",
+              "SP0033",
+              "SP0034",
+              "SP0035",
+              "SP0037",
+              "SP0038"
+            ],
+            "test_people_ids": [
+              "SP0002",
+              "SP0004",
+              "SP0012",
+              "SP0014",
+              "SP0016",
+              "SP0017",
+              "SP0021",
+              "SP0039"
+            ],
+            "test_class_distribution": {
+              "Neutral": 4,
+              "Warm": 11
+            },
+            "macro_f1": 0.3333333333333333
+          }
+        ],
+        "mean": 0.34259259259259256,
+        "std": 0.05319039487535211,
+        "mean_accuracy": 0.9375,
+        "mean_balanced_accuracy": 0.8541666666666667,
+        "mean_macro_precision": 0.35,
+        "mean_macro_recall": 0.34375,
+        "mean_weighted_f1": 0.9305555555555556,
+        "per_class_mean": {
+          "Cool": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Neutral-Cool": {
+            "precision": 0.25,
+            "recall": 0.125,
+            "f1": 0.16666666666666666
+          },
+          "Neutral": {
+            "precision": 0.8500000000000001,
+            "recall": 0.9375,
+            "f1": 0.8888888888888888
+          },
+          "Neutral-Warm": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "Warm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "Olive": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          }
+        },
+        "confusion_matrix_sum": {
+          "labels": [
+            "Cool",
+            "Neutral-Cool",
+            "Neutral",
+            "Neutral-Warm",
+            "Warm",
+            "Olive"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              17,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              41,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "ranking": [
+      {
+        "model": "lightgbm",
+        "mean": 0.34259259259259256
+      },
+      {
+        "model": "random_forest",
+        "mean": 0.33510101010101007
+      },
+      {
+        "model": "logreg",
+        "mean": 0.32408910533910534
+      },
+      {
+        "model": "extra_trees",
+        "mean": 0.31525974025974024
+      },
+      {
+        "model": "xgboost",
+        "mean": 0.31111111111111106
+      },
+      {
+        "model": "hist_gb",
+        "mean": 0.30614035087719293
+      }
+    ],
+    "best": "lightgbm"
+  },
+  "calibration": {
+    "method": "none",
+    "sufficient": false,
+    "note": "validation split does not contain classes ['Neutral-Cool']; raw probabilities kept (calibration requires every class to appear in the calibration data)"
+  },
+  "selection_reason": {
+    "metric": "macro_f1",
+    "selected": "lightgbm",
+    "selected_mean": 0.34259259259259256,
+    "runner_up": "random_forest",
+    "runner_up_mean": 0.33510101010101007,
+    "margin": 0.0074915824915824936,
+    "note": "highest person-grouped CV macro_f1 over the same folds; heuristic baseline kept separately as model zero"
+  },
+  "feature_audit": {
+    "n_rows": 63,
+    "features": {
+      "feat_skin_L": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 21.5686,
+        "max": 81.9608,
+        "mean": 55.2661,
+        "std": 18.7175,
+        "flags": []
+      },
+      "feat_skin_a": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 1.0,
+        "max": 22.0,
+        "mean": 11.0476,
+        "std": 5.8789,
+        "flags": []
+      },
+      "feat_skin_b": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 2.0,
+        "max": 36.0,
+        "mean": 19.9603,
+        "std": 8.7497,
+        "flags": []
+      },
+      "feat_ita": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -74.2845,
+        "max": 84.8421,
+        "mean": 10.5284,
+        "std": 43.3389,
+        "flags": []
+      },
+      "feat_undertone_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -5.0,
+        "max": 19.0,
+        "mean": 8.9127,
+        "std": 6.0136,
+        "flags": []
+      },
+      "feat_olive_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.1,
+        "max": 3.5,
+        "mean": 0.671,
+        "std": 0.6115,
+        "flags": []
+      },
+      "feat_chroma_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 6.3246,
+        "max": 39.8121,
+        "mean": 23.1927,
+        "std": 9.6789,
+        "flags": []
+      },
+      "feat_depth_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 18.0392,
+        "max": 78.4314,
+        "mean": 44.7339,
+        "std": 18.7175,
+        "flags": []
+      },
+      "feat_skin_hue": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 15.9454,
+        "max": 84.2894,
+        "mean": 60.3373,
+        "std": 14.1949,
+        "flags": []
+      },
+      "feat_hair_L": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 21.5686,
+        "max": 41.1765,
+        "mean": 38.3505,
+        "std": 6.2928,
+        "flags": []
+      },
+      "feat_eye_L": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 20.7843,
+        "max": 81.5686,
+        "mean": 54.46,
+        "std": 18.7757,
+        "flags": []
+      },
+      "feat_contrast_proxy": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -0.0,
+        "max": 41.1765,
+        "mean": 18.3473,
+        "std": 14.9193,
+        "flags": []
+      },
+      "feat_skin_region_count": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 4.0,
+        "max": 4.0,
+        "mean": 4.0,
+        "std": 0.0,
+        "flags": [
+          "constant"
+        ]
+      },
+      "feat_skin_L_spread": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 6.6225,
+        "mean": 3.1774,
+        "std": 2.628,
+        "flags": []
+      },
+      "feat_skin_a_spread": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 1.7321,
+        "mean": 0.5453,
+        "std": 0.5273,
+        "flags": []
+      },
+      "feat_skin_b_spread": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 3.0311,
+        "mean": 0.9258,
+        "std": 0.8948,
+        "flags": []
+      },
+      "feat_wb_b_minus_a": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": -4.0,
+        "max": 19.0,
+        "mean": 8.873,
+        "std": 5.9934,
+        "flags": []
+      },
+      "feat_grey_world_shift": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 4.054,
+        "max": 42.5416,
+        "mean": 21.2916,
+        "std": 11.1418,
+        "flags": []
+      },
+      "feat_brightness": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 21.5686,
+        "max": 81.9608,
+        "mean": 55.2661,
+        "std": 18.7175,
+        "flags": []
+      },
+      "feat_highlight_clip_frac": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0,
+        "flags": [
+          "constant"
+        ]
+      },
+      "feat_shadow_clip_frac": {
+        "missing_pct": 0.0,
+        "invalid_count": 0,
+        "count": 63,
+        "min": 0.0,
+        "max": 0.0006,
+        "mean": 0.0,
+        "std": 0.0001,
+        "flags": [
+          "near_constant"
+        ]
+      }
+    },
+    "flagged": [
+      "feat_highlight_clip_frac",
+      "feat_shadow_clip_frac",
+      "feat_skin_region_count"
+    ]
+  },
+  "ablation": {
+    "backend": "lightgbm",
+    "variants": {
+      "full": {
+        "n_features": 21,
+        "mean": 0.34259259259259256,
+        "std": 0.05319039487535211
+      },
+      "skin_core": {
+        "n_features": 9,
+        "mean": 0.31666666666666665,
+        "std": 0.016666666666666663
+      },
+      "skin_core+hair_eye": {
+        "n_features": 12,
+        "mean": 0.3091269841269841,
+        "std": 0.026450727163881717
+      },
+      "skin_core+hair_eye+region_variability": {
+        "n_features": 16,
+        "mean": 0.3611111111111111,
+        "std": 0.08333333333333334
+      },
+      "skin_core+hair_eye+region_variability+quality_lighting": {
+        "n_features": 21,
+        "mean": 0.34259259259259256,
+        "std": 0.05319039487535211
+      }
+    },
+    "best_variant": "skin_core+hair_eye+region_variability",
+    "note": "same folds/backend for every variant; the full set stays the deployed default unless a variant wins by a margin worth acting on"
+  },
+  "holdout": {
+    "n": 16,
+    "accuracy": 0.8125,
+    "balanced_accuracy": 0.75,
+    "macro_precision": 0.40151515151515155,
+    "macro_recall": 0.375,
+    "macro_f1": 0.3365079365079365,
+    "weighted_f1": 0.7785714285714286,
+    "per_class": {
+      "Cool": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "Neutral-Cool": {
+        "precision": 1.0,
+        "recall": 0.25,
+        "f1": 0.4,
+        "support": 4
+      },
+      "Neutral": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "support": 2
+      },
+      "Neutral-Warm": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "Warm": {
+        "precision": 0.9090909090909091,
+        "recall": 1.0,
+        "f1": 0.9523809523809523,
+        "support": 10
+      },
+      "Olive": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "Cool",
+        "Neutral-Cool",
+        "Neutral",
+        "Neutral-Warm",
+        "Warm",
+        "Olive"
+      ],
+      "matrix": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          10,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "warnings": [
+      "classes with zero support (metrics for them are vacuous): Cool, Neutral-Warm, Olive",
+      "classes with support < 5 (unstable metrics): Neutral-Cool=4, Neutral=2"
+    ],
+    "top2_accuracy": 0.9375,
+    "abstained_rows": 0,
+    "abstain_rate": 0.0
+  },
+  "calibration_scores": {
+    "ece": 0.1888,
+    "brier": 0.3765
+  },
+  "boundary": null,
+  "ordinal_adjacency": null,
+  "robustness": {
+    "skin_depth": {
+      "subgroups": {
+        "Deep": {
+          "n_images": 4,
+          "n_people": 2,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        },
+        "Fair": {
+          "n_images": 4,
+          "n_people": 2,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        },
+        "Light": {
+          "n_images": 2,
+          "n_people": 1,
+          "accuracy": 0.5,
+          "balanced_accuracy": 0.5,
+          "macro_f1": 0.3333,
+          "small_n": true
+        },
+        "Medium": {
+          "n_images": 2,
+          "n_people": 1,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        },
+        "Very Fair": {
+          "n_images": 4,
+          "n_people": 2,
+          "accuracy": 0.5,
+          "balanced_accuracy": 0.5,
+          "macro_f1": 0.2667,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "lighting_type": {
+      "subgroups": {
+        "Indoor cool": {
+          "n_images": 7,
+          "n_people": 7,
+          "accuracy": 0.7143,
+          "balanced_accuracy": 0.6667,
+          "macro_f1": 0.5,
+          "small_n": true
+        },
+        "Indoor warm": {
+          "n_images": 3,
+          "n_people": 3,
+          "accuracy": 0.6667,
+          "balanced_accuracy": 0.5,
+          "macro_f1": 0.4,
+          "small_n": true
+        },
+        "Low light": {
+          "n_images": 2,
+          "n_people": 2,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        },
+        "Natural": {
+          "n_images": 4,
+          "n_people": 4,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "camera_type": {
+      "subgroups": {
+        "DSLR": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.75,
+          "macro_f1": 0.673,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "makeup": {
+      "subgroups": {
+        "No makeup": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.75,
+          "macro_f1": 0.673,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "image_quality": {
+      "subgroups": {
+        "Good": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.75,
+          "macro_f1": 0.673,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    },
+    "source": {
+      "subgroups": {
+        "Synthetic": {
+          "n_images": 16,
+          "n_people": 8,
+          "accuracy": 0.8125,
+          "balanced_accuracy": 0.75,
+          "macro_f1": 0.673,
+          "small_n": true
+        }
+      },
+      "worst_best": null,
+      "verdict": "insufficient data"
+    }
+  },
+  "error_analysis": {
+    "worst_classes": [
+      {
+        "label": "Neutral-Cool",
+        "f1": 0.4,
+        "recall": 0.25,
+        "precision": 1.0,
+        "support": 4
+      },
+      {
+        "label": "Neutral",
+        "f1": 0.6667,
+        "recall": 1.0,
+        "precision": 0.5,
+        "support": 2
+      },
+      {
+        "label": "Warm",
+        "f1": 0.9524,
+        "recall": 1.0,
+        "precision": 0.9091,
+        "support": 10
+      }
+    ],
+    "worst_subgroups": [
+      {
+        "attribute": "skin_depth",
+        "group": "Very Fair",
+        "accuracy": 0.5,
+        "macro_f1": 0.2667,
+        "n_images": 4,
+        "small_n": true
+      },
+      {
+        "attribute": "skin_depth",
+        "group": "Light",
+        "accuracy": 0.5,
+        "macro_f1": 0.3333,
+        "n_images": 2,
+        "small_n": true
+      },
+      {
+        "attribute": "lighting_type",
+        "group": "Indoor warm",
+        "accuracy": 0.6667,
+        "macro_f1": 0.4,
+        "n_images": 3,
+        "small_n": true
+      },
+      {
+        "attribute": "lighting_type",
+        "group": "Indoor cool",
+        "accuracy": 0.7143,
+        "macro_f1": 0.5,
+        "n_images": 7,
+        "small_n": true
+      },
+      {
+        "attribute": "camera_type",
+        "group": "DSLR",
+        "accuracy": 0.8125,
+        "macro_f1": 0.673,
+        "n_images": 16,
+        "small_n": true
+      },
+      {
+        "attribute": "makeup",
+        "group": "No makeup",
+        "accuracy": 0.8125,
+        "macro_f1": 0.673,
+        "n_images": 16,
+        "small_n": true
+      },
+      {
+        "attribute": "image_quality",
+        "group": "Good",
+        "accuracy": 0.8125,
+        "macro_f1": 0.673,
+        "n_images": 16,
+        "small_n": true
+      },
+      {
+        "attribute": "source",
+        "group": "Synthetic",
+        "accuracy": 0.8125,
+        "macro_f1": 0.673,
+        "n_images": 16,
+        "small_n": true
+      }
+    ],
+    "largest_confusion_pairs": [
+      {
+        "true": "Neutral-Cool",
+        "predicted": "Neutral",
+        "count": 2
+      },
+      {
+        "true": "Neutral-Cool",
+        "predicted": "Warm",
+        "count": 1
+      }
+    ]
+  },
+  "holdout_evaluated_at": "2026-09-27 21:53:39",
+  "holdout_rows": 16,
+  "holdout_people": 8
+}

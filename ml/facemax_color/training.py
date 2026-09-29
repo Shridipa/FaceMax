@@ -298,7 +298,7 @@ def compute_metrics(y_true: Sequence[str], y_pred: Sequence[str], labels: Sequen
             "support": int(s_c[i]),
         }
     cm = confusion_matrix(y_true, y_pred, labels=list(labels))
-    return {
+    block = {
         "n": len(y_true),
         "accuracy": acc,
         "balanced_accuracy": bal,
@@ -311,6 +311,83 @@ def compute_metrics(y_true: Sequence[str], y_pred: Sequence[str], labels: Sequen
             "labels": list(labels),
             "matrix": cm.astype(int).tolist(),
         },
+    }
+    # Persisted honesty warnings (zero/tiny-support classes, degenerate
+    # predictions) so no reader mistakes imbalance-inflated accuracy for
+    # balanced skill (spec #28: never discard per-class context).
+    block["warnings"] = metric_warnings(block, labels)
+    return block
+
+
+def metric_warnings(
+    metrics: Dict[str, Any],
+    labels: Sequence[str],
+    min_support: int = 5,
+) -> List[str]:
+    """Honesty warnings derived ONLY from a metrics block (spec #28/#42).
+
+    - classes with zero holdout/fold support (their recall is vacuous)
+    - classes whose support is below ``min_support`` (metrics are unstable)
+    - degenerate predictions (one predicted class covers everything)
+    Never modifies the metrics themselves - flags so nobody mistakes an
+    imbalance-inflated score for balanced skill (the demo Warm-class effect).
+    """
+    warnings: List[str] = []
+    per_class = metrics.get("per_class") or {}
+    low, zero = [], []
+    for label in labels:
+        support = int((per_class.get(label) or {}).get("support", 0))
+        if support == 0:
+            zero.append(label)
+        elif support < min_support:
+            low.append(f"{label}={support}")
+    if zero:
+        warnings.append("classes with zero support (metrics for them are vacuous): " + ", ".join(zero))
+    if low:
+        warnings.append(f"classes with support < {min_support} (unstable metrics): " + ", ".join(low))
+    preds = metrics.get("confusion_matrix") or {}
+    matrix = preds.get("matrix")
+    if matrix:
+        col_sums = [sum(row[j] for row in matrix) for j in range(len(matrix))]
+        nonzero = [c for c in col_sums if c > 0]
+        if len(nonzero) == 1 and len(matrix) > 1:
+            warnings.append(
+                "degenerate predictions: every row was predicted as a single class "
+                "(accuracy equals that class's share - not skill)"
+            )
+    return warnings
+
+
+def ordinal_adjacency_report(
+    y_true: Sequence[str],
+    y_pred: Sequence[str],
+    order: Sequence[str],
+) -> Dict[str, Any]:
+    """For ORDERED targets (skin_depth): how far off are the errors?
+
+    Spec #5: a Medium->Medium-Deep mistake (adjacent on the depth scale) is a
+    different failure from a Very Fair->Deep one. Reports the share of errors
+    that are ADJACENT (distance 1 on the ordinal scale) plus the worst pairs.
+    Diagnostic only - never used to restate accuracy.
+    """
+    index = {label: i for i, label in enumerate(order)}
+    adjacent = 0
+    pairs: Dict[str, int] = {}
+    errors = 0
+    for truth, pred in zip(y_true, y_pred):
+        if truth == pred or truth not in index or pred not in index:
+            continue
+        errors += 1
+        distance = abs(index[truth] - index[pred])
+        if distance == 1:
+            adjacent += 1
+        pair = " -> ".join(sorted((truth, pred)))
+        pairs[pair] = pairs.get(pair, 0) + 1
+    return {
+        "n_errors": errors,
+        "adjacent_errors": adjacent,
+        "adjacent_share_of_errors": round(adjacent / errors, 4) if errors else 0.0,
+        "worst_pairs": dict(sorted(pairs.items(), key=lambda kv: -kv[1])[:6]),
     }
 
 
@@ -819,7 +896,32 @@ def render_model_card(metadata: Dict[str, Any], metrics: Dict[str, Any], config:
     holdout = metrics.get("holdout")
     if holdout:
         lines.append(f"- locked holdout: accuracy={holdout.get('accuracy'):.3f} "
-                     f"macro_f1={holdout.get('macro_f1'):.3f} n={holdout.get('n')}")
+                     f"macro_f1={holdout.get('macro_f1'):.3f} "
+                     f"balanced_accuracy={holdout.get('balanced_accuracy'):.3f} n={holdout.get('n')}")
+        # Per-class table on the card (spec #29): support + P/R/F1 must be
+        # visible where the headline number is read, not buried in metrics.json.
+        per_class = holdout.get("per_class") or {}
+        if per_class:
+            lines.append("")
+            lines.append("### Holdout per-class metrics")
+            lines.append("")
+            lines.append("| label | support | precision | recall | f1 |")
+            lines.append("|---|---|---|---|---|")
+            for label, stats in per_class.items():
+                lines.append(
+                    f"| {label} | {int(stats.get('support', 0))} "
+                    f"| {stats.get('precision', 0.0):.3f} | {stats.get('recall', 0.0):.3f} "
+                    f"| {stats.get('f1', 0.0):.3f} |"
+                )
+        for warning in holdout.get("warnings") or []:
+            lines.append(f"- warning: {warning}")
+        ordinal = metrics.get("ordinal_adjacency")
+        if ordinal:
+            lines.append(
+                f"- ordinal adjacency: {ordinal.get('adjacent_errors')}/{ordinal.get('n_errors')} "
+                f"errors are adjacent classes on the depth scale "
+                f"({ordinal.get('adjacent_share_of_errors'):.0%}) - see metrics.json"
+            )
     calib = metrics.get("calibration")
     if calib:
         lines.append(f"- calibration: method={calib.get('method')} ECE={calib.get('ece')} Brier={calib.get('brier')}")
@@ -834,8 +936,12 @@ def render_model_card(metadata: Dict[str, Any], metrics: Dict[str, Any], config:
         "- olive undertone is partly culture-dependent; labels reflect this project's handbook",
         "- NOT a benchmark beyond the recorded holdout numbers",
     ]
-    if metadata.get("smoke"):
-        limitations.insert(0, "- **SMOKE TEST ARTIFACT: trained on synthetic demo data. NOT FOR PRODUCTION. NOT A BENCHMARK.**")
+    if metadata.get("smoke") or metadata.get("data_source") == "demo":
+        limitations.insert(
+            0,
+            "- **SYNTHETIC DEMO / SMOKE TEST ARTIFACT: trained on synthetic demo data. "
+            "NOT A FACEMAXX PERFORMANCE BENCHMARK. NOT FOR PRODUCTION.**",
+        )
     audit = metrics.get("feature_audit") or {}
     if audit.get("flagged"):
         limitations.append(f"- flagged features (see feature_audit.json): {', '.join(audit['flagged'])}")
