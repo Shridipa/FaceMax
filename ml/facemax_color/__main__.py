@@ -838,6 +838,36 @@ def cmd_gate(args) -> int:
     return 0 if not blocked else 1
 
 
+def cmd_real_cv(args) -> int:
+    """REAL-image CV validation (Category B): genuine photos through the CV pipeline.
+
+    Never falls back to synthetic demo data: unmet real-data requirements
+    produce an explicit BLOCKED status instead. Reads only the licence-verified
+    external dataset; never trains, never promotes, never touches v002
+    artifacts. Writes data/reports/real/real_cv_validation.json + .txt.
+    """
+    from .real_data import REAL_CV_LIMITATIONS, render_real_cv, run_real_cv
+
+    report = run_real_cv(
+        Path(args.root),
+        dataset=args.dataset,
+        limit=args.limit,
+        offset=args.offset,
+        perturb=args.perturb,
+    )
+    print(render_real_cv(report))
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "real_cv_validation.json").write_text(
+        json.dumps(report, indent=2) + "\n", encoding="utf-8"
+    )
+    (out / "real_cv_validation.txt").write_text(
+        render_real_cv(report) + "\n", encoding="utf-8"
+    )
+    print(f"\nreport files: {out / 'real_cv_validation.json'} + .txt")
+    return 0 if report["status"] == "OK" else 1
+
+
 def _load_features(root: Path) -> dict:
     """image_id -> feature dict from processed/colour_features.csv."""
     path = root / "processed" / "colour_features.csv"
@@ -1004,6 +1034,23 @@ def main(argv=None) -> int:
     p.add_argument("--root", default="data", help="Dataset root (for model lookup)")
     p.add_argument("--model-dir", default=None, help="Explicit model directory (overrides root)")
     p.set_defaults(func=cmd_predict)
+
+    # --- real-cv (REAL-image testing mode; never falls back to demo data) ---
+    p = sub.add_parser(
+        "real-cv",
+        help="REAL-image CV validation on a licence-confirmed external dataset (no demo fallback)",
+    )
+    p.add_argument("--root", default="data")
+    p.add_argument("--dataset", default="CelebAMask-HQ")
+    p.add_argument("--limit", type=int, default=24, help="max images this run (bounded batches)")
+    p.add_argument("--offset", type=int, default=0, help="slide the deterministic sample window (resume)")
+    p.add_argument(
+        "--perturb",
+        action="store_true",
+        help="add brightness/JPEG/resolution stability probes (demo-trained artifacts as probes)",
+    )
+    p.add_argument("--out", default="data/reports/real")
+    p.set_defaults(func=cmd_real_cv)
 
     args = parser.parse_args(argv)
     return args.func(args)

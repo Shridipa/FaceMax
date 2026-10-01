@@ -134,7 +134,16 @@ def _require_cv2() -> None:
 
 
 def load_image(path: Path) -> "np.ndarray":
-    """Read an image as BGR ndarray, robust to exotic paths."""
+    """Read an image as BGR ndarray, robust to exotic paths.
+
+    EXIF orientation: the pinned OpenCV decoder (>=4.x, requirements.txt
+    opencv-python-headless==4.12.0.88) applies the JPEG EXIF orientation tag
+    during imdecode, so phone photos decode upright already. This is a load-
+    bearing decoder behaviour the pipeline depends on for face detection, so
+    it is pinned by tests (test_facemax_color.py::ExifOrientationDecoderTests);
+    if the decoder ever stops honouring the tag, those tests fail instead of
+    detection silently failing on rotated photos.
+    """
     _require_cv2()
     data = np.fromfile(str(path), dtype=np.uint8)  # handles unicode paths on Windows
     image = cv2.imdecode(data, cv2.IMREAD_COLOR)
@@ -143,8 +152,13 @@ def load_image(path: Path) -> "np.ndarray":
     return image
 
 
-def detect_face_box(image_bgr: "np.ndarray") -> Optional[Tuple[int, int, int, int]]:
-    """Haar-cascade face detection; returns (x, y, w, h) or None."""
+def detect_all_face_boxes(image_bgr: "np.ndarray") -> List[Tuple[int, int, int, int]]:
+    """All raw Haar detections as (x, y, w, h) tuples, largest first.
+
+    Used by the real-image CV validation to count multi-face images and to
+    apply plausibility checks; ``detect_face_box`` keeps its exact historical
+    behaviour (largest box, minNeighbors=5) and simply delegates here.
+    """
     _require_cv2()
     cascade_path = getattr(cv2.data, "haarcascades", "") + "haarcascade_frontalface_default.xml"
     cascade = cv2.CascadeClassifier(cascade_path)
@@ -153,11 +167,16 @@ def detect_face_box(image_bgr: "np.ndarray") -> Optional[Tuple[int, int, int, in
     faces = cascade.detectMultiScale(
         gray, scaleFactor=1.1, minNeighbors=5, minSize=(80, 80)
     )
-    if len(faces) == 0:
+    ordered = sorted(faces, key=lambda f: int(f[2]) * int(f[3]), reverse=True)
+    return [(int(x), int(y), int(w), int(h)) for x, y, w, h in ordered]
+
+
+def detect_face_box(image_bgr: "np.ndarray") -> Optional[Tuple[int, int, int, int]]:
+    """Haar-cascade face detection; returns (x, y, w, h) or None."""
+    faces = detect_all_face_boxes(image_bgr)
+    if not faces:
         return None
-    # Largest face wins (selfies: the subject dominates the frame).
-    x, y, w, h = max(faces, key=lambda f: f[2] * f[3])
-    return int(x), int(y), int(w), int(h)
+    return faces[0]
 
 
 def rgb_skin_mask(image_bgr: "np.ndarray", face_box: Tuple[int, int, int, int]) -> "np.ndarray":

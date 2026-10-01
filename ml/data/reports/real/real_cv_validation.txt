@@ -1,0 +1,36 @@
+REAL-IMAGE CV VALIDATION (Category B)
+==============================================
+evidence class: REAL IMAGE - UNLABELLED
+status:         OK
+dataset:        CelebAMask-HQ (confirmed) https://github.com/switchablenorms/CelebAMask-HQ
+receipt:        sha256 5dc46a36cba18d21... recorded 2026-09-28
+selection:      24 images, offset 0 (deterministic)
+
+counts:
+  images_selected          24
+  images_universe          30000
+  decode_failures          0
+  no_face_detected         0
+  implausible_face_box     0
+  multi_face_images        2
+  skin_mask_too_small      0
+  extraction_failed        0
+  images_processed         24
+  images_extracted_ok      24
+  images_with_seg_metrics  24
+
+segmentation vs GT (micro over 24 scored images, face box only (Haar box crop); GT neck/chin outside the box is not counted):
+  IoU 0.679  Dice 0.8088  precision 0.6929  recall 0.9713
+  (validates mask composition vs annotation geometry; NOT colour accuracy)
+
+model evaluation (Category C):
+  status: BLOCKED - no expert-labelled real data exists (annotation table empty); external dataset labels cannot become FaceMaxx colour ground truth
+  expert-labelled real images available: 0 (people: 0)
+  Synthetic demo results were not substituted.
+
+limitations:
+  - convenience sample: detection/extraction rates on this sample are NOT general-population performance claims
+  - segmentation metrics compare the heuristic skin mask with CelebAMask-HQ annotation geometry INSIDE the Haar face box only; they validate mask composition, not colour analysis
+  - colour values from uncontrolled photographs are not laboratory-grade measurements
+  - any predictions shown come from SYNTHETIC-DEMO-TRAINED artifacts used as stability probes; they are not accuracy measurements
+  - CelebAMask-HQ identity annotations are not part of this repository, so unique-people counts are unknown, not zero

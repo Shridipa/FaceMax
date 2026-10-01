@@ -10,7 +10,11 @@ fabrication. For a deterministic sample of images this script:
      report - nothing is repaired silently),
   3. checks mask label vocabulary against the archive's own class names,
   4. merges masks into FaceMaxx region groups (skin+neck vs exclusions),
-  5. verifies the merged skin and exclude masks are DISJOINT,
+  5. composes skin vs exclusion masks with FEATURE-OVER-SKIN priority
+     (facemax_color.external_datasets.build_skin_mask_with_exclusions): raw
+     per-class masks legitimately overlap where features sit on skin - the
+     correct sampling mask simply contains zero excluded pixels, and the raw
+     overlap is recorded, not treated as a pairing failure,
   6. pushes the masked skin pixels through the EXISTING extraction path
      (facemax_color.colour.region_lab_samples, with its 8-bit LAB a*/b*
      recentering) to prove the CelebA pairing works with the pipeline as-is.
@@ -107,19 +111,32 @@ def main() -> int:
             }
         )
 
+        # Compose the FINAL sampling mask with feature-over-skin priority:
+        # excluded features (eyes/brows/lips/hair/...) must never contribute
+        # skin-colour pixels. The raw overlap is informational (features sit
+        # ON skin); the zero-exclusion property is what is verified.
+        from facemax_color.external_datasets import build_skin_mask_with_exclusions
+
+        composed = build_skin_mask_with_exclusions(skin, exclude)
+        final_skin = composed["skin"]
+        assert not np.logical_and(final_skin, exclude).any(), (
+            "composition invariant violated: excluded pixels survived in the "
+            "final skin mask"
+        )
+
         # Existing extraction path on real CelebA pixels: skin mask must be a
         # full-size boolean array for region_lab_samples (it indexes by box).
         from facemax_color.colour import region_lab_samples
 
-        regions = region_lab_samples(image, (0, 0, w, h), skin.astype(bool))
+        regions = region_lab_samples(image, (0, 0, w, h), final_skin)
         entry["region_lab_samples_regions"] = sorted(regions)
         entry["lab_sample"] = {
             k: [round(v, 2) for v in vals] for k, vals in list(regions.items())[:2]
         }
         entry["ok"] = bool(
             masks_readable == len(classes)
-            and overlap == 0
-            and skin.sum() > 0
+            and composed["overlap_px"] >= 0  # recorded, never a failure
+            and final_skin.sum() > 0
             and not entry["unknown_classes"]
             and regions
         )

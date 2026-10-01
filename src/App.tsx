@@ -6,6 +6,7 @@ import Analyze from "./pages/Analyze";
 import Results from "./pages/Results";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
+import OutfitStudio from "./pages/OutfitStudio";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/analyze" element={<Analyze />} />
             <Route path="/results" element={<Results />} />
+            <Route path="/outfit-studio" element={<OutfitStudio />} />
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
           </Routes>

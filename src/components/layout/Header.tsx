@@ -15,6 +15,12 @@ export default function Header() {
             How it works
           </a>
           <Link
+            to="/outfit-studio"
+            className="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+          >
+            Outfit Studio
+          </Link>
+          <Link
             to="/analyze"
             className="text-sm font-medium px-5 py-2 bg-white text-[var(--color-text-primary)] rounded-full border border-[var(--color-border)] hover:bg-[var(--color-surface-muted)] transition-colors"
           >

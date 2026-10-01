@@ -5,6 +5,7 @@ import os from "os";
 import { execFile } from "child_process";
 import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
+import { runOutfitAnalysis, runDescribeAnalysis, runWardrobeAnalysis, compareOutfits } from "./api/outfit-core";
 import { createServer as createViteServer } from "vite";
 
 // Load environment variables
@@ -340,6 +341,157 @@ Important:
     res.status(500).json({
       error: "The laboratory scanner encountered an error during image processing.",
       details: error?.message || String(error)
+    });
+  }
+});
+
+/**
+ * POST /api/outfit-analysis
+ * Outfit Studio: garment/colour analysis + deterministic palette suitability + AI styling.
+ * Core logic lives in api/outfit-core.ts (shared with the serverless adapter).
+ */
+app.post("/api/outfit-analysis", async (req, res) => {
+  try {
+    const body = (req.body && typeof req.body === "object" ? req.body : {}) as Record<string, unknown>;
+    const image = typeof body.image === "string" ? body.image : "";
+    const profileRaw = (body.profile && typeof body.profile === "object" ? body.profile : {}) as Record<string, unknown>;
+    const profile = {
+      season: typeof profileRaw.season === "string" ? profileRaw.season : "",
+      undertone: typeof profileRaw.undertone === "string" ? profileRaw.undertone : undefined,
+      skin_depth: typeof profileRaw.skin_depth === "string" ? profileRaw.skin_depth : undefined,
+      chroma: typeof profileRaw.chroma === "string" ? profileRaw.chroma : undefined,
+      contrast: typeof profileRaw.contrast === "string" ? profileRaw.contrast : undefined,
+    };
+    const occasion = typeof body.occasion === "string" ? body.occasion.slice(0, 80) : undefined;
+    const stylePreference = typeof body.stylePreference === "string" ? body.stylePreference.slice(0, 80) : undefined;
+
+    if (!image) {
+      return res.status(400).json({ success: false, error: "Image data (base64) is required." });
+    }
+    if (!profile.season) {
+      return res.status(400).json({ success: false, error: "NO_PROFILE", message: "Complete your FaceMaxx colour analysis to receive styling recommendations tailored to you." });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY || null;
+    const result = await runOutfitAnalysis({ image, profile, occasion, stylePreference }, apiKey);
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Outfit analysis error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Outfit analysis failed. Please try again.",
+      details: error?.message || String(error),
+    });
+  }
+});
+
+/**
+ * POST /api/outfit-analysis/describe
+ * Mode 2 — interpret a natural-language wardrobe description into structured garments.
+ */
+app.post("/api/outfit-analysis/describe", async (req, res) => {
+  try {
+    const body = (req.body && typeof req.body === "object" ? req.body : {}) as Record<string, unknown>;
+    const description = typeof body.description === "string" ? body.description : "";
+    const profileRaw = (body.profile && typeof body.profile === "object" ? body.profile : {}) as Record<string, unknown>;
+    const profile = {
+      season: typeof profileRaw.season === "string" ? profileRaw.season : "",
+      undertone: typeof profileRaw.undertone === "string" ? profileRaw.undertone : undefined,
+      skin_depth: typeof profileRaw.skin_depth === "string" ? profileRaw.skin_depth : undefined,
+      chroma: typeof profileRaw.chroma === "string" ? profileRaw.chroma : undefined,
+      contrast: typeof profileRaw.contrast === "string" ? profileRaw.contrast : undefined,
+    };
+
+    if (!description.trim()) {
+      return res.status(400).json({ success: false, error: "EMPTY_DESCRIPTION", message: "Describe at least one garment." });
+    }
+    if (description.length > 2000) {
+      return res.status(400).json({ success: false, error: "DESCRIPTION_TOO_LONG", message: "Please keep the description under 2000 characters." });
+    }
+    if (!profile.season) {
+      return res.status(400).json({ success: false, error: "NO_PROFILE", message: "Complete your FaceMaxx colour analysis to receive styling recommendations tailored to you." });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY || null;
+    const result = await runDescribeAnalysis({ description, profile }, apiKey);
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Outfit describe error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Could not interpret the description. Please try again.",
+      details: error?.message || String(error),
+    });
+  }
+});
+
+/**
+ * POST /api/outfit-analysis/wardrobe
+ * Mode 3 — analyse a user-selected wardrobe outfit (deterministic core + AI styling).
+ */
+app.post("/api/outfit-analysis/wardrobe", async (req, res) => {
+  try {
+    const body = (req.body && typeof req.body === "object" ? req.body : {}) as Record<string, unknown>;
+    const garments = Array.isArray(body.garments) ? body.garments : [];
+    const profileRaw = (body.profile && typeof body.profile === "object" ? body.profile : {}) as Record<string, unknown>;
+    const profile = {
+      season: typeof profileRaw.season === "string" ? profileRaw.season : "",
+      undertone: typeof profileRaw.undertone === "string" ? profileRaw.undertone : undefined,
+      skin_depth: typeof profileRaw.skin_depth === "string" ? profileRaw.skin_depth : undefined,
+      chroma: typeof profileRaw.chroma === "string" ? profileRaw.chroma : undefined,
+      contrast: typeof profileRaw.contrast === "string" ? profileRaw.contrast : undefined,
+    };
+    const occasion = typeof body.occasion === "string" ? body.occasion.slice(0, 80) : undefined;
+    const stylePreference = typeof body.stylePreference === "string" ? body.stylePreference.slice(0, 80) : undefined;
+
+    if (!profile.season) {
+      return res.status(400).json({ success: false, error: "NO_PROFILE", message: "Complete your FaceMaxx colour analysis to receive styling recommendations tailored to you." });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY || null;
+    const result = await runWardrobeAnalysis({ garments, profile, occasion, stylePreference }, apiKey);
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Outfit wardrobe error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Outfit analysis failed. Please try again.",
+      details: error?.message || String(error),
+    });
+  }
+});
+
+/**
+ * POST /api/outfit-analysis/compare
+ * Deterministic comparison of 2-4 outfit options (no AI involved).
+ */
+app.post("/api/outfit-analysis/compare", (req, res) => {
+  try {
+    const body = (req.body && typeof req.body === "object" ? req.body : {}) as Record<string, unknown>;
+    const options = Array.isArray(body.options) ? body.options : [];
+    const profileRaw = (body.profile && typeof body.profile === "object" ? body.profile : {}) as Record<string, unknown>;
+    const profile = {
+      season: typeof profileRaw.season === "string" ? profileRaw.season : "",
+      undertone: typeof profileRaw.undertone === "string" ? profileRaw.undertone : undefined,
+      skin_depth: typeof profileRaw.skin_depth === "string" ? profileRaw.skin_depth : undefined,
+      chroma: typeof profileRaw.chroma === "string" ? profileRaw.chroma : undefined,
+      contrast: typeof profileRaw.contrast === "string" ? profileRaw.contrast : undefined,
+    };
+
+    if (!profile.season) {
+      return res.status(400).json({ success: false, error: "NO_PROFILE", message: "Complete your FaceMaxx colour analysis to compare outfits against your palette." });
+    }
+    if (options.length < 2) {
+      return res.status(400).json({ success: false, error: "NOT_ENOUGH_OPTIONS", message: "Add at least two outfit options to compare." });
+    }
+
+    return res.json(compareOutfits(options, profile));
+  } catch (error: any) {
+    console.error("Outfit compare error:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Comparison failed. Please try again.",
+      details: error?.message || String(error),
     });
   }
 });

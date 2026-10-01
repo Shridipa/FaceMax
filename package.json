@@ -9,6 +9,7 @@
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
+    "test:outfit": "node --import tsx --test tests/outfitCore.test.ts tests/outfitServices.test.ts tests/outfitStudio.test.ts tests/outfitMultiGarment.test.ts tests/outfitRender.test.ts",
     "bias:selfcheck": "cd ml && python -m facemax_bias selfcheck",
     "bias:demo": "cd ml && python -m facemax_bias demo --out data --people 1000",
     "bias:test": "cd ml && python -m unittest discover tests",

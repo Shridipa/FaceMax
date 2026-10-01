@@ -425,5 +425,128 @@ class EvaluationTests(unittest.TestCase):
             self.assertIn(token, text)
 
 
+class CorruptImageTests(unittest.TestCase):
+    """Invalid/corrupt images must fail LOUDLY, never become garbage features."""
+
+    def test_load_image_rejects_unreadable_bytes(self):
+        if not HAVE_CV2:
+            self.skipTest("opencv not installed")
+        import tempfile
+        from pathlib import Path
+
+        from facemax_color.colour import load_image
+
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "garbage.jpg"
+            p.write_bytes(b"this is not an image at all\x00\x01\x02")
+            with self.assertRaises(ValueError):
+                load_image(p)
+
+    def test_extract_image_reports_corrupt_file_instead_of_raising(self):
+        if not HAVE_CV2:
+            self.skipTest("opencv not installed")
+        import tempfile
+        from pathlib import Path
+
+        from facemax_color.colour import extract_image
+
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "garbage.jpg"
+            p.write_bytes(b"\xff\xd8\xff" + b"\x00" * 512)  # truncated JPEG header
+            result = extract_image("corrupt", p)
+        self.assertFalse(result.ok)
+        self.assertTrue(result.error)
+
+    def test_extract_batch_reports_missing_file(self):
+        if not HAVE_CV2:
+            self.skipTest("opencv not installed")
+        import tempfile
+        from pathlib import Path
+
+        from facemax_color.colour import extract_batch
+
+        with tempfile.TemporaryDirectory() as tmp:
+            results = extract_batch(["does_not_exist"], Path(tmp), progress_every=0)
+        self.assertFalse(results["does_not_exist"].ok)
+        self.assertEqual(results["does_not_exist"].error, "file_missing")
+
+
+class ExifOrientationDecoderTests(unittest.TestCase):
+    """Pin the OpenCV decoder's EXIF orientation behaviour (Phase 3 audit).
+
+    The pinned decoder (opencv-python-headless 4.12, requirements.txt) applies
+    the JPEG EXIF orientation tag during imdecode, so phone photos decode
+    upright and face detection works. That is a LOAD-BEARING behaviour: if the
+    decoder ever stops honouring the tag, rotated phone photos would decode
+    sideways and systematically fail detection. These tests turn that silent
+    failure mode into an explicit, actionable failure.
+    """
+
+    def _jpeg_with_orientation(self, pixels, orientation):
+        import io
+
+        ok, enc = cv2.imencode(".jpg", pixels)
+        assert ok
+        try:
+            from PIL import Image
+
+            buf = io.BytesIO()
+            exif = Image.Exif()
+            exif[274] = orientation
+            Image.open(io.BytesIO(enc.tobytes())).save(buf, format="JPEG", exif=exif)
+            return buf.getvalue()
+            # PIL is a test-only convenience; without it, fall back to a plain
+            # JPEG (orientation tag absent, nothing to pin).
+        except ImportError:  # pragma: no cover
+            return enc.tobytes()
+
+    def test_decoder_applies_exif_orientation(self):
+        if not HAVE_CV2:
+            self.skipTest("opencv not installed")
+        import io
+        import tempfile
+        from pathlib import Path
+
+        from facemax_color.colour import load_image
+
+        upright = np.zeros((64, 40, 3), dtype=np.uint8)  # 64h x 40w
+        sideways = np.transpose(upright, (1, 0, 2))  # 40h x 64w stored sideways
+        sideways = np.ascontiguousarray(sideways)
+        sideways[:] = 0  # keep content constant; shape is the marker
+        jpeg = self._jpeg_with_orientation(sideways, 6)
+        if b"Exif" not in jpeg:  # pragma: no cover - Pillow missing
+            self.skipTest("Pillow not available to write EXIF")
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "phone.jpg"
+            p.write_bytes(jpeg)
+            img = load_image(p)
+        self.assertEqual(
+            img.shape[:2],
+            (64, 40),
+            "OpenCV no longer applies EXIF orientation during decode; rotated "
+            "phone photos will systematically fail face detection. Add an "
+            "explicit orientation transform in colour.load_image.",
+        )
+
+    def test_plain_jpeg_decodes_untouched(self):
+        if not HAVE_CV2:  # pragma: no cover
+            self.skipTest("opencv not installed")
+        import tempfile
+        from pathlib import Path
+
+        from facemax_color.colour import load_image
+
+        # No EXIF tag: pixels must pass through byte-identical (shape + data).
+        pixels = np.full((50, 70, 3), 128, dtype=np.uint8)
+        ok, enc = cv2.imencode(".jpg", pixels)
+        assert ok
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "plain.jpg"
+            p.write_bytes(enc.tobytes())
+            img = load_image(p)
+        self.assertEqual(img.shape, (50, 70, 3))
+        np.testing.assert_array_equal(img, pixels)
+
+
 if __name__ == "__main__":
     unittest.main()

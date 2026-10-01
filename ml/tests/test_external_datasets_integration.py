@@ -210,6 +210,51 @@ class LabRecenteringTests(unittest.TestCase):
             self.assertLess(L, 60.0)
 
 
+class SkinMaskCompositionTests(unittest.TestCase):
+    """Feature-over-skin priority (verified against the REAL archive).
+
+    Raw CelebAMask-HQ per-class masks legitimately overlap where features sit
+    on skin (the official composite paints features last). The colour-sampling
+    mask must simply contain zero excluded pixels; the raw overlap is normal
+    and recorded, never a pairing failure.
+    """
+
+    def test_exclusion_wins_and_overlap_is_reported(self):
+        import numpy as np
+
+        from facemax_color.external_datasets import build_skin_mask_with_exclusions
+
+        skin = np.array([[1, 1, 0], [1, 1, 0], [0, 0, 0]], dtype=bool)
+        exclude = np.array([[0, 1, 1], [0, 1, 0], [0, 0, 0]], dtype=bool)
+        out = build_skin_mask_with_exclusions(skin, exclude)
+        # Every excluded pixel removed from the sampling mask...
+        self.assertFalse((out["skin"] & exclude).any())
+        # ...including the 2 pixels that were BOTH skin and exclude...
+        self.assertEqual(int(out["skin"].sum()), 2)
+        # ...and the raw overlap is reported (2 shared pixels), not hidden.
+        self.assertEqual(out["overlap_px"], 2)
+        self.assertEqual(out["excluded_px"], 3)
+
+    def test_disjoint_masks_pass_through(self):
+        import numpy as np
+
+        from facemax_color.external_datasets import build_skin_mask_with_exclusions
+
+        skin = np.array([[1, 0], [0, 1]], dtype=bool)
+        exclude = np.array([[0, 1], [1, 0]], dtype=bool)
+        out = build_skin_mask_with_exclusions(skin, exclude)
+        self.assertTrue((out["skin"] == skin).all())
+        self.assertEqual(out["overlap_px"], 0)
+
+    def test_masks_of_different_shapes_rejected(self):
+        import numpy as np
+
+        from facemax_color.external_datasets import build_skin_mask_with_exclusions
+
+        with self.assertRaises(ValueError):
+            build_skin_mask_with_exclusions(np.zeros((4, 4), bool), np.zeros((2, 2), bool))
+
+
 class GateIntegrityTests(unittest.TestCase):
     def test_real_gate_still_blocks_empty_dataset(self):
         from facemax_color.__main__ import _gate_allows_training

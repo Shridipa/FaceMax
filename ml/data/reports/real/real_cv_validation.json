@@ -1,0 +1,728 @@
+{
+  "report": "real_cv_validation",
+  "generated": "2026-09-30T14:49:32+00:00",
+  "evidence_class": "REAL IMAGE - UNLABELLED",
+  "status": "OK",
+  "blocked_reason": null,
+  "synthetic_demo_substituted": false,
+  "dataset": {
+    "name": "CelebAMask-HQ",
+    "official_url": "https://github.com/switchablenorms/CelebAMask-HQ",
+    "license_gate": "confirmed",
+    "note": "non-commercial research only; masks are geometry, never colour ground truth (DATASET_REGISTRY.md)"
+  },
+  "provenance": {
+    "receipt_present": true,
+    "sha256": "5dc46a36cba18d216b9a031902508b1398e7e4c545bbc9699bec32412c530ca6",
+    "archive_bytes": 3153930546,
+    "recorded": "2026-09-28",
+    "license_summary": "non-commercial research purposes ONLY (verified: official page states \"available for non-commercial research purposes only\"; use restricted to non-commercial research and educational purposes)"
+  },
+  "selection": {
+    "limit": 24,
+    "offset": 0,
+    "deterministic": true,
+    "method": "evenly spaced indices over the sorted image list; --offset slides the window"
+  },
+  "annotation_status": {
+    "annotated_images": 0,
+    "people": 0,
+    "expert_labelled_available": false,
+    "target_counts": {
+      "undertone": 0,
+      "skin_depth": 0,
+      "season": 0
+    },
+    "note": "no expert annotations exist yet: model-accuracy evaluation (Category C) is unavailable"
+  },
+  "counts": {
+    "images_selected": 24,
+    "images_universe": 30000,
+    "decode_failures": 0,
+    "no_face_detected": 0,
+    "implausible_face_box": 0,
+    "multi_face_images": 2,
+    "skin_mask_too_small": 0,
+    "extraction_failed": 0,
+    "images_processed": 24,
+    "images_extracted_ok": 24,
+    "images_with_seg_metrics": 24
+  },
+  "per_image": [
+    {
+      "image": "0.jpg",
+      "person": "unknown",
+      "decode_ms": 18.5,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        161,
+        234,
+        698,
+        698
+      ],
+      "skin_mask_fraction": 0.7796,
+      "extraction_ok": true,
+      "skin_pixels": 379839,
+      "face_fraction": 0.4646,
+      "exposure_flag": "ok",
+      "skin_L": 60.1961,
+      "skin_a": 21.0,
+      "skin_b": 29.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.6327,
+        "gt_overlap_px": 84380
+      },
+      "status": "ok"
+    },
+    {
+      "image": "1250.jpg",
+      "person": "unknown",
+      "decode_ms": 12.6,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        179,
+        213,
+        719,
+        719
+      ],
+      "skin_mask_fraction": 0.8886,
+      "extraction_ok": true,
+      "skin_pixels": 459391,
+      "face_fraction": 0.493,
+      "exposure_flag": "ok",
+      "skin_L": 64.1176,
+      "skin_a": 17.0,
+      "skin_b": 24.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.4439,
+        "gt_overlap_px": 48352
+      },
+      "status": "ok"
+    },
+    {
+      "image": "2500.jpg",
+      "person": "unknown",
+      "decode_ms": 9.8,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        175,
+        234,
+        638,
+        638
+      ],
+      "skin_mask_fraction": 0.6395,
+      "extraction_ok": true,
+      "skin_pixels": 260323,
+      "face_fraction": 0.3882,
+      "exposure_flag": "ok",
+      "skin_L": 58.6275,
+      "skin_a": 9.5,
+      "skin_b": 9.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7603,
+        "gt_overlap_px": 51324
+      },
+      "status": "ok"
+    },
+    {
+      "image": "3750.jpg",
+      "person": "unknown",
+      "decode_ms": 9.3,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        186,
+        238,
+        649,
+        649
+      ],
+      "skin_mask_fraction": 0.7828,
+      "extraction_ok": true,
+      "skin_pixels": 329699,
+      "face_fraction": 0.4017,
+      "exposure_flag": "ok",
+      "skin_L": 73.5294,
+      "skin_a": 16.0,
+      "skin_b": 27.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.8064,
+        "gt_overlap_px": 50284
+      },
+      "status": "ok"
+    },
+    {
+      "image": "5000.jpg",
+      "person": "unknown",
+      "decode_ms": 11.6,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        149,
+        210,
+        699,
+        699
+      ],
+      "skin_mask_fraction": 0.7144,
+      "extraction_ok": true,
+      "skin_pixels": 349067,
+      "face_fraction": 0.466,
+      "exposure_flag": "ok",
+      "skin_L": 71.7647,
+      "skin_a": 15.5,
+      "skin_b": 26.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.8008,
+        "gt_overlap_px": 47736
+      },
+      "status": "ok"
+    },
+    {
+      "image": "6250.jpg",
+      "person": "unknown",
+      "decode_ms": 9.1,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        186,
+        250,
+        600,
+        600
+      ],
+      "skin_mask_fraction": 0.7272,
+      "extraction_ok": true,
+      "skin_pixels": 261775,
+      "face_fraction": 0.3433,
+      "exposure_flag": "ok",
+      "skin_L": 56.8627,
+      "skin_a": 20.0,
+      "skin_b": 16.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.4842,
+        "gt_overlap_px": 53084
+      },
+      "status": "ok"
+    },
+    {
+      "image": "7500.jpg",
+      "person": "unknown",
+      "decode_ms": 10.2,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        264,
+        284,
+        544,
+        544
+      ],
+      "skin_mask_fraction": 0.8228,
+      "extraction_ok": true,
+      "skin_pixels": 243496,
+      "face_fraction": 0.2822,
+      "exposure_flag": "ok",
+      "skin_L": 54.5098,
+      "skin_a": 17.5,
+      "skin_b": 21.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7241,
+        "gt_overlap_px": 47452
+      },
+      "status": "ok"
+    },
+    {
+      "image": "8750.jpg",
+      "person": "unknown",
+      "decode_ms": 12.2,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        236,
+        281,
+        568,
+        568
+      ],
+      "skin_mask_fraction": 0.754,
+      "extraction_ok": true,
+      "skin_pixels": 243274,
+      "face_fraction": 0.3077,
+      "exposure_flag": "ok",
+      "skin_L": 78.8235,
+      "skin_a": 9.5,
+      "skin_b": 22.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7611,
+        "gt_overlap_px": 46796
+      },
+      "status": "ok"
+    },
+    {
+      "image": "10000.jpg",
+      "person": "unknown",
+      "decode_ms": 9.2,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        173,
+        246,
+        687,
+        687
+      ],
+      "skin_mask_fraction": 0.8245,
+      "extraction_ok": true,
+      "skin_pixels": 389134,
+      "face_fraction": 0.4501,
+      "exposure_flag": "ok",
+      "skin_L": 57.451,
+      "skin_a": 19.0,
+      "skin_b": 20.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.5477,
+        "gt_overlap_px": 144172
+      },
+      "status": "ok"
+    },
+    {
+      "image": "11250.jpg",
+      "person": "unknown",
+      "decode_ms": 9.9,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        160,
+        213,
+        709,
+        709
+      ],
+      "skin_mask_fraction": 0.7431,
+      "extraction_ok": true,
+      "skin_pixels": 373533,
+      "face_fraction": 0.4794,
+      "exposure_flag": "ok",
+      "skin_L": 49.6078,
+      "skin_a": 24.0,
+      "skin_b": 24.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7707,
+        "gt_overlap_px": 68524
+      },
+      "status": "ok"
+    },
+    {
+      "image": "12500.jpg",
+      "person": "unknown",
+      "decode_ms": 11.4,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        179,
+        227,
+        669,
+        669
+      ],
+      "skin_mask_fraction": 0.8474,
+      "extraction_ok": true,
+      "skin_pixels": 379250,
+      "face_fraction": 0.4268,
+      "exposure_flag": "ok",
+      "skin_L": 69.6078,
+      "skin_a": 27.5,
+      "skin_b": 18.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7122,
+        "gt_overlap_px": 91976
+      },
+      "status": "ok"
+    },
+    {
+      "image": "13750.jpg",
+      "person": "unknown",
+      "decode_ms": 8.3,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        173,
+        205,
+        670,
+        670
+      ],
+      "skin_mask_fraction": 0.7728,
+      "extraction_ok": true,
+      "skin_pixels": 346923,
+      "face_fraction": 0.4281,
+      "exposure_flag": "ok",
+      "skin_L": 72.1569,
+      "skin_a": 15.0,
+      "skin_b": 12.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.8373,
+        "gt_overlap_px": 52188
+      },
+      "status": "ok"
+    },
+    {
+      "image": "15000.jpg",
+      "person": "unknown",
+      "decode_ms": 10.4,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        226,
+        249,
+        625,
+        625
+      ],
+      "skin_mask_fraction": 0.5614,
+      "extraction_ok": true,
+      "skin_pixels": 219310,
+      "face_fraction": 0.3725,
+      "exposure_flag": "ok",
+      "skin_L": 70.3922,
+      "skin_a": 14.0,
+      "skin_b": 27.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7656,
+        "gt_overlap_px": 100948
+      },
+      "status": "ok"
+    },
+    {
+      "image": "16250.jpg",
+      "person": "unknown",
+      "decode_ms": 12.5,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        199,
+        353,
+        599,
+        599
+      ],
+      "skin_mask_fraction": 0.7009,
+      "extraction_ok": true,
+      "skin_pixels": 251495,
+      "face_fraction": 0.3422,
+      "exposure_flag": "ok",
+      "skin_L": 83.7255,
+      "skin_a": 5.0,
+      "skin_b": 13.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.3453,
+        "gt_overlap_px": 257768
+      },
+      "status": "ok"
+    },
+    {
+      "image": "17500.jpg",
+      "person": "unknown",
+      "decode_ms": 10.3,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        210,
+        271,
+        603,
+        603
+      ],
+      "skin_mask_fraction": 0.6885,
+      "extraction_ok": true,
+      "skin_pixels": 250333,
+      "face_fraction": 0.3468,
+      "exposure_flag": "ok",
+      "skin_L": 71.1765,
+      "skin_a": 18.0,
+      "skin_b": 17.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7937,
+        "gt_overlap_px": 57984
+      },
+      "status": "ok"
+    },
+    {
+      "image": "18750.jpg",
+      "person": "unknown",
+      "decode_ms": 9.7,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        191,
+        226,
+        634,
+        634
+      ],
+      "skin_mask_fraction": 0.8327,
+      "extraction_ok": true,
+      "skin_pixels": 334719,
+      "face_fraction": 0.3833,
+      "exposure_flag": "ok",
+      "skin_L": 54.1176,
+      "skin_a": 23.0,
+      "skin_b": 26.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7373,
+        "gt_overlap_px": 61860
+      },
+      "status": "ok"
+    },
+    {
+      "image": "20000.jpg",
+      "person": "unknown",
+      "decode_ms": 11.7,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        166,
+        237,
+        668,
+        668
+      ],
+      "skin_mask_fraction": 0.5946,
+      "extraction_ok": true,
+      "skin_pixels": 265334,
+      "face_fraction": 0.4256,
+      "exposure_flag": "ok",
+      "skin_L": 79.0196,
+      "skin_a": 13.5,
+      "skin_b": 23.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7731,
+        "gt_overlap_px": 50512
+      },
+      "status": "ok"
+    },
+    {
+      "image": "21250.jpg",
+      "person": "unknown",
+      "decode_ms": 9.9,
+      "faces_detected": 2,
+      "face_box_plausible": true,
+      "face_box": [
+        184,
+        235,
+        640,
+        640
+      ],
+      "skin_mask_fraction": 0.8386,
+      "extraction_ok": true,
+      "skin_pixels": 343477,
+      "face_fraction": 0.3906,
+      "exposure_flag": "ok",
+      "skin_L": 66.8627,
+      "skin_a": 17.0,
+      "skin_b": 18.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7561,
+        "gt_overlap_px": 91236
+      },
+      "status": "ok"
+    },
+    {
+      "image": "22500.jpg",
+      "person": "unknown",
+      "decode_ms": 9.8,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        145,
+        218,
+        723,
+        723
+      ],
+      "skin_mask_fraction": 0.7873,
+      "extraction_ok": true,
+      "skin_pixels": 411565,
+      "face_fraction": 0.4985,
+      "exposure_flag": "ok",
+      "skin_L": 75.2941,
+      "skin_a": 13.5,
+      "skin_b": 18.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.5711,
+        "gt_overlap_px": 121008
+      },
+      "status": "ok"
+    },
+    {
+      "image": "23750.jpg",
+      "person": "unknown",
+      "decode_ms": 9.7,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        193,
+        236,
+        624,
+        624
+      ],
+      "skin_mask_fraction": 0.9051,
+      "extraction_ok": true,
+      "skin_pixels": 352416,
+      "face_fraction": 0.3713,
+      "exposure_flag": "ok",
+      "skin_L": 77.0588,
+      "skin_a": 19.0,
+      "skin_b": 16.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7028,
+        "gt_overlap_px": 47104
+      },
+      "status": "ok"
+    },
+    {
+      "image": "25000.jpg",
+      "person": "unknown",
+      "decode_ms": 9.1,
+      "faces_detected": 2,
+      "face_box_plausible": true,
+      "face_box": [
+        199,
+        252,
+        637,
+        637
+      ],
+      "skin_mask_fraction": 0.6901,
+      "extraction_ok": true,
+      "skin_pixels": 280008,
+      "face_fraction": 0.387,
+      "exposure_flag": "ok",
+      "skin_L": 54.7059,
+      "skin_a": 16.5,
+      "skin_b": 15.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7302,
+        "gt_overlap_px": 112044
+      },
+      "status": "ok"
+    },
+    {
+      "image": "26250.jpg",
+      "person": "unknown",
+      "decode_ms": 9.4,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        161,
+        193,
+        699,
+        699
+      ],
+      "skin_mask_fraction": 0.7672,
+      "extraction_ok": true,
+      "skin_pixels": 374835,
+      "face_fraction": 0.466,
+      "exposure_flag": "ok",
+      "skin_L": 87.6471,
+      "skin_a": 6.0,
+      "skin_b": 9.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7734,
+        "gt_overlap_px": 66896
+      },
+      "status": "ok"
+    },
+    {
+      "image": "27500.jpg",
+      "person": "unknown",
+      "decode_ms": 10.5,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        181,
+        250,
+        636,
+        636
+      ],
+      "skin_mask_fraction": 0.8391,
+      "extraction_ok": true,
+      "skin_pixels": 339416,
+      "face_fraction": 0.3858,
+      "exposure_flag": "ok",
+      "skin_L": 72.549,
+      "skin_a": 17.0,
+      "skin_b": 20.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.5737,
+        "gt_overlap_px": 85876
+      },
+      "status": "ok"
+    },
+    {
+      "image": "28750.jpg",
+      "person": "unknown",
+      "decode_ms": 9.8,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        175,
+        244,
+        635,
+        635
+      ],
+      "skin_mask_fraction": 0.7321,
+      "extraction_ok": true,
+      "skin_pixels": 295205,
+      "face_fraction": 0.3845,
+      "exposure_flag": "ok",
+      "skin_L": 80.9804,
+      "skin_a": 15.5,
+      "skin_b": 16.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.5871,
+        "gt_overlap_px": 66072
+      },
+      "status": "ok"
+    }
+  ],
+  "segmentation_metrics": {
+    "scope": "face box only (Haar box crop); GT neck/chin outside the box is not counted",
+    "images_scored": 24,
+    "micro": {
+      "iou": 0.679,
+      "dice": 0.8088,
+      "precision": 0.6929,
+      "recall": 0.9713
+    },
+    "validates": "skin-mask composition vs annotation geometry",
+    "does_not_validate": "undertone / skin-depth / season accuracy"
+  },
+  "perturbation_stability": null,
+  "probe_predictors": null,
+  "model_evaluation": {
+    "status": "BLOCKED",
+    "reason": "no expert-labelled real data exists (annotation table empty); external dataset labels cannot become FaceMaxx colour ground truth",
+    "valid_real_labelled_samples": 0,
+    "synthetic_demo_substituted": false
+  },
+  "limitations": [
+    "convenience sample: detection/extraction rates on this sample are NOT general-population performance claims",
+    "segmentation metrics compare the heuristic skin mask with CelebAMask-HQ annotation geometry INSIDE the Haar face box only; they validate mask composition, not colour analysis",
+    "colour values from uncontrolled photographs are not laboratory-grade measurements",
+    "any predictions shown come from SYNTHETIC-DEMO-TRAINED artifacts used as stability probes; they are not accuracy measurements",
+    "CelebAMask-HQ identity annotations are not part of this repository, so unique-people counts are unknown, not zero"
+  ]
+}

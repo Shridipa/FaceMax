@@ -1,0 +1,390 @@
+{
+  "report": "real_cv_validation",
+  "generated": "2026-09-30T14:49:51+00:00",
+  "evidence_class": "REAL IMAGE - UNLABELLED",
+  "status": "OK",
+  "blocked_reason": null,
+  "synthetic_demo_substituted": false,
+  "dataset": {
+    "name": "CelebAMask-HQ",
+    "official_url": "https://github.com/switchablenorms/CelebAMask-HQ",
+    "license_gate": "confirmed",
+    "note": "non-commercial research only; masks are geometry, never colour ground truth (DATASET_REGISTRY.md)"
+  },
+  "provenance": {
+    "receipt_present": true,
+    "sha256": "5dc46a36cba18d216b9a031902508b1398e7e4c545bbc9699bec32412c530ca6",
+    "archive_bytes": 3153930546,
+    "recorded": "2026-09-28",
+    "license_summary": "non-commercial research purposes ONLY (verified: official page states \"available for non-commercial research purposes only\"; use restricted to non-commercial research and educational purposes)"
+  },
+  "selection": {
+    "limit": 8,
+    "offset": 0,
+    "deterministic": true,
+    "method": "evenly spaced indices over the sorted image list; --offset slides the window"
+  },
+  "annotation_status": {
+    "annotated_images": 0,
+    "people": 0,
+    "expert_labelled_available": false,
+    "target_counts": {
+      "undertone": 0,
+      "skin_depth": 0,
+      "season": 0
+    },
+    "note": "no expert annotations exist yet: model-accuracy evaluation (Category C) is unavailable"
+  },
+  "counts": {
+    "images_selected": 8,
+    "images_universe": 30000,
+    "decode_failures": 0,
+    "no_face_detected": 0,
+    "implausible_face_box": 0,
+    "multi_face_images": 0,
+    "skin_mask_too_small": 0,
+    "extraction_failed": 0,
+    "images_processed": 8,
+    "images_extracted_ok": 8,
+    "images_with_seg_metrics": 8
+  },
+  "per_image": [
+    {
+      "image": "0.jpg",
+      "person": "unknown",
+      "decode_ms": 8.7,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        161,
+        234,
+        698,
+        698
+      ],
+      "skin_mask_fraction": 0.7796,
+      "extraction_ok": true,
+      "skin_pixels": 379839,
+      "face_fraction": 0.4646,
+      "exposure_flag": "ok",
+      "skin_L": 60.1961,
+      "skin_a": 21.0,
+      "skin_b": 29.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.6327,
+        "gt_overlap_px": 84380
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Warm",
+        "skin_depth": "Light-Medium"
+      },
+      "status": "ok"
+    },
+    {
+      "image": "3750.jpg",
+      "person": "unknown",
+      "decode_ms": 7.2,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        186,
+        238,
+        649,
+        649
+      ],
+      "skin_mask_fraction": 0.7828,
+      "extraction_ok": true,
+      "skin_pixels": 329699,
+      "face_fraction": 0.4017,
+      "exposure_flag": "ok",
+      "skin_L": 73.5294,
+      "skin_a": 16.0,
+      "skin_b": 27.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.8064,
+        "gt_overlap_px": 50284
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Warm",
+        "skin_depth": "Fair"
+      },
+      "status": "ok"
+    },
+    {
+      "image": "7500.jpg",
+      "person": "unknown",
+      "decode_ms": 7.5,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        264,
+        284,
+        544,
+        544
+      ],
+      "skin_mask_fraction": 0.8228,
+      "extraction_ok": true,
+      "skin_pixels": 243496,
+      "face_fraction": 0.2822,
+      "exposure_flag": "ok",
+      "skin_L": 54.5098,
+      "skin_a": 17.5,
+      "skin_b": 21.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7241,
+        "gt_overlap_px": 47452
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Neutral",
+        "skin_depth": "Medium"
+      },
+      "status": "ok"
+    },
+    {
+      "image": "11250.jpg",
+      "person": "unknown",
+      "decode_ms": 5.8,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        160,
+        213,
+        709,
+        709
+      ],
+      "skin_mask_fraction": 0.7431,
+      "extraction_ok": true,
+      "skin_pixels": 373533,
+      "face_fraction": 0.4794,
+      "exposure_flag": "ok",
+      "skin_L": 49.6078,
+      "skin_a": 24.0,
+      "skin_b": 24.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7707,
+        "gt_overlap_px": 68524
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Neutral-Cool",
+        "skin_depth": "Medium"
+      },
+      "status": "ok"
+    },
+    {
+      "image": "15000.jpg",
+      "person": "unknown",
+      "decode_ms": 6.5,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        226,
+        249,
+        625,
+        625
+      ],
+      "skin_mask_fraction": 0.5614,
+      "extraction_ok": true,
+      "skin_pixels": 219310,
+      "face_fraction": 0.3725,
+      "exposure_flag": "ok",
+      "skin_L": 70.3922,
+      "skin_a": 14.0,
+      "skin_b": 27.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7656,
+        "gt_overlap_px": 100948
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Warm",
+        "skin_depth": "Fair"
+      },
+      "status": "ok"
+    },
+    {
+      "image": "18750.jpg",
+      "person": "unknown",
+      "decode_ms": 6.8,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        191,
+        226,
+        634,
+        634
+      ],
+      "skin_mask_fraction": 0.8327,
+      "extraction_ok": true,
+      "skin_pixels": 334719,
+      "face_fraction": 0.3833,
+      "exposure_flag": "ok",
+      "skin_L": 54.1176,
+      "skin_a": 23.0,
+      "skin_b": 26.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7373,
+        "gt_overlap_px": 61860
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Neutral",
+        "skin_depth": "Medium"
+      },
+      "status": "ok"
+    },
+    {
+      "image": "22500.jpg",
+      "person": "unknown",
+      "decode_ms": 6.9,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        145,
+        218,
+        723,
+        723
+      ],
+      "skin_mask_fraction": 0.7873,
+      "extraction_ok": true,
+      "skin_pixels": 411565,
+      "face_fraction": 0.4985,
+      "exposure_flag": "ok",
+      "skin_L": 75.2941,
+      "skin_a": 13.5,
+      "skin_b": 18.0,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.5711,
+        "gt_overlap_px": 121008
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Neutral",
+        "skin_depth": "Fair"
+      },
+      "status": "ok"
+    },
+    {
+      "image": "26250.jpg",
+      "person": "unknown",
+      "decode_ms": 7.0,
+      "faces_detected": 1,
+      "face_box_plausible": true,
+      "face_box": [
+        161,
+        193,
+        699,
+        699
+      ],
+      "skin_mask_fraction": 0.7672,
+      "extraction_ok": true,
+      "skin_pixels": 374835,
+      "face_fraction": 0.466,
+      "exposure_flag": "ok",
+      "skin_L": 87.6471,
+      "skin_a": 6.0,
+      "skin_b": 9.5,
+      "segmentation": {
+        "status": "scored",
+        "iou": 0.7734,
+        "gt_overlap_px": 66896
+      },
+      "perturbation_probed": true,
+      "baseline_predictions": {
+        "undertone": "Neutral",
+        "skin_depth": "Very Fair"
+      },
+      "status": "ok"
+    }
+  ],
+  "segmentation_metrics": {
+    "scope": "face box only (Haar box crop); GT neck/chin outside the box is not counted",
+    "images_scored": 8,
+    "micro": {
+      "iou": 0.7165,
+      "dice": 0.8348,
+      "precision": 0.7322,
+      "recall": 0.971
+    },
+    "validates": "skin-mask composition vs annotation geometry",
+    "does_not_validate": "undertone / skin-depth / season accuracy"
+  },
+  "perturbation_stability": {
+    "images_probed": 8,
+    "feature_mean_abs_delta": {
+      "feat_skin_L": {
+        "n_compared": 32,
+        "mean_abs_delta": 1.9363
+      },
+      "feat_skin_a": {
+        "n_compared": 32,
+        "mean_abs_delta": 0.4219
+      },
+      "feat_skin_b": {
+        "n_compared": 32,
+        "mean_abs_delta": 0.375
+      },
+      "feat_ita": {
+        "n_compared": 32,
+        "mean_abs_delta": 3.3106
+      },
+      "feat_undertone_proxy": {
+        "n_compared": 32,
+        "mean_abs_delta": 0.4531
+      },
+      "feat_depth_proxy": {
+        "n_compared": 32,
+        "mean_abs_delta": 1.9363
+      },
+      "feat_chroma_proxy": {
+        "n_compared": 32,
+        "mean_abs_delta": 0.4955
+      }
+    },
+    "prediction_flips": {
+      "undertone": {
+        "flips": 2,
+        "compared": 32,
+        "flip_rate": 0.0625
+      },
+      "skin_depth": {
+        "flips": 3,
+        "compared": 32,
+        "flip_rate": 0.0938
+      }
+    },
+    "note": "flip counts measure stability of SYNTHETIC-DEMO-TRAINED models on real inputs, not correctness (no ground truth)"
+  },
+  "probe_predictors": {
+    "undertone": {
+      "artifact": "undertone-lightgbm-v002",
+      "trained_on": "synthetic_demo"
+    },
+    "skin_depth": {
+      "artifact": "skin_depth-extra_trees-v002",
+      "trained_on": "synthetic_demo"
+    }
+  },
+  "model_evaluation": {
+    "status": "BLOCKED",
+    "reason": "no expert-labelled real data exists (annotation table empty); external dataset labels cannot become FaceMaxx colour ground truth",
+    "valid_real_labelled_samples": 0,
+    "synthetic_demo_substituted": false
+  },
+  "limitations": [
+    "convenience sample: detection/extraction rates on this sample are NOT general-population performance claims",
+    "segmentation metrics compare the heuristic skin mask with CelebAMask-HQ annotation geometry INSIDE the Haar face box only; they validate mask composition, not colour analysis",
+    "colour values from uncontrolled photographs are not laboratory-grade measurements",
+    "any predictions shown come from SYNTHETIC-DEMO-TRAINED artifacts used as stability probes; they are not accuracy measurements",
+    "CelebAMask-HQ identity annotations are not part of this repository, so unique-people counts are unknown, not zero"
+  ]
+}

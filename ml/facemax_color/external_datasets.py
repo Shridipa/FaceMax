@@ -175,6 +175,41 @@ def validate_celebamask_pairing(
     }
 
 
+def build_skin_mask_with_exclusions(
+    skin_mask: "np.ndarray",
+    exclude_mask: "np.ndarray",
+) -> Dict[str, Any]:
+    """Compose skin + exclusion masks with FEATURE-OVER-SKIN priority.
+
+    Raw CelebAMask-HQ per-class masks overlap where facial features sit ON
+    skin (e.g. lips over the mouth area, brows over the brow ridge); the
+    official composite resolves this by painting feature classes LAST, so the
+    correct semantics for colour analysis is: exclusion WINS. The overlap
+    itself is NORMAL, not a pairing failure - what matters is that the final
+    sampling mask contains zero excluded pixels.
+
+    Returns {"skin": mask, "excluded_px": int, "overlap_px": int} where
+    ``skin`` is a boolean array with every excluded pixel removed. numpy is
+    imported lazily so the module stays importable without it.
+    """
+    import numpy as np
+
+    skin = np.asarray(skin_mask).astype(bool)
+    exclude = np.asarray(exclude_mask).astype(bool)
+    if skin.shape != exclude.shape:
+        raise ValueError(
+            f"mask shape mismatch: skin {skin.shape} vs exclude {exclude.shape} "
+            "- masks must be aligned to the same image geometry before composition"
+        )
+    overlap = int(np.logical_and(skin, exclude).sum())
+    composed = skin & ~exclude
+    return {
+        "skin": composed,
+        "excluded_px": int(exclude.sum()),
+        "overlap_px": overlap,
+    }
+
+
 def validate_fitzpatrick_frame(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Fitzpatrick17k label-preservation guard.
 
