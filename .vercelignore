@@ -1,0 +1,10 @@
+ml/data/raw
+ml/data/processed
+ml/.pytest_cache
+ml/**/__pycache__
+node_modules
+.git
+.env
+.env.*
+tests
+*.test.ts
