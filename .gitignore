@@ -16,3 +16,4 @@ __pycache__/
 # control (see ml/data/DATASET_REGISTRY.md); receipts + provenance live in
 # ml/data/ingest/ instead.
 ml/data/raw/
+.env*.local
