@@ -170,15 +170,12 @@ describe("validateGarmentInputs", () => {
 /* ================================================================== */
 
 describe("runDescribeAnalysis", () => {
-  test("no profile -> NO_PROFILE without calling the interpreter", async () => {
-    let called = false;
-    const res = await runDescribeAnalysis({ description: "a black shirt", profile: undefined as never }, null, async () => {
-      called = true;
-      return { garments: [] };
-    });
-    assert.equal(res.success, false);
-    assert.equal(res.error, "NO_PROFILE");
-    assert.equal(called, false);
+  test("no profile -> extracts garments with source 'none'", async () => {
+    const res = await runDescribeAnalysis({ description: "a black shirt", profile: undefined }, null);
+    assert.equal(res.success, true);
+    assert.equal(res.garments.length, 1);
+    assert.equal(res.garments[0].category, "Shirt");
+    assert.equal(res.profile_used?.source, "none");
   });
 
   test("empty description -> EMPTY_DESCRIPTION", async () => {

@@ -57,15 +57,39 @@ export async function analyseOutfit(
 }
 
 async function postJson<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  let response: Response;
+  try {
+    response = await fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    const err = new Error("Could not connect to the styling service. Please check your internet connection.") as Error & { code?: string };
+    err.code = "NETWORK_ERROR";
+    throw err;
+  }
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const err = new Error(errorData.message || errorData.error || "Request failed. Please try again.") as Error & { code?: string };
-    err.code = errorData.error;
+    const errorData = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+    let message = typeof errorData.message === "string" ? errorData.message : "";
+    if (!message && typeof errorData.error === "string") {
+      message = errorData.error;
+    }
+    if (!message) {
+      if (response.status === 404) {
+        message = "Styling service endpoint not found (404).";
+      } else if (response.status >= 500) {
+        message = `Styling server encountered an error (${response.status}). Please try again shortly.`;
+      } else if (response.status === 429) {
+        message = "Too many requests. Please wait a moment before trying again.";
+      } else {
+        message = `Request failed (${response.status}). Please try again.`;
+      }
+    }
+    const err = new Error(message) as Error & { code?: string; status?: number };
+    if (typeof errorData.error === "string") err.code = errorData.error;
+    err.status = response.status;
     throw err;
   }
   return response.json() as Promise<T>;

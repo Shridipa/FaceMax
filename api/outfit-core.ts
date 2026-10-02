@@ -11,7 +11,7 @@
  * This module is PURE (no Express, no Gemini SDK) so it can be unit-tested
  * with injected analysers and reused by both server.ts and api/*.ts.
  */
-import { SEASON_DESCRIPTIONS } from "../src/types/api";
+import { SEASON_DESCRIPTIONS } from "./palette-data.js";
 import type {
   OutfitAnalysisRequest,
   OutfitAnalysisResponse,
@@ -1090,17 +1090,6 @@ export async function runDescribeAnalysis(
     source: (profile?.season ? "session_profile" : "none") as "session_profile" | "none",
   });
 
-  if (!request.profile?.season) {
-    return {
-      success: false,
-      error: "NO_PROFILE",
-      message: "Complete your FaceMaxx colour analysis to receive styling recommendations tailored to you.",
-      garments: [],
-      assumptions: [],
-      limitations: ["No saved FaceMaxx colour profile was supplied."],
-      profile_used: profileMeta(undefined),
-    };
-  }
   const description = (request.description || "").trim();
   if (description.length < 3) {
     return {
@@ -1305,6 +1294,22 @@ export function parseDescriptionLocally(description: string): { garments: Garmen
     }
     categories.sort((a, b) => a.idx - b.idx);
     if (!categories.length) {
+      // If we already extracted a garment, check if this chunk describes a pattern,
+      // embroidery, or fit on that garment (e.g. "with gold embroidery")
+      const patternWord = PATTERN_WORDS.map(([word, p]) => (chunk.includes(word) ? p : null)).find(Boolean);
+      if (patternWord && out.length > 0) {
+        if (!out[out.length - 1].pattern || out[out.length - 1].pattern === "Solid") {
+          out[out.length - 1].pattern = patternWord;
+        }
+        continue;
+      }
+      const fitWord = FIT_WORDS.map((word) => (chunk.includes(word) ? word : null)).find(Boolean);
+      if (fitWord && out.length > 0) {
+        if (!out[out.length - 1].fit) {
+          out[out.length - 1].fit = fitWord;
+        }
+        continue;
+      }
       // colour-only chunk without a category word
       let colour: [string, string, string] | null = null;
       for (const phrase of COLOUR_PHRASES) {
