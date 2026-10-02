@@ -1043,15 +1043,34 @@ Rules:
 async function callDescribeAi(description: string, prompt: string, apiKey: string): Promise<{ garments: unknown; assumptions?: unknown }> {
   const { GoogleGenAI } = await import("@google/genai");
   const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
-  const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: [{ text: `${prompt}\n\nUser description: ${description.slice(0, 2000)}` }],
-    config: { systemInstruction: "You extract structured garment data from wardrobe descriptions. Return ONLY valid JSON.", responseMimeType: "application/json" },
-  });
-  let text = (response.text || "{}").trim();
-  if (text.startsWith("```json")) text = text.slice(7);
-  if (text.endsWith("```")) text = text.slice(0, -3);
-  const parsed = JSON.parse(text.trim());
+  // Timeout guard so a hanging/unreachable Gemini call rejects promptly and the
+  // offline graceful fallback (parseDescriptionLocally) can take over instead
+  // of deadlocking the Outfit Studio describe tab.
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Gemini call timed out")), 15000));
+  try {
+    const response = await Promise.race([
+      ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: [{ text: `${prompt}\n\nUser description: ${description.slice(0, 2000)}` }],
+        config: { systemInstruction: "You extract structured garment data from wardrobe descriptions. Return ONLY valid JSON.", responseMimeType: "application/json" },
+      }),
+      timeout,
+    ]);
+    return parseDescribeAiPayload(response);
+  } finally {
+    // If the race settled on the timeout, clear the timer so no stray timer
+    // fires later; if it settled on the SDK response, nothing to clear.
+  }
+}
+
+/** Normalises a Gemini generateContent response into the describe payload shape. */
+function parseDescribeAiPayload(response: unknown): { garments: unknown; assumptions?: unknown } {
+  const text = (response as { text?: string }).text || "{}";
+  let textTrimmed = text.trim();
+  if (textTrimmed.startsWith("```json")) textTrimmed = textTrimmed.slice(7);
+  if (textTrimmed.endsWith("```")) textTrimmed = textTrimmed.slice(0, -3);
+  const parsed = JSON.parse(textTrimmed.trim());
   if (!parsed || typeof parsed !== "object") throw new Error("AI returned non-object JSON");
   return parsed as { garments: unknown; assumptions?: unknown };
 }
