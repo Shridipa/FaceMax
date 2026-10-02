@@ -30,7 +30,7 @@ import type {
   CompareOptionInput,
   CompareOptionResult,
   CompareResponse,
-} from "../src/types/outfit";
+} from "./types/outfit.js";
 
 export const EVIDENCE_CLASS =
   "DETERMINISTIC PALETTE MATCH + AI STYLING (NOT SCIENTIFICALLY VALIDATED)";
