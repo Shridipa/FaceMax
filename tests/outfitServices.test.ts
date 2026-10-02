@@ -6,7 +6,7 @@
  */
 import { test, describe, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { loadSavedProfile, analyseOutfit } from "../src/services/outfit";
+import { loadSavedProfile, analyseOutfit, describeClothes } from "../src/services/outfit";
 import type { ColourAnalysisResponse } from "../src/types/api";
 
 /* ------------------------------------------------------------------ */
@@ -161,3 +161,55 @@ describe("analyseOutfit", () => {
     );
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  describeClothes                                                    */
+/* ------------------------------------------------------------------ */
+
+describe("describeClothes", () => {
+  test("POSTs description + profile to /api/outfit-analysis/describe", async () => {
+    let capturedUrl = "";
+    let capturedBody: Record<string, unknown> = {};
+    globalThis.fetch = (async (url: string, init?: RequestInit) => {
+      capturedUrl = String(url);
+      capturedBody = JSON.parse(String(init?.body));
+      return new Response(
+        JSON.stringify({
+          success: true,
+          garments: [{ category: "Shirt", colourName: "Black", hex: "#000000" }],
+          assumptions: [],
+          limitations: [],
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    }) as typeof fetch;
+
+    const res = await describeClothes(
+      "black oversized shirt",
+      { season: "Dark Winter" },
+    );
+
+    assert.equal(capturedUrl, "/api/outfit-analysis/describe");
+    assert.equal(capturedBody.description, "black oversized shirt");
+    assert.deepEqual(capturedBody.profile, { season: "Dark Winter" });
+    assert.equal(res.success, true);
+    assert.equal(res.garments.length, 1);
+    assert.equal(res.garments[0].category, "Shirt");
+  });
+
+  test("throws structured error on non-ok HTTP responses", async () => {
+    installFetch(() =>
+      new Response(
+        JSON.stringify({ success: false, error: "EMPTY_DESCRIPTION", message: "Describe at least one garment." }),
+        { status: 400 },
+      ),
+    );
+
+    await assert.rejects(
+      describeClothes("", { season: "Dark Winter" }),
+      (err: Error & { code?: string }) =>
+        err.code === "EMPTY_DESCRIPTION" && err.message.includes("Describe at least one garment"),
+    );
+  });
+});
+

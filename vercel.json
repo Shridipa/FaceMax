@@ -10,9 +10,27 @@
     "api/color-analysis.py": {
       "maxDuration": 60,
       "excludeFiles": "{ml/tests/**,ml/**/__pycache__/**,ml/.pytest_cache/**,ml/data/demo/training_data_*.json,ml/data/demo/fallback_boxes.json,ml/data/raw/**,ml/data/processed/**}"
+    },
+    "api/outfit-analysis.ts": {
+      "maxDuration": 30
+    },
+    "api/outfit-describe.ts": {
+      "maxDuration": 30
+    },
+    "api/outfit-wardrobe.ts": {
+      "maxDuration": 30
+    },
+    "api/outfit-compare.ts": {
+      "maxDuration": 10
+    },
+    "api/outfit-analysis/*.ts": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
+    { "source": "/api/outfit-describe", "destination": "/api/outfit-analysis/describe" },
+    { "source": "/api/outfit-wardrobe", "destination": "/api/outfit-analysis/wardrobe" },
+    { "source": "/api/outfit-compare", "destination": "/api/outfit-analysis/compare" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

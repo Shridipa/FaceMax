@@ -17,3 +17,4 @@ __pycache__/
 # ml/data/ingest/ instead.
 ml/data/raw/
 .env*.local
+powershell.cmd

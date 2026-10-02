@@ -457,10 +457,19 @@ def train_bundle(
         bundle.axes[axis] = model
         comparison[axis] = {"backend": model.backend, "cv_macro_f1": scores}
     # Season classifier: the transparent rule combiner over the trained axes.
-    season_scores = _season_cv_score(rows, bundle, seed=seed) if season_cv else float("nan")
+    # season_cv=False signals an intentional skip (speed / test mode); the
+    # distinction is stored in comparison_provenance so render_comparison can
+    # print a clear "skipped" note rather than a bare nan.
+    if season_cv:
+        season_scores: Any = _season_cv_score(rows, bundle, seed=seed)
+        season_cv_skipped = False
+    else:
+        season_scores = float("nan")
+        season_cv_skipped = True
     comparison["season_primary"] = {
         "backend": "rule_combiner+" + "+".join(sorted(m.backend for m in bundle.axes.values())),
         "cv_macro_f1": season_scores,
+        "cv_skipped": season_cv_skipped,
     }
     from .training_data import FEATURE_VERSION  # lazy: training_data imports this module
 
@@ -469,12 +478,17 @@ def train_bundle(
         "dataset_rows": len(rows),
         "people": len({str(r.get("person_id") or i) for i, r in enumerate(rows)}),
         "feature_version": FEATURE_VERSION,
+        "season_cv_skipped": season_cv_skipped,
     }
     return bundle
 
 
 def _season_cv_score(rows: List[Dict], bundle: ColourModelBundle, seed: int = 7) -> float:
-    """Person-grouped CV macro-F1 for the full season pipeline."""
+    """Person-grouped CV macro-F1 for the full season pipeline.
+
+    Returns float("nan") when data is insufficient for a meaningful estimate;
+    callers should distinguish this from an intentional skip (season_cv=False).
+    """
     eligible = [r for r in rows if r.get("season_primary") in SEASON_ORDER]
     if len(eligible) < 30:
         return float("nan")
@@ -486,13 +500,18 @@ def _season_cv_score(rows: List[Dict], bundle: ColourModelBundle, seed: int = 7)
     gkf = GroupKFold(n_splits=min(5, len(groups)))
     scores = []
     y_all = np.array([str(r["season_primary"]) for r in eligible])
-    for train_idx, test_idx in gkf.split(eligible, y_all, np.array([str(r.get("person_id") or i) for i, r in enumerate(eligible)])):
+    group_arr = np.array([str(r.get("person_id") or i) for i, r in enumerate(eligible)])
+    for train_idx, test_idx in gkf.split(eligible, y_all, group_arr):
         train_rows = [eligible[i] for i in train_idx]
         test_rows = [eligible[i] for i in test_idx]
         fold_bundle = train_bundle(train_rows, axes=["undertone", "skin_depth", "chroma", "contrast"], seed=seed)
         preds = [fold_bundle.predict(_features_of(r))["prediction"] for r in test_rows]
         truth = [str(r["season_primary"]) for r in test_rows]
-        scores.append(float(f1_score(truth, preds, average="macro", zero_division=0)))
+        fold_score = float(f1_score(truth, preds, average="macro", zero_division=0))
+        # Guard against sklearn returning nan (e.g., zero-sample folds on very
+        # small datasets). A fold contributing nan would poison np.mean.
+        if fold_score == fold_score:  # nan != nan
+            scores.append(fold_score)
     return float(np.mean(scores)) if scores else float("nan")
 
 

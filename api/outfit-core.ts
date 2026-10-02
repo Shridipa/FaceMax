@@ -1043,11 +1043,12 @@ Rules:
 async function callDescribeAi(description: string, prompt: string, apiKey: string): Promise<{ garments: unknown; assumptions?: unknown }> {
   const { GoogleGenAI } = await import("@google/genai");
   const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
-  // Timeout guard so a hanging/unreachable Gemini call rejects promptly and the
-  // offline graceful fallback (parseDescriptionLocally) can take over instead
-  // of deadlocking the Outfit Studio describe tab.
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error("Gemini call timed out")), 15000));
+  // Timeout guard so a hanging/unreachable Gemini call rejects promptly and
+  // the offline fallback (parseDescriptionLocally) can take over.
+  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutHandle = setTimeout(() => reject(new Error("Gemini call timed out after 15 s")), 15000);
+  });
   try {
     const response = await Promise.race([
       ai.models.generateContent({
@@ -1059,8 +1060,8 @@ async function callDescribeAi(description: string, prompt: string, apiKey: strin
     ]);
     return parseDescribeAiPayload(response);
   } finally {
-    // If the race settled on the timeout, clear the timer so no stray timer
-    // fires later; if it settled on the SDK response, nothing to clear.
+    // Always clear the timer so it cannot fire after the promise resolves/rejects.
+    if (timeoutHandle !== undefined) clearTimeout(timeoutHandle);
   }
 }
 
@@ -1287,16 +1288,20 @@ export function parseDescriptionLocally(description: string): { garments: Garmen
 
   for (const chunk of chunks.slice(0, 12)) {
     // Find every category word in this chunk with its position.
+    // Skip any category word that is a substring of a longer dictionary word
+    // already matched, so that "shirt" inside "t-shirt" is not double counted
+    // (it sits at a different index than the longer word).
     const categories: { word: string; cat: string; idx: number }[] = [];
     for (const [word, cat] of CATEGORY_WORDS) {
       const idx = chunk.indexOf(word);
-      if (idx !== -1) {
-        // A longer dictionary word containing this one ("shirt" in "t-shirt")
-        // at the same position wins; skip contained duplicates.
-        if (!categories.some((c) => c.idx === idx && c.word.length >= word.length)) {
-          categories.push({ word, cat, idx });
-        }
-      }
+      if (idx === -1) continue;
+      // Filter out contained words: if a longer dictionary word matches the
+      // same chunk and contains `word`, skip `word` entirely.
+      const contained = CATEGORY_WORDS.some(([longWord, ,]) =>
+        longWord.length > word.length && chunk.includes(longWord) && chunk.indexOf(longWord) <= idx
+      );
+      if (contained) continue;
+      categories.push({ word, cat, idx });
     }
     categories.sort((a, b) => a.idx - b.idx);
     if (!categories.length) {

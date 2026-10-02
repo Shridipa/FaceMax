@@ -146,8 +146,15 @@ def render_comparison(bundle: ColourModelBundle) -> str:
         if axis == "season_primary":
             lines.append("")
             lines.append(f"season pipeline [{backend}]")
-            value = scores if isinstance(scores, float) else float("nan")
-            lines.append(f"  full-pipeline macro-F1: {value:.3f}")
+            cv_skipped = info.get("cv_skipped", False)
+            if cv_skipped:
+                lines.append("  full-pipeline macro-F1: skipped (season_cv=False; re-run with season_cv=True for a score)")
+            else:
+                value = scores if isinstance(scores, float) else float("nan")
+                if value != value:  # nan != nan is True
+                    lines.append("  full-pipeline macro-F1: insufficient data (< 30 eligible rows for season CV)")
+                else:
+                    lines.append(f"  full-pipeline macro-F1: {value:.3f}")
             continue
         lines.append("")
         lines.append(f"{axis}  (selected: {backend})")

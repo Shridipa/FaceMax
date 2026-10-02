@@ -4,7 +4,7 @@
  * Core logic lives in api/outfit-core.ts (shared with server.ts).
  */
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { compareOutfits } from "./outfit-core";
+import { compareOutfits } from "./outfit-core.js";
 
 export const maxDuration = 10;
 

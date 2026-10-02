@@ -459,3 +459,81 @@ describe("Comparison: complete outfits per option", () => {
     assert.deepEqual(a, b);
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  Prove the production failure is fixed                              */
+/* ------------------------------------------------------------------ */
+describe("Describe offline fallback (production failure fix)", () => {
+  test("offline parser returns garments from a simple description", () => {
+    const { garments } = parseDescriptionLocally("Black oversized shirt.");
+    assert.equal(garments.length, 1);
+    assert.equal(garments[0].category, "Shirt");
+    assert.equal(garments[0].colourName, "Black");
+    assert.equal(garments[0].hex, "#000000");
+    assert.equal(garments[0].fit, "oversized");
+  });
+
+  test("offline parser returns multiple garments from one sentence", () => {
+    const { garments } = parseDescriptionLocally("I own a dark blue denim jacket, white T-shirt, black jeans and beige sneakers.");
+    assert.equal(garments.length, 4);
+    assert.deepEqual(garments.map((g: any) => g.category), ["Jacket", "T-Shirt", "Jeans", "Sneakers"]);
+    assert.equal(garments.find((g: any) => g.category === "T-Shirt")?.colourName, "White");
+    assert.equal(garments.find((g: any) => g.category === "Jacket")?.colourName, "Navy");
+    assert.equal(garments.some((g: any) => g.colourName === "Unknown"), false);
+  });
+
+  test("offline parser handles the describe tab's example descriptions", () => {
+    const cases = [
+      "I have a black oversized shirt and beige wide-leg trousers.",
+      "I own a dark blue denim jacket, white T-shirt and black jeans.",
+      "I have a maroon kurti with gold embroidery.",
+      "I own a cream sweater, brown trousers and beige shoes.",
+    ];
+    for (const d of cases) {
+      const { garments } = parseDescriptionLocally(d);
+      assert.ok(garments.length > 0, `Expected at least 1 garment for: ${d}`);
+      assert.ok(garments.every((g: any) => g.colourName !== "Unknown"), `Expected no unknown colours for: ${d}`);
+    }
+  });
+
+  test("runDescribeAnalysis returns garments when Gemini key is missing", async () => {
+    const res = await runDescribeAnalysis(
+      { description: "Black oversized shirt and beige trousers", profile: { season: "Autumn" } },
+      null,
+    );
+    assert.equal(res.success, true);
+    assert.equal(res.garments.length, 2);
+    assert.equal(res.garments[0].colourName, "Black");
+    assert.equal(res.garments[1].colourName, "Beige");
+    assert.ok(res.assumptions.some((a: string) => a.includes("offline")));
+  });
+
+  test("runDescribeAnalysis returns a structured error for empty description", async () => {
+    const res = await runDescribeAnalysis({ description: "   ", profile: { season: "Autumn" } }, null);
+    assert.equal(res.success, false);
+    assert.equal(res.error, "EMPTY_DESCRIPTION");
+    assert.ok(Array.isArray(res.garments));
+    assert.equal(res.garments.length, 0);
+  });
+
+  test("runDescribeAnalysis returns a clear error when nothing is identifiable", async () => {
+    const res = await runDescribeAnalysis({ description: "something completely unidentifiable", profile: { season: "Autumn" } }, null);
+    assert.equal(res.success, false);
+    assert.equal(res.error, undefined);
+    assert.ok(res.limitations.length > 0);
+    assert.equal(res.garments.length, 0);
+  });
+
+  test("runDescribeAnalysis with a valid profile returns the structured object (no HTTP status)", async () => {
+    const res = await runDescribeAnalysis(
+      { description: "Silver Cardigan with black jeans", profile: { season: "Autumn", undertone: "Neutral", skin_depth: "Light-Medium", chroma: "", contrast: "" } },
+      null,
+    );
+    assert.equal(res.success, true);
+    assert.equal(res.garments.length, 2);
+    assert.equal(res.garments[0].category, "Cardigan");
+    assert.equal(res.garments[1].category, "Jeans");
+    assert.equal(res.profile_used?.season, "Autumn");
+  });
+});
+
