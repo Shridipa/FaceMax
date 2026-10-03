@@ -12,6 +12,7 @@
  * with injected analysers and reused by both server.ts and api/*.ts.
  */
 import { SEASON_DESCRIPTIONS } from "./palette-data.js";
+import { parseDescriptionLocally } from "./outfit-parser.js";
 import type {
   OutfitAnalysisRequest,
   OutfitAnalysisResponse,
@@ -1011,78 +1012,24 @@ export function garmentInputsToOutfitGarments(inputs: GarmentInput[]): OutfitGar
       patternConfidence: 0.9,
       confidence: 1, // user-supplied colours are ground truth, not AI estimates
     }));
-}
-
+}/* ================================================================== */
+/*  MODE 2 — Describe clothes (fully local, deterministic)              */
 /* ================================================================== */
-/*  MODE 2 — Describe clothes (NL -> structured garments)              */
-/* ================================================================== */
+/*
+ * The user's description is parsed by the staged dictionary parser in
+ * ./outfit-parser.ts. This path involves NO AI service, NO API key, NO
+ * network request and NO timeout: it works identically locally and on
+ * Vercel with every AI-related environment variable unset. Parsed garments
+ * use the canonical GarmentInput schema, so Describe mode feeds the exact
+ * same analysis pipeline as Photograph and Wardrobe modes.
+ */
+export { parseDescriptionLocally };
 
-export interface DescribeInterpreter {
-  (description: string, prompt: string): Promise<{ garments: unknown; assumptions?: unknown }>;
-}
-
-export function buildDescribePrompt(profile: OutfitAnalysisRequest["profile"]): string {
-  return `You are FaceMaxx's wardrobe interpreter. The user describes clothes they own in ordinary language. Extract a structured list of garments.
-
-Return ONLY valid JSON:
-{
-  "garments": [
-    {"category": "e.g. Shirt/Trousers/Dress/Sweater/Jeans/Kurti/Sneakers", "colourName": "plain colour name", "hex": "#RRGGBB", "pattern": "Solid|Striped|Checked|Floral|Geometric|Printed|null", "fit": "only if the user said it, else null"}
-  ],
-  "assumptions": ["short strings for anything you had to assume, e.g. ambiguous colour"]
-}
-
-Rules:
-1. Extract ONLY garments the user actually mentioned; never invent extra items, fabrics, brands or quality.
-2. If a colour is ambiguous, pick the most likely hex and record why in "assumptions".
-3. If the user names a colour with no standard hex, choose the closest reasonable hex and name it plainly.
-4. Do not give styling advice here; this step only structures the description.` +
-    `\n\nSaved FaceMaxx profile (for context only; never restate or invent profile data): ${JSON.stringify(profile)}`;
-}
-
-async function callDescribeAi(description: string, prompt: string, apiKey: string): Promise<{ garments: unknown; assumptions?: unknown }> {
-  const { GoogleGenAI } = await import("@google/genai");
-  const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
-  // Timeout guard so a hanging/unreachable Gemini call rejects promptly and
-  // the offline fallback (parseDescriptionLocally) can take over.
-  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timeoutHandle = setTimeout(() => reject(new Error("Gemini call timed out after 15 s")), 15000);
-  });
-  try {
-    const response = await Promise.race([
-      ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: [{ text: `${prompt}\n\nUser description: ${description.slice(0, 2000)}` }],
-        config: { systemInstruction: "You extract structured garment data from wardrobe descriptions. Return ONLY valid JSON.", responseMimeType: "application/json" },
-      }),
-      timeout,
-    ]);
-    return parseDescribeAiPayload(response);
-  } finally {
-    // Always clear the timer so it cannot fire after the promise resolves/rejects.
-    if (timeoutHandle !== undefined) clearTimeout(timeoutHandle);
-  }
-}
-
-/** Normalises a Gemini generateContent response into the describe payload shape. */
-function parseDescribeAiPayload(response: unknown): { garments: unknown; assumptions?: unknown } {
-  const text = (response as { text?: string }).text || "{}";
-  let textTrimmed = text.trim();
-  if (textTrimmed.startsWith("```json")) textTrimmed = textTrimmed.slice(7);
-  if (textTrimmed.endsWith("```")) textTrimmed = textTrimmed.slice(0, -3);
-  const parsed = JSON.parse(textTrimmed.trim());
-  if (!parsed || typeof parsed !== "object") throw new Error("AI returned non-object JSON");
-  return parsed as { garments: unknown; assumptions?: unknown };
-}
+const NO_GARMENT_MESSAGE =
+  'I couldn\'t identify a clothing item from that description. Try something like "a blue shirt and black jeans."';
 
 export async function runDescribeAnalysis(
   request: { description: string; profile?: OutfitAnalysisRequest["profile"] },
-  apiKey: string | null,
-  interpreter: DescribeInterpreter = (text, prompt) => {
-    if (!apiKey) throw new Error("GEMINI_API_KEY is not configured.");
-    return callDescribeAi(text, prompt, apiKey);
-  },
 ): Promise<DescribeResponse> {
   const profileMeta = (profile?: OutfitAnalysisRequest["profile"]) => ({
     season: profile?.season || "",
@@ -1103,293 +1050,32 @@ export async function runDescribeAnalysis(
     };
   }
 
-  let payload: { garments: unknown; assumptions?: unknown } | null = null;
-  let aiError: string | null = null;
-  try {
-    payload = await interpreter(description, buildDescribePrompt(request.profile));
-  } catch (err) {
-    aiError = err instanceof Error ? err.message : "Interpretation service failed.";
-  }
-
-  const report = payload ? validateGarmentInputsWithReport(payload?.garments) : { accepted: [], rejected: [], overflow: 0 };
-  let garments = report.accepted;
-  let assumptions = Array.isArray(payload?.assumptions)
-    ? payload.assumptions.filter((a): a is string => typeof a === "string" && !!a.trim()).map((a) => a.trim().slice(0, 200))
-    : [];
-
-  // Graceful degradation: if the AI is unavailable (e.g. no API key configured)
-  // or found nothing, try the built-in offline colour/garment dictionary so
-  // text mode still works. Clearly disclosed when used.
-  if (!garments.length) {
-    const offline = parseDescriptionLocally(description);
-    if (offline.garments.length) {
-      garments = offline.garments;
-      assumptions = [
-        "Interpreted offline with FaceMaxx's built-in colour dictionary (AI interpretation unavailable) — please check each item below.",
-        ...offline.assumptions,
-      ];
-      if (aiError) assumptions.push(`AI interpreter: ${aiError}`);
-    }
-  }
+  // Local deterministic extraction, then a defensive validation pass so no
+  // malformed garment can ever reach the recommendation engine.
+  const parsed = parseDescriptionLocally(description);
+  const report = validateGarmentInputsWithReport(parsed.garments);
+  const garments = report.accepted;
 
   const limitations: string[] = [];
-  if (!garments.length) {
-    if (aiError) {
-      limitations.push(aiError);
-      limitations.push(
-        "Tip: add GEMINI_API_KEY to your .env file and restart the server for AI interpretation — or name each garment with a colour (e.g. \"a yellow cardigan and hot pink jeans\") so the built-in dictionary can read it.",
-      );
-    } else {
-      limitations.push("No recognisable garment with a colour was found in the description. Try naming the clothing type and colour (e.g. \"navy sweater\").");
-    }
-  }
+  if (!garments.length) limitations.push(NO_GARMENT_MESSAGE);
   for (const r of report.rejected) limitations.push(`${r.category}: ${r.reason}`);
-  if (assumptions.length) limitations.push(`Interpretation assumptions: ${assumptions.join("; ")}.`);
+  if (parsed.assumptions.length) {
+    limitations.push(`Interpretation assumptions: ${parsed.assumptions.join("; ")}.`);
+  }
 
   return {
     success: garments.length > 0,
+    message: garments.length ? undefined : NO_GARMENT_MESSAGE,
     garments,
-    assumptions,
+    assumptions: parsed.assumptions,
     limitations,
     rejectedGarments: report.rejected.length ? report.rejected : undefined,
     profile_used: profileMeta(request.profile),
   };
 }
 
-/* ================================================================== */
-/*  Offline describe fallback — deterministic dictionary parser        */
-/* ================================================================== */
 
-/** Curated colour phrases, longest-first matching (deterministic). */
-const COLOUR_PHRASES: [string, string, string][] = [
-  ["hot pink", "#FF69B4", "Hot Pink"],
-  ["pastel pink", "#FFD1DC", "Pastel Pink"],
-  ["navy blue", "#1A1A3E", "Navy"],
-  ["dark blue", "#1A1A3E", "Navy"],
-  ["light blue", "#87CEEB", "Sky Blue"],
-  ["sky blue", "#87CEEB", "Sky Blue"],
-  ["baby blue", "#A6C8E5", "Baby Blue"],
-  ["off white", "#F8F6F0", "Off White"],
-  ["off-white", "#F8F6F0", "Off White"],
-  ["forest green", "#234B35", "Forest Green"],
-  ["dark green", "#234B35", "Forest Green"],
-  ["olive green", "#6B8E23", "Olive Green"],
-  ["light green", "#7FBF7F", "Light Green"],
-  ["dark red", "#8B0000", "Dark Red"],
-  ["wine", "#722F37", "Wine"],
-  ["charcoal", "#36454F", "Charcoal"],
-  ["denim", "#5B7C99", "Denim Blue"],
-  ["burgundy", "#6E1F2A", "Burgundy"],
-  ["maroon", "#6E1F2A", "Maroon"],
-  ["lavender", "#B57EDC", "Lavender"],
-  ["turquoise", "#40E0D0", "Turquoise"],
-  ["mustard", "#D4A017", "Mustard"],
-  ["fuchsia", "#D648D6", "Magenta"],
-  ["silver", "#C0C0C0", "Silver"],
-  ["golden", "#FFD700", "Gold"],
-  ["black", "#000000", "Black"],
-  ["white", "#FFFFFF", "White"],
-  ["grey", "#808080", "Grey"],
-  ["gray", "#808080", "Grey"],
-  ["cream", "#FFFDD0", "Cream"],
-  ["ivory", "#FFFFF0", "Ivory"],
-  ["beige", "#F5F5DC", "Beige"],
-  ["khaki", "#C3B091", "Khaki"],
-  ["camel", "#C19A6B", "Camel"],
-  ["tan", "#D2B48C", "Tan"],
-  ["brown", "#8B6914", "Brown"],
-  ["olive", "#6B8E23", "Olive Green"],
-  ["green", "#2E8B57", "Green"],
-  ["teal", "#008080", "Teal"],
-  ["blue", "#0047AB", "Blue"],
-  ["navy", "#1A1A3E", "Navy"],
-  ["yellow", "#FFD700", "Yellow"],
-  ["gold", "#FFD700", "Gold"],
-  ["orange", "#FFA500", "Orange"],
-  ["rust", "#B7410E", "Rust"],
-  ["coral", "#FF7F50", "Coral"],
-  ["peach", "#FFDAB9", "Peach"],
-  ["pink", "#FFB6C1", "Light Pink"],
-  ["red", "#C0392B", "Red"],
-  ["purple", "#6A0DAD", "Purple"],
-  ["mauve", "#8B668B", "Mauve"],
-  ["indigo", "#4B0082", "Indigo"],
-];
 
-const CATEGORY_WORDS: [string, string][] = [
-  ["t-shirt", "T-Shirt"], ["t shirt", "T-Shirt"], ["tshirt", "T-Shirt"], ["tee", "T-Shirt"],
-  ["shirt", "Shirt"], ["blouse", "Blouse"], ["cardigan", "Cardigan"],
-  ["sweater", "Sweater"], ["jumper", "Sweater"], ["hoodie", "Hoodie"],
-  ["blazer", "Blazer"], ["jacket", "Jacket"], ["coat", "Coat"], ["parka", "Coat"],
-  ["jeans", "Jeans"], ["trousers", "Trousers"], ["pants", "Trousers"], ["chinos", "Trousers"],
-  ["bottoms", "Bottoms"], ["bottom", "Bottoms"],
-  ["skirt", "Skirt"], ["dress", "Dress"], ["gown", "Dress"],
-  ["kurti", "Kurti"], ["kurta", "Kurta"], ["saree", "Saree"], ["sari", "Saree"],
-  ["lehenga", "Lehenga"], ["salwar", "Salwar"], ["shorts", "Shorts"],
-  ["leggings", "Leggings"], ["joggers", "Joggers"], ["suit", "Suit"],
-  ["sneakers", "Sneakers"], ["trainers", "Sneakers"], ["shoes", "Shoes"],
-  ["boots", "Boots"], ["heels", "Heels"], ["sandals", "Sandals"], ["flats", "Flats"], ["loafers", "Loafers"],
-  ["scarf", "Scarf"], ["belt", "Belt"], ["bag", "Bag"], ["handbag", "Bag"], ["tote", "Bag"],
-  ["watch", "Watch"], ["necklace", "Necklace"], ["earrings", "Earrings"],
-  ["top", "Top"],
-];
-
-const PATTERN_WORDS: [string, string][] = [
-  ["striped", "Striped"], ["stripes", "Striped"],
-  ["checked", "Checked"], ["check", "Checked"], ["plaid", "Checked"],
-  ["floral", "Floral"], ["florals", "Floral"],
-  ["geometric", "Geometric"],
-  ["printed", "Printed"], ["print", "Printed"], ["polka", "Printed"],
-  ["embroidered", "Embroidered"], ["embroidery", "Embroidered"],
-];
-
-const FIT_WORDS = [
-  "oversized", "slim", "straight", "wide-leg", "wide leg", "relaxed",
-  "tailored", "fitted", "baggy", "loose", "cropped", "regular",
-];
-
-function stripChunkPrefix(chunk: string): string {
-  return chunk
-    .replace(/^(?:and|with|plus|also|i\s+(?:have|own|got|bought|brought)|my|a|an|the|some|one)\s+/gi, "")
-    .replace(/^(?:and|with|plus|also|my|a|an|the|some|one)\s+/gi, "")
-    .trim();
-}
-
-/**
- * Offline fallback parser. Deliberately conservative:
- *  - splits on commas, semicolons, newlines and the conjunctions
- *    "and" / "with" / "plus" / "&" so "a cobalt top with teal trousers"
- *    yields TWO garments;
- *  - extracts one garment per clothing-category word, pairing it with the
- *    NEAREST preceding colour phrase (never a later one, never an invented
- *    default);
- *  - reports garments whose colour could not be determined instead of
- *    dropping them.
- */
-export function parseDescriptionLocally(description: string): { garments: GarmentInput[]; assumptions: string[] } {
-  const assumptions: string[] = [];
-  const out: GarmentInput[] = [];
-  const chunks = description
-    .toLowerCase()
-    .split(/\s*(?:,|;|\n|\band\b|\bwith\b|\bplus\b|\b&\b)\s*/)
-    .map(stripChunkPrefix)
-    .filter((c) => c.length > 2);
-
-  for (const chunk of chunks.slice(0, 12)) {
-    // Find every category word in this chunk with its position.
-    // Skip any category word that is a substring of a longer dictionary word
-    // already matched, so that "shirt" inside "t-shirt" is not double counted
-    // (it sits at a different index than the longer word).
-    const categories: { word: string; cat: string; idx: number }[] = [];
-    for (const [word, cat] of CATEGORY_WORDS) {
-      const idx = chunk.indexOf(word);
-      if (idx === -1) continue;
-      // Filter out contained words: if a longer dictionary word matches the
-      // same chunk and contains `word`, skip `word` entirely.
-      const contained = CATEGORY_WORDS.some(([longWord, ,]) =>
-        longWord.length > word.length && chunk.includes(longWord) && chunk.indexOf(longWord) <= idx
-      );
-      if (contained) continue;
-      categories.push({ word, cat, idx });
-    }
-    categories.sort((a, b) => a.idx - b.idx);
-    if (!categories.length) {
-      // If we already extracted a garment, check if this chunk describes a pattern,
-      // embroidery, or fit on that garment (e.g. "with gold embroidery")
-      const patternWord = PATTERN_WORDS.map(([word, p]) => (chunk.includes(word) ? p : null)).find(Boolean);
-      if (patternWord && out.length > 0) {
-        if (!out[out.length - 1].pattern || out[out.length - 1].pattern === "Solid") {
-          out[out.length - 1].pattern = patternWord;
-        }
-        continue;
-      }
-      const fitWord = FIT_WORDS.map((word) => (chunk.includes(word) ? word : null)).find(Boolean);
-      if (fitWord && out.length > 0) {
-        if (!out[out.length - 1].fit) {
-          out[out.length - 1].fit = fitWord;
-        }
-        continue;
-      }
-      // colour-only chunk without a category word
-      let colour: [string, string, string] | null = null;
-      for (const phrase of COLOUR_PHRASES) {
-        const idx = chunk.indexOf(phrase[0]);
-        if (idx === -1) continue;
-        if (!colour || phrase[0].length > colour[0].length) colour = phrase;
-      }
-      if (colour) {
-        assumptions.push(`could not tell the garment type for the ${colour[2].toLowerCase()} item — set it below`);
-        out.push({
-          id: `local-${out.length + 1}-${chunk.length}`,
-          category: "Garment",
-          colourName: colour[2],
-          hex: colour[1],
-          pattern: null,
-          fit: null,
-          owned: true,
-        });
-      }
-      continue;
-    }
-
-    // One garment per category word; the colour is the LONGEST phrase that
-    // appears BEFORE this category word (falls back to any position for the
-    // first garment only when nothing precedes it).
-    const pattern = PATTERN_WORDS.map(([word, p]) => (chunk.includes(word) ? p : null)).find(Boolean) || null;
-    const fit = FIT_WORDS.map((word) => (chunk.includes(word) ? word : null)).find(Boolean) || null;
-    for (let ci = 0; ci < categories.length; ci++) {
-      const { word, cat, idx } = categories[ci];
-      const prevIdx = ci > 0 ? categories[ci - 1].idx : -1;
-      let colour: [string, string, string] | null = null;
-      let colourIdx = -1;
-      for (const phrase of COLOUR_PHRASES) {
-        const pIdx = chunk.indexOf(phrase[0]);
-        if (pIdx === -1) continue;
-        const inScope = pIdx < idx && pIdx > prevIdx;
-        if (!inScope) continue;
-        if (!colour || phrase[0].length > colour[0].length) {
-          colour = phrase;
-          colourIdx = pIdx;
-        }
-      }
-      if (!colour && ci === 0) {
-        // first garment: accept a colour anywhere in the chunk as a fallback
-        for (const phrase of COLOUR_PHRASES) {
-          const pIdx = chunk.indexOf(phrase[0]);
-          if (pIdx === -1) continue;
-          if (!colour || phrase[0].length > colour[0].length) colour = phrase;
-        }
-      }
-      if (!colour) {
-        assumptions.push(`could not tell the colour of the ${cat.toLowerCase()} — add it below`);
-        out.push({
-          id: `local-${out.length + 1}-${idx}`,
-          category: cat,
-          colourName: "Unknown",
-          hex: "",
-          pattern,
-          fit,
-          owned: true,
-        });
-        continue;
-      }
-      const garment: GarmentInput = {
-        id: `local-${out.length + 1}-${idx}`,
-        category: cat,
-        colourName: colour[2],
-        hex: colour[1],
-        pattern,
-        fit,
-        owned: true,
-      };
-      // dedupe identical category+colour
-      if (!out.some((g) => g.category === garment.category && g.hex === garment.hex && g.hex !== "")) {
-        out.push(garment);
-      }
-    }
-  }
-  return { garments: out.slice(0, MAX_INPUT_GARMENTS), assumptions };
-}
 
 /* ================================================================== */
 /*  MODE 3 — Wardrobe outfit analysis (deterministic core + AI styling) */

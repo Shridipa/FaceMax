@@ -412,8 +412,7 @@ app.post("/api/outfit-analysis/describe", async (req, res) => {
       return res.status(400).json({ success: false, error: "NO_PROFILE", message: "Complete your FaceMaxx colour analysis to receive styling recommendations tailored to you." });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || null;
-    const result = await runDescribeAnalysis({ description, profile }, apiKey);
+    const result = await runDescribeAnalysis({ description, profile });
     return res.json(result);
   } catch (error: any) {
     console.error("Outfit describe error:", error);

@@ -415,11 +415,9 @@ describe("Describe mode: multiple garments in one description", () => {
     assert.ok(garments.some((g) => g.hex === "#008080" && g.category === "Bottoms"));
   });
 
-  test("describe pipeline preserves both parsed garments end-to-end", async () => {
+  test("describe pipeline preserves both parsed garments end-to-end (no AI key)", async () => {
     const res = await runDescribeAnalysis(
       { description: "a cobalt blue top with teal bottom", profile: WARM_AUTUMN },
-      null,
-      async () => { throw new Error("GEMINI_API_KEY is not configured."); },
     );
     assert.equal(res.success, true);
     assert.equal(res.garments.length, 2);
@@ -496,20 +494,18 @@ describe("Describe offline fallback (production failure fix)", () => {
     }
   });
 
-  test("runDescribeAnalysis returns garments when Gemini key is missing", async () => {
+  test("runDescribeAnalysis works with no API key at all (local parser is primary)", async () => {
     const res = await runDescribeAnalysis(
       { description: "Black oversized shirt and beige trousers", profile: { season: "Autumn" } },
-      null,
     );
     assert.equal(res.success, true);
     assert.equal(res.garments.length, 2);
     assert.equal(res.garments[0].colourName, "Black");
     assert.equal(res.garments[1].colourName, "Beige");
-    assert.ok(res.assumptions.some((a: string) => a.includes("offline")));
   });
 
   test("runDescribeAnalysis returns a structured error for empty description", async () => {
-    const res = await runDescribeAnalysis({ description: "   ", profile: { season: "Autumn" } }, null);
+    const res = await runDescribeAnalysis({ description: "   ", profile: { season: "Autumn" } });
     assert.equal(res.success, false);
     assert.equal(res.error, "EMPTY_DESCRIPTION");
     assert.ok(Array.isArray(res.garments));
@@ -517,7 +513,7 @@ describe("Describe offline fallback (production failure fix)", () => {
   });
 
   test("runDescribeAnalysis returns a clear error when nothing is identifiable", async () => {
-    const res = await runDescribeAnalysis({ description: "something completely unidentifiable", profile: { season: "Autumn" } }, null);
+    const res = await runDescribeAnalysis({ description: "something completely unidentifiable", profile: { season: "Autumn" } });
     assert.equal(res.success, false);
     assert.equal(res.error, undefined);
     assert.ok(res.limitations.length > 0);
@@ -527,7 +523,6 @@ describe("Describe offline fallback (production failure fix)", () => {
   test("runDescribeAnalysis with a valid profile returns the structured object (no HTTP status)", async () => {
     const res = await runDescribeAnalysis(
       { description: "Silver Cardigan with black jeans", profile: { season: "Autumn", undertone: "Neutral", skin_depth: "Light-Medium", chroma: "", contrast: "" } },
-      null,
     );
     assert.equal(res.success, true);
     assert.equal(res.garments.length, 2);

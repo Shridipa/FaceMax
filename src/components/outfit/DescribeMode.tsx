@@ -1,8 +1,9 @@
 /**
  * Outfit Studio — Mode 2: describe clothes in natural language.
  *
- * The backend (Gemini) extracts structured garments from the description;
- * the user can correct every field before generating recommendations.
+ * Garments are extracted locally by a deterministic dictionary parser
+ * (api/outfit-parser.ts) — no AI service and no API key are involved.
+ * The user can correct every field before generating recommendations.
  * Colours supplied/confirmed by the user are treated as ground truth, so
  * the later suitability verdict is deterministic.
  */
@@ -144,7 +145,7 @@ export function DescribeMode({
             </button>
           </div>
           <p className="text-[11px] text-[var(--color-text-tertiary)]">
-            The AI may misread a colour or category — correct anything before generating outfits.
+            Items are read from your description with FaceMaxx's built-in dictionary — correct anything before generating outfits.
           </p>
 
           {extracted.map((g) => (

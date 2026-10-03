@@ -169,9 +169,9 @@ describe("validateGarmentInputs", () => {
 /*  Mode 2 — describe clothes                                          */
 /* ================================================================== */
 
-describe("runDescribeAnalysis", () => {
+describe("runDescribeAnalysis (local parser — no AI, no API key)", () => {
   test("no profile -> extracts garments with source 'none'", async () => {
-    const res = await runDescribeAnalysis({ description: "a black shirt", profile: undefined }, null);
+    const res = await runDescribeAnalysis({ description: "a black shirt", profile: undefined });
     assert.equal(res.success, true);
     assert.equal(res.garments.length, 1);
     assert.equal(res.garments[0].category, "Shirt");
@@ -179,94 +179,79 @@ describe("runDescribeAnalysis", () => {
   });
 
   test("empty description -> EMPTY_DESCRIPTION", async () => {
-    const res = await runDescribeAnalysis({ description: "  ", profile: DEEP_WINTER_PROFILE }, "key");
+    const res = await runDescribeAnalysis({ description: "  ", profile: DEEP_WINTER_PROFILE });
     assert.equal(res.error, "EMPTY_DESCRIPTION");
   });
 
-  test("interpreter extracts and sanitises garments + assumptions", async () => {
-    const res = await runDescribeAnalysis(
-      { description: "black oversized shirt and beige trousers", profile: DEEP_WINTER_PROFILE },
-      "key",
-      async () => ({
-        garments: [
-          { category: "Shirt", hex: "#1A1A3E", colourName: "Dark Navy", fit: "oversized" },
-          { category: "Trousers", hex: "not-a-hex" }, // dropped
-          { category: "Sweater", hex: "#F5F5DC", colourName: "   " },
-          "garbage",
-        ],
-        assumptions: ["assumed dark green means forest green", "", 42],
-      }),
-    );
+  test("multi-garment spec sentence parses into 3 correct garments, no AI involved", async () => {
+    const res = await runDescribeAnalysis({
+      description: "cobalt blue oversized shirt, teal wide-leg trousers and beige sneakers",
+      profile: DEEP_WINTER_PROFILE,
+    });
     assert.equal(res.success, true);
-    assert.equal(res.garments.length, 2);
+    assert.equal(res.garments.length, 3);
+    assert.equal(res.garments[0].category, "Shirt");
+    assert.equal(res.garments[0].colourName, "Cobalt Blue");
     assert.equal(res.garments[0].fit, "oversized");
-    assert.equal(res.garments[1].colourName.length > 0, true); // backfilled
-    assert.deepEqual(res.assumptions, ["assumed dark green means forest green"]);
+    assert.equal(res.garments[1].category, "Trousers");
+    assert.equal(res.garments[1].colourName, "Teal");
+    assert.equal(res.garments[1].fit, "wide-leg");
+    assert.equal(res.garments[2].category, "Sneakers");
+    assert.equal(res.garments[2].colourName, "Beige");
   });
 
-  test("interpreter failure + parsable text -> offline fallback discloses the AI error", async () => {
-    const res = await runDescribeAnalysis(
-      { description: "a black shirt", profile: DEEP_WINTER_PROFILE },
-      null,
-      async () => { throw new Error("boom"); },
-    );
-    assert.equal(res.success, true); // offline dictionary saved it
-    assert.equal(res.garments[0].colourName, "Black");
-    assert.ok(res.assumptions.some((a) => a.includes("boom")));
+  test("works with every AI env var unset", async () => {
+    const saved = {
+      gemini: process.env.GEMINI_API_KEY,
+      google: process.env.GOOGLE_API_KEY,
+      openai: process.env.OPENAI_API_KEY,
+    };
+    delete process.env.GEMINI_API_KEY;
+    delete process.env.GOOGLE_API_KEY;
+    delete process.env.OPENAI_API_KEY;
+    try {
+      const res = await runDescribeAnalysis({ description: "black shirt and blue jeans", profile: DEEP_WINTER_PROFILE });
+      assert.equal(res.success, true);
+      assert.equal(res.garments.length, 2);
+    } finally {
+      if (saved.gemini !== undefined) process.env.GEMINI_API_KEY = saved.gemini;
+      if (saved.google !== undefined) process.env.GOOGLE_API_KEY = saved.google;
+      if (saved.openai !== undefined) process.env.OPENAI_API_KEY = saved.openai;
+    }
   });
 
-  test("interpreter failure + unparsable text -> honest AI_SERVICE_FAILED", async () => {
-    const res = await runDescribeAnalysis(
-      { description: "my comfy favourites", profile: DEEP_WINTER_PROFILE },
-      null,
-      async () => { throw new Error("boom"); },
-    );
+  test("no garments found -> success:false with actionable guidance", async () => {
+    const res = await runDescribeAnalysis({ description: "something nice", profile: DEEP_WINTER_PROFILE });
     assert.equal(res.success, false);
-    assert.ok(res.limitations.some((l) => l.includes("boom")));
-    assert.ok(res.limitations.some((l) => l.includes("GEMINI_API_KEY")));
+    assert.equal(res.garments.length, 0);
+    assert.ok(res.limitations[0].includes("couldn't identify a clothing item"));
+    assert.ok(res.limitations[0].includes("a blue shirt and black jeans"));
   });
 
-  test("no garments found -> success:false with guidance", async () => {
-    const res = await runDescribeAnalysis(
-      { description: "something nice", profile: DEEP_WINTER_PROFILE },
-      "key",
-      async () => ({ garments: ["nope"] }),
-    );
+  test("no garments found -> user-friendly message, never a key/server error", async () => {
+    const res = await runDescribeAnalysis({ description: "my comfy favourites", profile: DEEP_WINTER_PROFILE });
     assert.equal(res.success, false);
-    assert.ok(res.limitations[0].includes("No recognisable garment"));
+    assert.ok((res.message || "").includes("couldn't identify"));
+    const serialised = JSON.stringify(res);
+    assert.ok(!serialised.includes("GEMINI_API_KEY"), "describe path must not mention any API key");
   });
 
-  test("AI unavailable + parsable description -> offline dictionary fallback with disclosure", async () => {
-    const res = await runDescribeAnalysis(
-      { description: "I have a yellow cardigan and hot pink jeans", profile: DEEP_WINTER_PROFILE },
-      null,
-      async () => { throw new Error("GEMINI_API_KEY is not configured."); },
-    );
+  test("colour-only sentence never invents a garment", async () => {
+    const res = await runDescribeAnalysis({ description: "I like blue colours.", profile: DEEP_WINTER_PROFILE });
+    assert.equal(res.success, false);
+    assert.equal(res.garments.length, 0);
+  });
+
+  test("assumptions surface in limitations for user correction", async () => {
+    const res = await runDescribeAnalysis({ description: "a nice cardigan", profile: DEEP_WINTER_PROFILE });
     assert.equal(res.success, true);
-    assert.equal(res.garments.length, 2);
-    const cardigan = res.garments.find((g) => g.category === "Cardigan");
-    const jeans = res.garments.find((g) => g.category === "Jeans");
-    assert.ok(cardigan && cardigan.hex === "#FFD700");
-    assert.ok(jeans && jeans.hex === "#FF69B4");
-    assert.ok(res.assumptions.some((a) => a.includes("built-in colour dictionary")));
+    assert.equal(res.garments[0].colourName, "Unknown");
+    assert.ok(res.assumptions.some((a) => a.includes("could not tell the colour")));
+    assert.ok(res.limitations.some((l) => l.includes("Interpretation assumptions")));
   });
 
-  test("AI unavailable + unparsable description -> honest error naming the key", async () => {
-    const res = await runDescribeAnalysis(
-      { description: "my favourite comfy things", profile: DEEP_WINTER_PROFILE },
-      null,
-      async () => { throw new Error("GEMINI_API_KEY is not configured."); },
-    );
-    assert.equal(res.success, false);
-    assert.ok(res.limitations.some((l) => l.includes("GEMINI_API_KEY")));
-  });
-
-  test("AI found nothing + parsable description -> offline fallback", async () => {
-    const res = await runDescribeAnalysis(
-      { description: "a striped navy shirt", profile: DEEP_WINTER_PROFILE },
-      "key",
-      async () => ({ garments: [] }),
-    );
+  test("patterns parsed locally: 'a striped navy shirt'", async () => {
+    const res = await runDescribeAnalysis({ description: "a striped navy shirt", profile: DEEP_WINTER_PROFILE });
     assert.equal(res.success, true);
     assert.equal(res.garments[0].category, "Shirt");
     assert.equal(res.garments[0].pattern, "Striped");

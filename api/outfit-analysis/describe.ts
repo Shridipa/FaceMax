@@ -2,22 +2,16 @@
  * POST /api/outfit-analysis/describe — Vercel serverless adapter.
  * Mode 2: natural-language wardrobe description -> structured garments.
  *
- * ROOT CAUSE FIX:
- *   The old adapter lived at api/outfit-describe.ts which Vercel deploys as
- *   /api/outfit-describe.  The frontend called /api/outfit-analysis/describe,
- *   which did not exist on Vercel — every request got a 404, which the
- *   frontend's postJson helper converted to "Request failed. Please try again."
+ * ARCHITECTURE (local-first):
+ *   Extraction is performed entirely by the deterministic dictionary parser
+ *   (api/outfit-parser.ts via runDescribeAnalysis). This endpoint requires NO
+ *   GEMINI_API_KEY, NO GOOGLE_API_KEY and makes NO external AI or network
+ *   request — it works on Vercel with every AI-related env var unset.
  *
- *   Moving the handler here (api/outfit-analysis/describe.ts) makes Vercel
- *   deploy it at the URL the frontend already expects.
- *
- * SECONDARY FIX:
- *   The old handler blocked offline extraction by returning 400 when
- *   profile.season was missing.  Offline garment extraction must work even if
- *   the user has not yet completed a colour analysis, so the season gate has
- *   been removed from this handler.  runDescribeAnalysis already handles the
- *   no-profile case gracefully (it extracts garments but omits season-specific
- *   styling tips).
+ * ROUTING NOTE (kept from the original fix):
+ *   This file lives at api/outfit-analysis/describe.ts so Vercel deploys it at
+ *   /api/outfit-analysis/describe — the URL the frontend already calls
+ *   (api/outfit-describe.ts re-exports it as a legacy alias).
  */
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { runDescribeAnalysis } from "../outfit-core.js";
@@ -33,9 +27,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST")
     return res.status(405).json({ success: false, error: "Method not allowed" });
 
-  // GEMINI_API_KEY is optional — offline extraction works without it.
-  const apiKey = process.env.GEMINI_API_KEY || null;
-
   const body = (req.body && typeof req.body === "object" ? req.body : {}) as Record<
     string,
     unknown
@@ -45,8 +36,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ? body.profile
     : {}) as Record<string, unknown>;
 
-  // Profile is optional for basic offline extraction; when present it enables
-  // season-aware styling guidance from Gemini.
+  // Profile is optional: extraction is purely local; a saved season simply
+  // enriches the later styling guidance.
   const profile =
     typeof profileRaw.season === "string" && profileRaw.season.trim()
       ? {
@@ -74,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const result = await runDescribeAnalysis({ description, profile }, apiKey);
+    const result = await runDescribeAnalysis({ description, profile });
     // HTTP 200 even when no garments found — the body carries success:false with
     // a meaningful message so the frontend can distinguish extraction failure
     // from a network or server error.
