@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const promptText = `Analyze this selfie and return a comprehensive JSON report with: scores (overallScore, photographyScore, groomingScore, styleScore), faceAnalysis (symmetryScore, symmetryDetails, jawlineType, eyeSpacingRatio, poseAssessment, expressionFeedback), photoQuality (lightingScore, lightingType, sharpnessScore), styleRecommendations, hairstyles, eyewear, skincare, and landmarks (leftEye, rightEye, noseBridge, noseTip, mouth, jawline, leftEyebrow, rightEyebrow, faceContour). All coordinates should be 0-100 relative to image dimensions. Return ONLY valid JSON.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.8-flash",
       contents: [imagePart, { text: promptText }],
       config: { systemInstruction, responseMimeType: "application/json" },
     });

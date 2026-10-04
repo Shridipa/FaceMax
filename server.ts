@@ -289,7 +289,7 @@ Important:
 2. Return ONLY clean, valid JSON. Do not write markdown blocks outside the JSON, do not include backticks unless wrapped in markdown format of JSON. Make sure the JSON parser can parse it directly.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-3.8-flash",
       contents: [imagePart, { text: promptText }],
       config: {
         systemInstruction,

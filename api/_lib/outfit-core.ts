@@ -681,7 +681,7 @@ export async function callOutfitAi(
   }
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
+    model: "gemini-3.8-flash",
     contents: [{ inlineData: { mimeType, data: base64Data } }, { text: prompt }],
     config: { systemInstruction: "You are a practical fashion-styling assistant. Return ONLY valid JSON matching the requested schema. Never invent profile data.", responseMimeType: "application/json" },
   });
@@ -1114,7 +1114,7 @@ async function callStyleTextAi(prompt: string, apiKey: string): Promise<OutfitAi
   const { GoogleGenAI } = await import("@google/genai");
   const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
+    model: "gemini-3.8-flash",
     contents: [{ text: prompt }],
     config: { systemInstruction: "You are a practical fashion-styling assistant. Return ONLY valid JSON matching the requested schema. Never invent profile data or garments the user does not own.", responseMimeType: "application/json" },
   });
