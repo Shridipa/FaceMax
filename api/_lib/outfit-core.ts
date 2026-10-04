@@ -663,6 +663,59 @@ Rules:
     (stylePreference ? `\nUser style preference: ${stylePreference}.` : "");
 }
 
+/** Google capacity errors (429/503) are transient — retry briefly before giving up. */
+function isTransientAiError(err: unknown): boolean {
+  const e = err as { status?: number; code?: number; message?: string };
+  if (e?.status === 429 || e?.status === 503 || e?.code === 429 || e?.code === 503) return true;
+  return /"code"\s*:\s*(429|503)\b|UNAVAILABLE|RESOURCE_EXHAUSTED/i.test(e?.message ?? "");
+}
+
+async function withTransientRetry<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (i === attempts - 1 || !isTransientAiError(err)) throw err;
+      await new Promise((r) => setTimeout(r, 1000 * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
+
+/** Preferred model first; retired-model 404s and capacity errors (429/503)
+ *  advance to the next candidate so one saturated model cannot take the
+ *  AI features down. Other errors surface honestly. */
+const GEMINI_MODEL_CANDIDATES = ["gemini-3.8-flash", "gemini-2.5-flash"];
+
+function isModelNotFound(err: unknown): boolean {
+  const e = err as { status?: number; code?: number; message?: string };
+  if (e?.status === 404 || e?.code === 404) return true;
+  return /"code"\s*:\s*404\b|NOT_FOUND/i.test(e?.message ?? "");
+}
+
+async function generateWithFallback(
+  ai: { models: { generateContent: (args: { model: string; contents: unknown; config?: unknown }) => Promise<unknown> } },
+  contents: unknown,
+  config: unknown,
+): Promise<unknown> {
+  let lastErr: unknown;
+  for (const model of GEMINI_MODEL_CANDIDATES) {
+    try {
+      return await withTransientRetry(
+        () => ai.models.generateContent({ model, contents, config }),
+        2,
+      );
+    } catch (err) {
+      lastErr = err;
+      if (isModelNotFound(err)) continue;
+      throw err;
+    }
+  }
+  throw lastErr;
+}
+
 export async function callOutfitAi(
   imageBase64: string,
   prompt: string,
@@ -680,11 +733,11 @@ export async function callOutfitAi(
     base64Data = parts[1];
   }
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3.8-flash",
-    contents: [{ inlineData: { mimeType, data: base64Data } }, { text: prompt }],
-    config: { systemInstruction: "You are a practical fashion-styling assistant. Return ONLY valid JSON matching the requested schema. Never invent profile data.", responseMimeType: "application/json" },
-  });
+  const response = (await generateWithFallback(
+    ai,
+    [{ inlineData: { mimeType, data: base64Data } }, { text: prompt }],
+    { systemInstruction: "You are a practical fashion-styling assistant. Return ONLY valid JSON matching the requested schema. Never invent profile data.", responseMimeType: "application/json" },
+  )) as { text?: string };
 
   let text = (response.text || "{}").trim();
   if (text.startsWith("```json")) text = text.slice(7);
@@ -1113,11 +1166,11 @@ Rules:
 async function callStyleTextAi(prompt: string, apiKey: string): Promise<OutfitAiPayload> {
   const { GoogleGenAI } = await import("@google/genai");
   const ai = new GoogleGenAI({ apiKey, httpOptions: { headers: { "User-Agent": "aistudio-build" } } });
-  const response = await ai.models.generateContent({
-    model: "gemini-3.8-flash",
-    contents: [{ text: prompt }],
-    config: { systemInstruction: "You are a practical fashion-styling assistant. Return ONLY valid JSON matching the requested schema. Never invent profile data or garments the user does not own.", responseMimeType: "application/json" },
-  });
+  const response = (await generateWithFallback(
+    ai,
+    [{ text: prompt }],
+    { systemInstruction: "You are a practical fashion-styling assistant. Return ONLY valid JSON matching the requested schema. Never invent profile data or garments the user does not own.", responseMimeType: "application/json" },
+  )) as { text?: string };
   let text = (response.text || "{}").trim();
   if (text.startsWith("```json")) text = text.slice(7);
   if (text.endsWith("```")) text = text.slice(0, -3);
