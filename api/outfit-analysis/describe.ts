@@ -14,7 +14,7 @@
  *   (api/outfit-describe.ts re-exports it as a legacy alias).
  */
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { runDescribeAnalysis } from "../outfit-core.js";
+import { runDescribeAnalysis } from "../_lib/outfit-core.js";
 
 export const maxDuration = 30;
 

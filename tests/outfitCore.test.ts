@@ -23,7 +23,7 @@ import {
   buildOutfitPrompt,
   runOutfitAnalysis,
   type OutfitAiPayload,
-} from "../api/outfit-core";
+} from "../api/_lib/outfit-core";
 import type { OutfitGarment } from "../src/types/outfit";
 
 const DEEP_AUTUMN = "Deep Autumn";

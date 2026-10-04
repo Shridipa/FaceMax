@@ -5,7 +5,7 @@ import os from "os";
 import { execFile } from "child_process";
 import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
-import { runOutfitAnalysis, runDescribeAnalysis, runWardrobeAnalysis, compareOutfits } from "./api/outfit-core";
+import { runOutfitAnalysis, runDescribeAnalysis, runWardrobeAnalysis, compareOutfits } from "./api/_lib/outfit-core";
 import { createServer as createViteServer } from "vite";
 
 // Load environment variables

@@ -7,7 +7,7 @@
  * server-side in api/outfit-core.ts against that saved profile.
  */
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { runOutfitAnalysis } from "./outfit-core.js";
+import { runOutfitAnalysis } from "./_lib/outfit-core.js";
 
 export const maxDuration = 30;
 

@@ -27,7 +27,7 @@ import {
   paletteForSeason,
   parseDescriptionLocally,
   type OutfitAiPayload,
-} from "../api/outfit-core";
+} from "../api/_lib/outfit-core";
 import type {
   GarmentInput,
   OutfitGarment,

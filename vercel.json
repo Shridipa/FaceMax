@@ -14,15 +14,6 @@
     "api/outfit-analysis.ts": {
       "maxDuration": 30
     },
-    "api/outfit-describe.ts": {
-      "maxDuration": 30
-    },
-    "api/outfit-wardrobe.ts": {
-      "maxDuration": 30
-    },
-    "api/outfit-compare.ts": {
-      "maxDuration": 10
-    },
     "api/outfit-analysis/*.ts": {
       "maxDuration": 30
     }

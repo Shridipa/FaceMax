@@ -26,7 +26,7 @@ import {
   runWardrobeAnalysis,
   garmentInputsToOutfitGarments,
   computeSuitability,
-} from "../api/outfit-core";
+} from "../api/_lib/outfit-core";
 
 const PROFILE = {
   season: "Warm Autumn",
@@ -277,7 +277,7 @@ describe("regression: cobalt blue top + teal bottom", () => {
 describe("architecture guarantees", () => {
   test("parser module contains no network/AI primitives", () => {
     const src = readFileSync(
-      fileURLToPath(new URL("../api/outfit-parser.ts", import.meta.url)),
+      fileURLToPath(new URL("../api/_lib/outfit-parser.ts", import.meta.url)),
       "utf8",
     );
     const forbidden = [
@@ -299,7 +299,7 @@ describe("architecture guarantees", () => {
 
   test("describe path in outfit-core has no Gemini text-mode call left", () => {
     const src = readFileSync(
-      fileURLToPath(new URL("../api/outfit-core.ts", import.meta.url)),
+      fileURLToPath(new URL("../api/_lib/outfit-core.ts", import.meta.url)),
       "utf8",
     );
     assert.ok(!src.includes("buildDescribePrompt"));
